@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:gravity="center_horizontal"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_margin="5dp"
+        android:gravity="center_horizontal"
+        android:background="@color/azul_bajo"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="100dp">
+
+        <LinearLayout
+            android:gravity="center_horizontal"
+            android:layout_weight="0.6"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/nombreProducto"
+                android:layout_marginTop="6dp"
+                android:textStyle="bold"
+                android:textColor="@color/azul_oscuro"
+                android:textSize="20dp"
+                android:text="Trucha"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/nombreProductoAdicional"
+                android:textStyle="bold"
+                android:textColor="@color/azul_oscuro"
+                android:textSize="12dp"
+                android:text="Trucha"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_weight="0.4"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/precioProductoKg"
+                android:textSize="10dp"
+                android:textColor="@color/azul_oscuro"
+                android:textStyle="italic"
+                android:text="$17.000 Kg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_marginBottom="10dp"
+                android:id="@+id/precioProductoLb"
+                android:textSize="10dp"
+                android:textColor="@color/azul_oscuro"
+                android:textStyle="italic"
+                android:text="$8.500 Lb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

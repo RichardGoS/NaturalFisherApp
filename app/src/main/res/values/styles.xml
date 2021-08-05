@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--<item name="floatingActionButtonStyle">@style/Widget.MaterialComponents.FloatingActionButton</item> -->
+    <style name="MyFloatingActionButton" parent="@style/Widget.Design.FloatingActionButton">
+        <item name="android:src">@drawable/ic_menu_circular</item>
+        <item name="android:background">@drawable/shape_floating_buttons</item>
+    </style>
+
+</resources>

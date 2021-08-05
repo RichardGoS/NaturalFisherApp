@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:background="@drawable/shape_toolbar_detalle_venta"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/llBtnFecha"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:layout_margin="5dp"
+                        android:src="@drawable/ic_date1"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"/>
+
+                    <TextView
+                        android:id="@+id/fechaVentaDetalle"
+                        android:textSize="15dp"
+                        android:textColor="@color/white"
+                        android:textStyle="italic"
+                        android:text="06/07/21"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:gravity="center"
+                    android:layout_marginBottom="2dp"
+                    android:id="@+id/nombreCliente"
+                    android:textSize="20dp"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:text="Natalia Instagram"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:layout_marginBottom="1dp"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_margin="1dp"
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:textSize="12dp"
+                        android:text="Tel. "
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        android:layout_marginLeft="2dp"
+                        android:id="@+id/telefonoCliente"
+                        android:textSize="12dp"
+                        android:text="3185479231"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_margin="1dp"
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:layout_marginLeft="2dp"
+                        android:textSize="12dp"
+                        android:text="Dir. "
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        android:layout_marginLeft="2dp"
+                        android:id="@+id/direccionCliente"
+                        android:textSize="12dp"
+                        android:text="Cra 32 # 21 - 69"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llAgregarProducto"
+            android:visibility="gone"
+            android:layout_weight="8"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/llBtnAgregarProducto"
+                android:background="@drawable/shape_item_autocomplete_azul_bajo"
+                android:gravity="center_vertical|center_horizontal"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="80dp">
+
+                <ImageView
+                    android:layout_marginRight="20dp"
+                    android:src="@drawable/ic_agregarproducto"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:layout_marginLeft="20dp"
+                    android:textSize="20dp"
+                    android:textColor="@color/azul_oscuro"
+                    android:textStyle="bold"
+                    android:text="Agregar Producto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:visibility="visible"
+            android:layout_weight="7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/efRvItems"
+                    android:scrollbars="horizontal"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                </androidx.recyclerview.widget.RecyclerView>
+
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:textColor="@color/azul_oscuro"
+                android:textSize="30dp"
+                android:id="@+id/totalVenta"
+                android:textStyle="bold"
+                android:text="$54.000"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/llBotonesProcesos"
+            android:layout_marginRight="2dp"
+            android:layout_marginLeft="2dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/btnCancelarVenta"
+                android:layout_margin="2dp"
+                android:layout_weight="0.4"
+                android:background="@drawable/shape_btn_cancelar"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="25dp">
+
+                <TextView
+                    android:textColor="@color/white"
+                    android:text="Cancelar Venta"
+                    android:textSize="12dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/btnConfirmarVenta"
+                android:layout_margin="2dp"
+                android:layout_weight="0.6"
+                android:background="@drawable/shape_btn_aceptar"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="25dp">
+
+                <TextView
+                    android:textColor="@color/white"
+                    android:text="Confirmar Venta"
+                    android:textSize="12dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <include layout="@layout/floating_button_agregar_producto"/>
+
+</RelativeLayout>

@@ -1,0 +1,11 @@
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/nombreCliente"
+    android:background="@drawable/shape_item_autocomplete_azul_bajo"
+    android:singleLine="true"
+    android:textSize="12dp"
+    android:gravity="center_vertical"
+    android:text="Richard"
+    android:layout_width="match_parent"
+    android:layout_height="25dp"
+    android:ellipsize="marquee"/>

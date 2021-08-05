@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_margin="2dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:background="@drawable/borde_item_venta"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_marginLeft="10dp"
+                android:id="@+id/nombreProducto"
+                android:textSize="25dp"
+                android:textColor="@color/azul_secundario"
+                android:textStyle="bold"
+                android:text="Chuleta Trucha"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_gravity="center"
+            android:layout_margin="1dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="0.4"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_marginLeft="15dp"
+                    android:id="@+id/precioKg"
+                    android:textSize="10dp"
+                    android:textColor="@color/azul_oscuro"
+                    android:textStyle="italic"
+                    android:text="$17.000 Kg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:layout_marginLeft="15dp"
+                    android:id="@+id/precioLb"
+                    android:textSize="10dp"
+                    android:textColor="@color/azul_oscuro"
+                    android:textStyle="italic"
+                    android:text="$8.500 Lb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_weight="0.6"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_gravity="bottom"
+                    android:gravity="center_horizontal"
+                    android:layout_weight="0.8"
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <LinearLayout
+                            android:id="@+id/llBtnReducirCantidad"
+                            android:visibility="visible"
+                            android:background="@drawable/shape_button"
+                            android:gravity="center"
+                            android:textColor="@color/white"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:textColor="@color/white"
+                                android:gravity="center"
+                                android:textSize="20dp"
+                                android:text="-"
+                                android:layout_width="20dp"
+                                android:layout_height="wrap_content"/>
+
+                        </LinearLayout>
+
+                        <EditText
+                            android:inputType="numberDecimal"
+                            android:id="@+id/cantPeso"
+                            android:textColor="@color/azul_primario"
+                            android:textSize="12dp"
+                            android:text="0.512"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                        <LinearLayout
+                            android:id="@+id/llBtnAumentarCantidad"
+                            android:visibility="visible"
+                            android:background="@drawable/shape_button"
+                            android:gravity="center"
+                            android:layout_gravity="center"
+                            android:textColor="@color/white"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:textColor="@color/white"
+                                android:gravity="center"
+                                android:textSize="20dp"
+                                android:text="+"
+                                android:layout_width="20dp"
+                                android:layout_height="wrap_content"/>
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_margin="2dp"
+                            android:id="@+id/total"
+                            android:textSize="20dp"
+                            android:textColor="@color/azul_oscuro"
+                            android:textStyle="bold"
+                            android:text="$100.000"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

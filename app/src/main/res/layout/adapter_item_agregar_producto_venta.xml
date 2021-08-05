@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/llItemProducto"
+        android:layout_margin="1dp"
+        android:gravity="center_horizontal|center_vertical"
+        android:orientation="horizontal"
+        android:background="@drawable/shape_item_autocomplete_azul_bajo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/txtNombreProducto"
+            android:layout_weight="6"
+            android:layout_marginLeft="4dp"
+            android:textStyle="bold"
+            android:textColor="@color/azul_oscuro"
+            android:textSize="14dp"
+            android:text="Trucha"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:layout_marginRight="10dp"
+            android:gravity="right"
+            android:id="@+id/txtPrecio"
+            android:layout_weight="4"
+            android:layout_marginLeft="4dp"
+            android:textStyle="italic"
+            android:textColor="@color/azul_oscuro"
+            android:textSize="13dp"
+            android:text="$17.000 - $8.500"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+</LinearLayout>

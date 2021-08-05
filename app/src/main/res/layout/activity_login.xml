@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context=".view.activities.LoginActivity">
+
+    <LinearLayout
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="20dp"
+        android:layout_weight="0.6"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:src="@drawable/ic_usernaturalfisherapp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_weight="0.4"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <EditText
+            android:alpha="0.60"
+            android:hint="Usuario"
+            android:layout_marginRight="50dp"
+            android:layout_marginLeft="50dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:alpha="0.60"
+            android:hint="Contrasena"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="2dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginLeft="50dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:id="@+id/btnEntrar"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginBottom="2dp"
+            android:orientation="vertical"
+            android:layout_marginRight="60dp"
+            android:layout_marginLeft="60dp"
+            android:background="@drawable/shape">
+
+            <TextView
+                android:alpha="0.8"
+                android:textColor="@color/white"
+                android:text="Entrar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <include layout="@layout/footer"/>
+
+
+</LinearLayout>
