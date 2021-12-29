@@ -101,7 +101,9 @@ public class VentaBusquedaFragment extends Fragment implements VentaBusquedaFrag
 
     @Override
     public void hideProgress() {
-        progress.dismiss();
+        if(progress != null){
+            progress.dismiss();
+        }
     }
 
 }

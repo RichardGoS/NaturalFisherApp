@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.naturalfisherapp.R;
+import com.example.naturalfisherapp.view.interfaces.IConfiguracionView;
 import com.example.naturalfisherapp.view.interfaces.IDetalleRegistroVentaFragmentView;
 
 import org.jetbrains.annotations.NotNull;
@@ -35,6 +36,7 @@ public class InformacionDialogFragment extends DialogFragment {
     private String tipo;
     private String informacion;
     private IDetalleRegistroVentaFragmentView detalleRegistroVentaFragmentView;
+    private IConfiguracionView configuracionView;
 
     @BindView(R.id.imvIcono)
     ImageView imvIcono;
@@ -47,6 +49,14 @@ public class InformacionDialogFragment extends DialogFragment {
         informacionDialogFragment.tipo = tipo;
         informacionDialogFragment.informacion = informacion;
         informacionDialogFragment.detalleRegistroVentaFragmentView = detalleRegistroVentaFragmentView;
+        return informacionDialogFragment;
+    }
+
+    public static InformacionDialogFragment newInstance(String tipo, String informacion, IConfiguracionView configuracionView){
+        InformacionDialogFragment informacionDialogFragment = new InformacionDialogFragment();
+        informacionDialogFragment.tipo = tipo;
+        informacionDialogFragment.informacion = informacion;
+        informacionDialogFragment.configuracionView = configuracionView;
         return informacionDialogFragment;
     }
 
@@ -73,6 +83,12 @@ public class InformacionDialogFragment extends DialogFragment {
 
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
+        if(tipo.equals("Error")){
+            imvIcono.setImageDrawable(getResources().getDrawable(R.drawable.ic_error));
+        } else {
+            imvIcono.setImageDrawable(getResources().getDrawable(R.drawable.ic_confimar_mejorado));
+        }
+
         txtInfo.setText(informacion);
 
         Thread timer = new Thread() {
@@ -81,8 +97,12 @@ public class InformacionDialogFragment extends DialogFragment {
                     sleep(1000);
                     dialog.dismiss();
 
-                    if(detalleRegistroVentaFragmentView != null){
-                        detalleRegistroVentaFragmentView.goToVentaPrinsipalActivity();
+                    if(!tipo.equals("Error")){
+                        if(detalleRegistroVentaFragmentView != null){
+                            detalleRegistroVentaFragmentView.goToVentaPrinsipalActivity();
+                        } else if(configuracionView != null){
+                            configuracionView.goToLoginActivity();
+                        }
                     }
 
                 } catch (InterruptedException e) {

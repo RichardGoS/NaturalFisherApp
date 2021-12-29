@@ -139,7 +139,7 @@ public class VentaRegistroAdapter extends RecyclerView.Adapter<VentaRegistroAdap
                     llAgregarProducto.setVisibility(View.GONE);
                     llBotonesProcesos.setVisibility(View.GONE);
                     btnAgregarProducto.setVisibility(View.GONE);
-                    cargarAdapterItems(this.venta.getItems());
+                    cargarAdapterItems(this.venta.getItems(), "consulta");
                 } else {
                     recyclerViewItems.setVisibility(View.GONE);
                     llAgregarProducto.setVisibility(View.VISIBLE);
@@ -149,8 +149,6 @@ public class VentaRegistroAdapter extends RecyclerView.Adapter<VentaRegistroAdap
 
                 totalVenta.setText("$ " + Utilidades.puntoMil(venta.getTotal()));
             }
-
-
 
         }
 
@@ -195,7 +193,7 @@ public class VentaRegistroAdapter extends RecyclerView.Adapter<VentaRegistroAdap
          * @Fecha 18/07/21
          */
         @Override
-        public void cargarAdapterItems(List<ItemVenta> items) {
+        public void cargarAdapterItems(List<ItemVenta> items, String modo) {
 
             recyclerViewItems.setVisibility(View.VISIBLE);
             llAgregarProducto.setVisibility(View.GONE);
@@ -203,7 +201,7 @@ public class VentaRegistroAdapter extends RecyclerView.Adapter<VentaRegistroAdap
 
             linearLayoutManager = new LinearLayoutManager(activity,RecyclerView.VERTICAL,false);
             android.app.FragmentManager fragmentManager = activity.getFragmentManager();
-            ItemVentaAdapter itemVentaAdapter = new ItemVentaAdapter(items, activity.getApplicationContext(), fragmentManager, activity, this);
+            ItemVentaAdapter itemVentaAdapter = new ItemVentaAdapter(items, activity.getApplicationContext(), fragmentManager, activity, this, modo);
             recyclerViewItems.setAdapter(itemVentaAdapter);
             recyclerViewItems.setLayoutManager(linearLayoutManager);
         }
@@ -233,7 +231,7 @@ public class VentaRegistroAdapter extends RecyclerView.Adapter<VentaRegistroAdap
 
             btnAgregarProducto.setVisibility(View.VISIBLE);
 
-            cargarAdapterItems(this.venta.getItems());
+            cargarAdapterItems(this.venta.getItems(), "creacion");
 
 
         }
@@ -313,7 +311,7 @@ public class VentaRegistroAdapter extends RecyclerView.Adapter<VentaRegistroAdap
          */
         private void goToAgregarProducto() {
             System.out.println("Agregar Producto....");
-            AgregarProductoDialogFragment agregarProductoDialogFragment = AgregarProductoDialogFragment.newInstance(fragmentManager, this);
+            AgregarProductoDialogFragment agregarProductoDialogFragment = AgregarProductoDialogFragment.newInstance(fragmentManager, this, venta.getItems());
             agregarProductoDialogFragment.show(fragmentManager, "AgregarProducto");
             android.app.Fragment fragment = activity.getFragmentManager().findFragmentByTag("AgregarProducto");
             if (fragment != null) {

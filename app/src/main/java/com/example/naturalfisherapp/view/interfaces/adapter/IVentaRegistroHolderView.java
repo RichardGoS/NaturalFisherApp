@@ -14,7 +14,7 @@ import java.util.List;
 
 public interface IVentaRegistroHolderView {
 
-    void cargarAdapterItems(List<ItemVenta> items);
+    void cargarAdapterItems(List<ItemVenta> items, String modo);
 
     void agregarProducto(Producto producto);
 

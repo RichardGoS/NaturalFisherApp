@@ -2,6 +2,7 @@ package com.example.naturalfisherapp.utilidades;
 
 import com.example.naturalfisherapp.data.models.Cliente;
 import com.example.naturalfisherapp.data.models.Producto;
+import com.example.naturalfisherapp.data.system.Configuracion;
 
 import java.util.List;
 
@@ -17,6 +18,7 @@ public class InformacionSession {
     private static InformacionSession instance;
     private List<Cliente> clientesConsultados;
     private List<Producto> productosConsultados;
+    private Configuracion configuracion;
 
     public static InformacionSession getInstance() {
         if (instance == null) {
@@ -43,5 +45,13 @@ public class InformacionSession {
 
     public void setProductosConsultados(List<Producto> productosConsultados) {
         this.productosConsultados = productosConsultados;
+    }
+
+    public Configuracion getConfiguracion() {
+        return configuracion;
+    }
+
+    public void setConfiguracion(Configuracion configuracion) {
+        this.configuracion = configuracion;
     }
 }

@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.naturalfisherapp.R;
+import com.example.naturalfisherapp.data.models.ItemVenta;
 import com.example.naturalfisherapp.data.models.Producto;
 import com.example.naturalfisherapp.presenter.activities.ProductoPresenter;
 import com.example.naturalfisherapp.presenter.interfaces.IProductoPresenter;
@@ -29,6 +30,7 @@ import com.example.naturalfisherapp.view.interfaces.dialog.IAgregarProductoDialo
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -49,6 +51,7 @@ public class AgregarProductoDialogFragment extends DialogFragment implements IAg
     private ProgressDialog progress;
     private LinearLayoutManager linearLayoutManager;
     private IVentaRegistroHolderView ventaRegistroHolderView;
+    private List<ItemVenta> items;
 
     @BindView(R.id.edtBuscador)
     EditText edtBuscador;
@@ -56,10 +59,11 @@ public class AgregarProductoDialogFragment extends DialogFragment implements IAg
     @BindView(R.id.efRvProductos)
     RecyclerView efRvProductos;
 
-    public static AgregarProductoDialogFragment newInstance(FragmentManager fragmentManager, IVentaRegistroHolderView ventaRegistroHolderView){
+    public static AgregarProductoDialogFragment newInstance(FragmentManager fragmentManager, IVentaRegistroHolderView ventaRegistroHolderView, List<ItemVenta> items){
         AgregarProductoDialogFragment agregarProductoDialogFragment = new AgregarProductoDialogFragment();
         agregarProductoDialogFragment.fragmentManager = fragmentManager;
         agregarProductoDialogFragment.ventaRegistroHolderView = ventaRegistroHolderView;
+        agregarProductoDialogFragment.items = items;
 
         return agregarProductoDialogFragment;
     }
@@ -94,7 +98,8 @@ public class AgregarProductoDialogFragment extends DialogFragment implements IAg
         progress = new ProgressDialog(getContext());
 
         if(InformacionSession.getInstance().getProductosConsultados() != null && !InformacionSession.getInstance().getProductosConsultados().isEmpty()){
-            cargarAdapter(InformacionSession.getInstance().getProductosConsultados());
+            List<Producto> productosDisponibles = validarProductosDisponibles(InformacionSession.getInstance().getProductosConsultados(), items);
+            cargarAdapter(productosDisponibles);
         } else {
             productoPresenter.consultarProductos();
         }
@@ -127,7 +132,9 @@ public class AgregarProductoDialogFragment extends DialogFragment implements IAg
      */
     @Override
     public void hideProgress() {
-        progress.dismiss();
+        if(progress != null){
+            progress.dismiss();
+        }
     }
 
     /**
@@ -137,7 +144,9 @@ public class AgregarProductoDialogFragment extends DialogFragment implements IAg
      */
     @Override
     public void dismissDialog() {
-        dialog.dismiss();
+        if( dialog != null ){
+            dialog.dismiss();
+        }
     }
 
     /**
@@ -147,10 +156,66 @@ public class AgregarProductoDialogFragment extends DialogFragment implements IAg
      */
     @Override
     public void cargarAdapter(List<Producto> productos) {
-        linearLayoutManager = new LinearLayoutManager(getActivity());
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        ItemAgregarProductoVentaAdapter itemAgregarProductoVentaAdapter = new ItemAgregarProductoVentaAdapter(getContext(), fragmentManager, getActivity(), productos, ventaRegistroHolderView, this);
-        efRvProductos.setAdapter(itemAgregarProductoVentaAdapter);
-        efRvProductos.setLayoutManager(linearLayoutManager);
+        if(productos != null && !productos.isEmpty()){
+            linearLayoutManager = new LinearLayoutManager(getActivity());
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            ItemAgregarProductoVentaAdapter itemAgregarProductoVentaAdapter = new ItemAgregarProductoVentaAdapter(getContext(), fragmentManager, getActivity(), productos, ventaRegistroHolderView, this);
+            efRvProductos.setAdapter(itemAgregarProductoVentaAdapter);
+            efRvProductos.setLayoutManager(linearLayoutManager);
+        } else {
+            dismissDialog();
+        }
+    }
+
+    /**
+     * -------------- METODOS PROPIOS --------------------------------
+     */
+
+    /**
+     * @Autor RagooS
+     * @Descripccion Metodo permite validar los productos disponibles para agregar a la venta
+     * @Fecha 10/08/21
+     */
+    private List<Producto> validarProductosDisponibles(List<Producto> productosConsultados, List<ItemVenta> items) {
+
+        List<Producto> productosDis = new ArrayList<>(productosConsultados);
+
+        if(items != null && !items.isEmpty()){
+            List<Producto> productosOcupados = extraerProductos(items);
+
+
+            if(productosOcupados != null && !productosOcupados.isEmpty()){
+
+                for(Producto productoOcupado: productosOcupados){
+                    for(int i = 0; i < productosDis.size(); i++){
+                        if(productoOcupado.getCodigo() == productosDis.get(i).getCodigo()){
+                            productosDis.remove(i);
+                        }
+
+                    }
+                }
+            }
+        }
+
+        return productosDis;
+    }
+
+    /**
+     * @Autor RagooS
+     * @Descripccion Metodo permite extraer los productos de los item venta
+     * @Fecha 10/08/21
+     */
+    private List<Producto> extraerProductos(List<ItemVenta> items) {
+
+        List<Producto> productos = new ArrayList<>();
+
+        for( ItemVenta item:items){
+            if(item.getProducto() != null){
+                productos.add(item.getProducto());
+            }
+        }
+
+        return productos;
+
     }
 }

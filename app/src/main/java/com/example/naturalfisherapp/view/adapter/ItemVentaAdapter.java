@@ -42,13 +42,15 @@ public class ItemVentaAdapter extends RecyclerView.Adapter<ItemVentaAdapter.Item
     private android.app.FragmentManager fragmentManager;
     private Activity activity;
     private IVentaRegistroHolderView ventaRegistroHolderView;
+    private String modo;
 
-    public ItemVentaAdapter(List<ItemVenta> items, Context context, android.app.FragmentManager fragmentManager, Activity activity, IVentaRegistroHolderView ventaRegistroHolderView) {
+    public ItemVentaAdapter(List<ItemVenta> items, Context context, android.app.FragmentManager fragmentManager, Activity activity, IVentaRegistroHolderView ventaRegistroHolderView, String modo) {
         this.items = items;
         this.context = context;
         this.fragmentManager = fragmentManager;
         this.activity = activity;
         this.ventaRegistroHolderView = ventaRegistroHolderView;
+        this.modo = modo;
     }
 
     @NonNull
@@ -56,7 +58,7 @@ public class ItemVentaAdapter extends RecyclerView.Adapter<ItemVentaAdapter.Item
     @Override
     public ItemVentaHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_item_venta, parent, false);
-        ItemVentaAdapter.ItemVentaHolder itemVentaHolder = new ItemVentaHolder(view);
+        ItemVentaAdapter.ItemVentaHolder itemVentaHolder = new ItemVentaHolder(view, modo);
         context = parent.getContext();
         return itemVentaHolder;
     }
@@ -74,6 +76,7 @@ public class ItemVentaAdapter extends RecyclerView.Adapter<ItemVentaAdapter.Item
     class ItemVentaHolder extends RecyclerView.ViewHolder{
 
         ItemVenta item;
+        String modo;
 
         @BindView(R.id.nombreProducto)
         TextView nombreProducto;
@@ -96,8 +99,9 @@ public class ItemVentaAdapter extends RecyclerView.Adapter<ItemVentaAdapter.Item
         @BindView(R.id.llBtnAumentarCantidad)
         LinearLayout llBtnAumentarCantidad;
 
-        public ItemVentaHolder(@NonNull @NotNull View itemView) {
+        public ItemVentaHolder(@NonNull @NotNull View itemView, String modo) {
             super(itemView);
+            this.modo = modo;
             ButterKnife.bind(this, itemView);
         }
 
@@ -105,15 +109,33 @@ public class ItemVentaAdapter extends RecyclerView.Adapter<ItemVentaAdapter.Item
             this.item = item;
 
             if(this.item != null){
+
+                if( modo != null && !modo.equals("creacion") ){
+                    llBtnAumentarCantidad.setVisibility(View.GONE);
+                    llBtnReducirCantidad.setVisibility(View.GONE);
+                    cantPeso.setFocusable(false);
+                } else {
+                    llBtnAumentarCantidad.setVisibility(View.VISIBLE);
+                    llBtnReducirCantidad.setVisibility(View.VISIBLE);
+                    cantPeso.setFocusable(true);
+                }
+
                 nombreProducto.setText(item.getProducto().getNombre());
 
                 cantPeso.setText(item.getCant_peso().toString());
 
                 Double precioUni = item.getProducto().getPrecio();
 
-                if(item.getProducto().getUnidad().equals("Lb")){
+                if(item.getProducto().getUnidad().equals("Kg")){
+                    precioKg.setText("$" + Utilidades.puntoMil(precioUni) + " Kg");
+                    precioLb.setText("$" + Utilidades.puntoMil(precioUni / 2) + " Lb");
+
+                } else if(item.getProducto().getUnidad().equals("Lb")){
                     precioKg.setText("$" + Utilidades.puntoMil(precioUni * 2) + " Kg");
                     precioLb.setText("$" + Utilidades.puntoMil(precioUni) + " Lb");
+                } else if(item.getProducto().getUnidad().contains("Uni")){
+                    precioKg.setText("$" + Utilidades.puntoMil(precioUni) + " - " + item.getProducto().getUnidad());
+                    precioLb.setVisibility(View.GONE);
                 }
 
                 total.setText("$" + Utilidades.puntoMil(item.getTotal()));

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.widget.LinearLayout;
 
 import com.example.naturalfisherapp.R;
+import com.example.naturalfisherapp.utilidades.InformacionSession;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,6 +24,9 @@ public class LoginActivity extends AppCompatActivity {
 
     @BindView(R.id.btnEntrar)
     LinearLayout btnEntrar;
+
+    @BindView(R.id.llBtnConfig)
+    LinearLayout llBtnConfig;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +49,18 @@ public class LoginActivity extends AppCompatActivity {
     @OnClick(R.id.btnEntrar)
     void goToEntrar(){
         //goToVentaPrinsipalActivity();
-        goToMenuPrincipalActivity();
+        if(InformacionSession.getInstance().getConfiguracion() != null){
+            goToMenuPrincipalActivity();
+        }
+
     }
+
+    @OnClick(R.id.llBtnConfig)
+    void onClickLlBtnConfig(){
+        goToConfiguracionActivity();
+    }
+
+
 
     /**
      * -------------- METODOS PROPIOS --------------------------------
@@ -70,6 +84,17 @@ public class LoginActivity extends AppCompatActivity {
      */
     private void goToMenuPrincipalActivity() {
         Intent intent = new Intent(this, MenuPrincipalActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    /**
+     * @Descripccion Metodo permite ir a la actividad MenuPrincipal
+     * @Autor RagooS
+     * @Date 04/07/21
+     */
+    private void goToConfiguracionActivity() {
+        Intent intent = new Intent(this, ConfiguracionActivity.class);
         startActivity(intent);
         finish();
     }

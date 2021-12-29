@@ -2,6 +2,7 @@
 
 import android.content.Context;
 
+import com.example.naturalfisherapp.utilidades.InformacionSession;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -21,8 +22,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ClientApiService {
 
     public static Retrofit retrofit = null;
-    public Context context;
-    public final String BASE_URL = "http://192.168.1.2:6111/appi/";
+     public Context context;
+    public static String BASE_URL = "http://"+ InformacionSession.getInstance().getConfiguracion().getIp() + ":"+ InformacionSession.getInstance().getConfiguracion().getPuerto() + "/appi/";
 
     /*public ClientApiService(Context context) {
         this.context = context;
@@ -37,7 +38,6 @@ public class ClientApiService {
         //Configuracion configuracion = SessionDAO.getDataBaseDAO().obtenerConfiguracion();
         //final String BASE_URL = "http://"+configuracion.getIp()+":"+configuracion.getPuerto();
         //   Log.i("BASE_URL", BASE_URL);
-        final String BASE_URL = "http://192.168.1.2:6111/appi/";
         Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 
         //Para aumentar el timeOut un poco mas de lo normal
