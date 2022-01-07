@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import com.example.naturalfisherapp.R;
 import com.example.naturalfisherapp.data.models.Producto;
 import com.example.naturalfisherapp.presenter.activities.ProductoPresenter;
+import com.example.naturalfisherapp.presenter.interfaces.IProductoPresenter;
 import com.example.naturalfisherapp.view.adapter.ItemProductoAdapter;
 import com.example.naturalfisherapp.view.interfaces.IProductoBusquedaFragmentView;
 
@@ -37,7 +38,7 @@ public class ProductoBusquedaFragment extends Fragment implements IProductoBusqu
     private Activity activity;
     private GridLayoutManager gridLayoutManager;
 
-    private ProductoPresenter productoPresenter;
+    private IProductoPresenter productoPresenter;
 
     private ProgressDialog progress;
 

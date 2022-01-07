@@ -2,6 +2,7 @@ package com.example.naturalfisherapp.view.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,8 @@ import com.example.naturalfisherapp.data.models.Producto;
 import com.example.naturalfisherapp.data.models.Venta;
 import com.example.naturalfisherapp.presenter.interfaces.IVentaPresenter;
 import com.example.naturalfisherapp.utilidades.Utilidades;
+import com.example.naturalfisherapp.view.activities.MenuPrincipalActivity;
+import com.example.naturalfisherapp.view.activities.VentaPrinsipalActivity;
 import com.example.naturalfisherapp.view.dialog.AgregarProductoDialogFragment;
 import com.example.naturalfisherapp.view.dialog.ConfirmarDialogFragment;
 import com.example.naturalfisherapp.view.dialog.InformacionDialogFragment;
@@ -167,7 +170,7 @@ public class VentaRegistroAdapter extends RecyclerView.Adapter<VentaRegistroAdap
 
         @OnClick(R.id.btnCancelarVenta)
         void onClickCancelarVenta(){
-
+            goToVentaPrincipalActivity();
         }
 
         @OnClick(R.id.btnConfirmarVenta)
@@ -358,12 +361,23 @@ public class VentaRegistroAdapter extends RecyclerView.Adapter<VentaRegistroAdap
          * @Fecha 27/07/21
          */
         private void goToConfirmarDialog() {
-            ConfirmarDialogFragment confirmarDialogFragment = ConfirmarDialogFragment.newInstance("Confirmar Venta", "Esta seguro que desea confirmar la venta...", this);
+            ConfirmarDialogFragment confirmarDialogFragment = ConfirmarDialogFragment.newInstance("Confirmar Venta", "Esta seguro que desea confirmar la venta...", "CONFIRMAR_VENTA", this);
             confirmarDialogFragment.show(fragmentManager, "ConfirmarVenta");
             android.app.Fragment fragment = activity.getFragmentManager().findFragmentByTag("ConfirmarVenta");
             if (fragment != null) {
                 activity.getFragmentManager().beginTransaction().remove(fragment).commit();
             }
+        }
+
+        /**
+         * @Autor RagooS
+         * @Descripccion Metodo permite ir a la actividad VentaPrincipal
+         * @Fecha 04/01/2022
+         */
+        private void goToVentaPrincipalActivity() {
+            Intent intent = new Intent(activity, VentaPrinsipalActivity.class);
+            activity.startActivity(intent);
+            activity.finish();
         }
 
     }

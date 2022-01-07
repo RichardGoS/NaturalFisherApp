@@ -19,6 +19,7 @@ public class InformacionSession {
     private List<Cliente> clientesConsultados;
     private List<Producto> productosConsultados;
     private Configuracion configuracion;
+    private Cliente clienteNewVenta;
 
     public static InformacionSession getInstance() {
         if (instance == null) {
@@ -53,5 +54,13 @@ public class InformacionSession {
 
     public void setConfiguracion(Configuracion configuracion) {
         this.configuracion = configuracion;
+    }
+
+    public Cliente getClienteNewVenta() {
+        return clienteNewVenta;
+    }
+
+    public void setClienteNewVenta(Cliente clienteNewVenta) {
+        this.clienteNewVenta = clienteNewVenta;
     }
 }

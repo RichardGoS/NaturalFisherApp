@@ -13,6 +13,7 @@ public class Cliente {
     private String nombre;
     private String direccion;
     private String telefono;
+    private String estado;
 
     public Long getId() {
         return id;
@@ -44,5 +45,13 @@ public class Cliente {
 
     public void setTelefono(String telefono) {
         this.telefono = telefono;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 }

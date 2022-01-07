@@ -1,9 +1,11 @@
 package com.example.naturalfisherapp.view.dialog;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -14,11 +16,13 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -30,9 +34,12 @@ import com.example.naturalfisherapp.data.models.Producto;
 import com.example.naturalfisherapp.presenter.activities.ClientePresenter;
 import com.example.naturalfisherapp.presenter.interfaces.IClientePresenter;
 import com.example.naturalfisherapp.utilidades.InformacionSession;
+import com.example.naturalfisherapp.view.activities.VentaPrinsipalActivity;
 import com.example.naturalfisherapp.view.adapter.ItemAutocompleteTextViewAdapter;
 import com.example.naturalfisherapp.view.fragment.DetalleRegistroVentaFragment;
 import com.example.naturalfisherapp.view.interfaces.IAgregarClienteDialogFragmentView;
+import com.example.naturalfisherapp.view.interfaces.dialog.IDetalleClienteDialogFragment;
+import com.example.naturalfisherapp.view.interfaces.fragment.IClienteBusquedaFragmentView;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -54,11 +61,19 @@ public class AgregarClienteDialogFragment extends DialogFragment implements IAgr
 
     private Dialog dialog;
     private IClientePresenter clientePresenter;
+    private IClienteBusquedaFragmentView iClienteBusquedaFragmentView;
+    private IDetalleClienteDialogFragment iDetalleClienteDialogFragment;
     private ProgressDialog progress;
+    private Activity activity;
     private String strNombreCliente = "";
     private Long id;
     private Cliente clienteSeleccionado;
     private FragmentManager fragmentManager;
+    private String titulo;
+    private Cliente clienteActualizar;
+
+    @BindView(R.id.txtTitulo)
+    TextView txtTitulo;
 
     @BindView(R.id.edtNombreCliente)
     AutoCompleteTextView edtNombreCliente;
@@ -76,9 +91,29 @@ public class AgregarClienteDialogFragment extends DialogFragment implements IAgr
     LinearLayout btnAgregarCliente;
 
 
-    public static AgregarClienteDialogFragment newInstance(FragmentManager fragmentManager){
+    public static AgregarClienteDialogFragment newInstance(Activity activity, FragmentManager fragmentManager, String titulo){
         AgregarClienteDialogFragment agregarClienteDialogFragment = new AgregarClienteDialogFragment();
         agregarClienteDialogFragment.fragmentManager = fragmentManager;
+        agregarClienteDialogFragment.titulo = titulo;
+        agregarClienteDialogFragment.activity = activity;
+        return agregarClienteDialogFragment;
+    }
+
+    public static AgregarClienteDialogFragment newInstance(Activity activity, FragmentManager fragmentManager, String titulo, IClienteBusquedaFragmentView iClienteBusquedaFragmentView){
+        AgregarClienteDialogFragment agregarClienteDialogFragment = new AgregarClienteDialogFragment();
+        agregarClienteDialogFragment.fragmentManager = fragmentManager;
+        agregarClienteDialogFragment.titulo = titulo;
+        agregarClienteDialogFragment.iClienteBusquedaFragmentView = iClienteBusquedaFragmentView;
+        agregarClienteDialogFragment.activity = activity;
+        return agregarClienteDialogFragment;
+    }
+
+    public static AgregarClienteDialogFragment newInstance(Activity activity, Cliente clienteActualizar, String titulo, IDetalleClienteDialogFragment iDetalleClienteDialogFragment){
+        AgregarClienteDialogFragment agregarClienteDialogFragment = new AgregarClienteDialogFragment();
+        agregarClienteDialogFragment.titulo = titulo;
+        agregarClienteDialogFragment.activity = activity;
+        agregarClienteDialogFragment.clienteActualizar = clienteActualizar;
+        agregarClienteDialogFragment.iDetalleClienteDialogFragment = iDetalleClienteDialogFragment;
         return agregarClienteDialogFragment;
     }
 
@@ -104,11 +139,27 @@ public class AgregarClienteDialogFragment extends DialogFragment implements IAgr
 
         builder.setView(agregarClienteDialog);
 
+        txtTitulo.setText(titulo);
+
         progress = new ProgressDialog(getContext());
 
-        clientePresenter = new ClientePresenter(getContext(), this);
+        if ( iClienteBusquedaFragmentView != null) {
+            clientePresenter = new ClientePresenter(getContext(), this, iClienteBusquedaFragmentView);
 
-        clientePresenter.consultarClientes();
+        } else if(iDetalleClienteDialogFragment != null){
+            clientePresenter = new ClientePresenter(getContext(), iDetalleClienteDialogFragment, this);
+        } else {
+            clientePresenter = new ClientePresenter(getContext(), this);
+        }
+
+        if(clienteActualizar != null){
+            edtNombreCliente.setText(clienteActualizar.getNombre());
+            edtDireccionCliente.setText(clienteActualizar.getDireccion());
+            edtTelefonoCliente.setText(clienteActualizar.getTelefono());
+        } else {
+            clientePresenter.consultarClientes();
+        }
+
 
         dialog = builder.create();
 
@@ -135,12 +186,8 @@ public class AgregarClienteDialogFragment extends DialogFragment implements IAgr
                 } else {
                     edtNombreCliente.setText(parent.getItemAtPosition(position).toString());
                 }
-
-
-
             }
         });
-
 
         return dialog;
     }
@@ -197,17 +244,18 @@ public class AgregarClienteDialogFragment extends DialogFragment implements IAgr
     private boolean validarCampos() {
         boolean validado = false;
 
-        if(edtNombreCliente.getText().equals("")){
-            System.out.println("Campo Nombre Vacio");
-            validado = false;
-        } else if(edtDireccionCliente.getText().equals("")){
-            System.out.println("Campo Direccion Vacio");
-            validado = false;
-        } else if(edtTelefonoCliente.getText().equals("")){
-            System.out.println("Campo Telefono Vacio");
-            validado = false;
+        if(!edtNombreCliente.getText().toString().equals("")){
+            if(!edtDireccionCliente.getText().toString().equals("")){
+                if(!edtTelefonoCliente.getText().toString().equals("")){
+                    validado = true;
+                } else {
+                    System.out.println("Campo Telefono Vacio");
+                }
+            } else {
+                System.out.println("Campo Direccion Vacio");
+            }
         } else {
-            validado = true;
+            System.out.println("Campo Nombre Vacio");
         }
 
         return  validado;
@@ -220,6 +268,12 @@ public class AgregarClienteDialogFragment extends DialogFragment implements IAgr
      */
     private Cliente extraerDatos() {
         Cliente cliente = new Cliente();
+
+        cliente.setEstado("ACTIVO");
+
+        if(clienteActualizar != null){
+            cliente.setId(clienteActualizar.getId());
+        }
 
         if(edtNombreCliente.getText().toString().contains("-")){
             strNombreCliente = eliminarIdNombre(edtNombreCliente.getText().toString());
@@ -347,11 +401,34 @@ public class AgregarClienteDialogFragment extends DialogFragment implements IAgr
      */
     @Override
     public void goToVentaDetalle(Cliente client) {
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.venta_container, DetalleRegistroVentaFragment.newInstance(getActivity(), true, client));
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+        dismissDialog();
+
+        InformacionSession.getInstance().setClienteNewVenta(client);
+
+        Intent intent = new Intent(getContext(), VentaPrinsipalActivity.class);
+        intent.putExtra("vender", true);
+        startActivity(intent);
+        getActivity().finish();
+
+    }
+
+    @Override
+    public void mostrarMensaje(Cliente cliente, String tipoMensaje, boolean isVenta) {
+
+        if(cliente != null){
+            DetalleClienteDialogFragment detalleClienteDialogFragment = DetalleClienteDialogFragment.newInstance(activity, cliente, this, tipoMensaje);
+            detalleClienteDialogFragment.show(fragmentManager, "DetalleCliente");
+            Fragment fragment = fragmentManager.findFragmentByTag("DetalleCliente");
+            if (fragment != null) {
+                fragmentManager.beginTransaction().remove(fragment).commit();
+            }
+        }
 
         dismissDialog();
+
+        if(!tipoMensaje.contains("ALVERTENCIA") && isVenta){
+            goToVentaDetalle(cliente);
+        }
     }
+
 }

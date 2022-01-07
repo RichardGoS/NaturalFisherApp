@@ -118,8 +118,6 @@ public class ItemProductoAdapter extends RecyclerView.Adapter<ItemProductoAdapte
                     precioProductoLb.setText(unidades[1]);
                 }
 
-
-
             }
         }
     }

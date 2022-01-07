@@ -12,9 +12,7 @@ import com.example.naturalfisherapp.data.models.Cliente;
 public interface IClientePresenter {
 
     void guardarCliente(Cliente cliente);
-
     void consultarClientes();
-
-
-
+    void eliminarCliente(Cliente cliente);
+    void actualizarCliente(Cliente cliente);
 }

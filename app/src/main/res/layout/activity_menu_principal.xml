@@ -55,6 +55,26 @@
 
         <LinearLayout
             android:layout_marginTop="5dp"
+            android:id="@+id/btnClientes"
+            android:gravity="center"
+            android:layout_marginRight="50dp"
+            android:layout_marginLeft="50dp"
+            android:background="@drawable/shape_btn_default"
+            android:layout_width="match_parent"
+            android:layout_height="60dp">
+
+            <TextView
+                android:alpha="0.8"
+                android:textColor="@color/white"
+                android:text="Clientes"
+                android:textSize="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginTop="5dp"
             android:id="@+id/btnBodega"
             android:gravity="center"
             android:layout_marginRight="50dp"

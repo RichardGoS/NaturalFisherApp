@@ -8,6 +8,8 @@ import com.example.naturalfisherapp.retrofit.ClientApiService;
 import com.example.naturalfisherapp.retrofit.InterfaceApiService;
 import com.example.naturalfisherapp.utilidades.InformacionSession;
 import com.example.naturalfisherapp.view.interfaces.IAgregarClienteDialogFragmentView;
+import com.example.naturalfisherapp.view.interfaces.dialog.IDetalleClienteDialogFragment;
+import com.example.naturalfisherapp.view.interfaces.fragment.IClienteBusquedaFragmentView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,9 +30,34 @@ public class ClientePresenter implements IClientePresenter {
     private Context context;
     private InterfaceApiService service;
     private IAgregarClienteDialogFragmentView agregarClienteDialogFragmentView;
+    private IClienteBusquedaFragmentView iClienteBusquedaFragmentView;
+    private IDetalleClienteDialogFragment iDetalleClienteDialogFragment;
 
     public ClientePresenter(Context context, IAgregarClienteDialogFragmentView agregarClienteDialogFragmentView) {
         this.context = context;
+        this.agregarClienteDialogFragmentView = agregarClienteDialogFragmentView;
+    }
+
+    public ClientePresenter(Context context, IAgregarClienteDialogFragmentView agregarClienteDialogFragmentView, IClienteBusquedaFragmentView iClienteBusquedaFragmentView) {
+        this.context = context;
+        this.iClienteBusquedaFragmentView = iClienteBusquedaFragmentView;
+        this.agregarClienteDialogFragmentView = agregarClienteDialogFragmentView;
+    }
+
+    public ClientePresenter(Context context, IClienteBusquedaFragmentView iClienteBusquedaFragmentView) {
+        this.context = context;
+        this.iClienteBusquedaFragmentView = iClienteBusquedaFragmentView;
+    }
+
+    public ClientePresenter(Context context, IClienteBusquedaFragmentView iClienteBusquedaFragmentView, IDetalleClienteDialogFragment iDetalleClienteDialogFragment) {
+        this.context = context;
+        this.iClienteBusquedaFragmentView = iClienteBusquedaFragmentView;
+        this.iDetalleClienteDialogFragment = iDetalleClienteDialogFragment;
+    }
+
+    public ClientePresenter(Context context, IDetalleClienteDialogFragment iDetalleClienteDialogFragment, IAgregarClienteDialogFragmentView agregarClienteDialogFragmentView) {
+        this.context = context;
+        this.iDetalleClienteDialogFragment = iDetalleClienteDialogFragment;
         this.agregarClienteDialogFragmentView = agregarClienteDialogFragmentView;
     }
 
@@ -71,6 +98,7 @@ public class ClientePresenter implements IClientePresenter {
                         System.out.println("Objeto respuesta null");
                         if(agregarClienteDialogFragmentView != null){
                             agregarClienteDialogFragmentView.hideProgress();
+                            validarClienteNuevo(clienteNew, null);
                         }
                     }
                 }
@@ -79,6 +107,7 @@ public class ClientePresenter implements IClientePresenter {
                 public void onFailure(Call<Cliente> call, Throwable t) {
                     if(agregarClienteDialogFragmentView != null){
                         agregarClienteDialogFragmentView.hideProgress();
+                        validarClienteNuevo(clienteNew, null);
                     }
 
                 }
@@ -88,6 +117,7 @@ public class ClientePresenter implements IClientePresenter {
             e.printStackTrace();
             if(agregarClienteDialogFragmentView != null){
                 agregarClienteDialogFragmentView.hideProgress();
+                validarClienteNuevo(clienteNew, null);
             }
         }
 
@@ -104,6 +134,8 @@ public class ClientePresenter implements IClientePresenter {
         try{
             if(agregarClienteDialogFragmentView != null){
                 agregarClienteDialogFragmentView.showProgress("Consultando...");
+            } else if(iClienteBusquedaFragmentView != null){
+                iClienteBusquedaFragmentView.showProgress("Consultando...");
             }
 
             service = ClientApiService.getClient().create(InterfaceApiService.class);
@@ -120,6 +152,8 @@ public class ClientePresenter implements IClientePresenter {
                 public void onFailure(Call<List<Cliente>> call, Throwable t) {
                     if(agregarClienteDialogFragmentView != null){
                         agregarClienteDialogFragmentView.hideProgress();
+                    } else if(iClienteBusquedaFragmentView != null){
+                        iClienteBusquedaFragmentView.hideProgress();
                     }
                 }
             });
@@ -128,9 +162,97 @@ public class ClientePresenter implements IClientePresenter {
             e.printStackTrace();
             if(agregarClienteDialogFragmentView != null){
                 agregarClienteDialogFragmentView.hideProgress();
+            } else if(iClienteBusquedaFragmentView != null){
+                iClienteBusquedaFragmentView.hideProgress();
             }
         }
 
+    }
+
+    /**
+     * @Autor RagooS
+     * @Descripccion Metodo permite eliminar el cliente
+     * @Fecha 03/01/2022
+     */
+    @Override
+    public void eliminarCliente(Cliente cliente) {
+        try{
+            if(iDetalleClienteDialogFragment != null){
+                iDetalleClienteDialogFragment.showProgress("Eliminando...");
+            }
+
+            service = ClientApiService.getClient().create(InterfaceApiService.class);
+
+            Call<Boolean> call = service.eliminarCliente(cliente);
+
+            call.enqueue(new Callback<Boolean>() {
+                @Override
+                public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                    validarClienteEliminado(response.body());
+                }
+
+                @Override
+                public void onFailure(Call<Boolean> call, Throwable t) {
+                    validarClienteEliminado(false);
+                }
+            });
+
+        } catch (Exception e){
+            e.printStackTrace();
+            validarClienteEliminado(false);
+        }
+    }
+
+    /**
+     * @Autor RagooS
+     * @Descripccion Metodo permite actualizar el cliente
+     * @Fecha 07/01/2022
+     */
+    @Override
+    public void actualizarCliente(Cliente cliente) {
+        try {
+
+            if(agregarClienteDialogFragmentView != null){
+                agregarClienteDialogFragmentView.showProgress("Actualizando...");
+            }
+
+            service = ClientApiService.getClient().create(InterfaceApiService.class);
+
+            Call<Cliente> call = service.saveCliente(cliente);
+
+            call.enqueue(new Callback<Cliente>() {
+                @Override
+                public void onResponse(Call<Cliente> call, Response<Cliente> response) {
+                    if(response != null){
+                        if(response.body() != null){
+                            validarClienteNuevo(response.body(), cliente);
+                        }
+                    } else {
+                        System.out.println("Objeto respuesta null");
+                        if(agregarClienteDialogFragmentView != null){
+                            agregarClienteDialogFragmentView.hideProgress();
+                            validarClienteNuevo(cliente, null);
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Cliente> call, Throwable t) {
+                    if(agregarClienteDialogFragmentView != null){
+                        agregarClienteDialogFragmentView.hideProgress();
+                        validarClienteNuevo(cliente, null);
+                    }
+
+                }
+            });
+
+        } catch ( Exception e){
+            e.printStackTrace();
+            if(agregarClienteDialogFragmentView != null){
+                agregarClienteDialogFragmentView.hideProgress();
+                validarClienteNuevo(cliente, null);
+            }
+        }
     }
 
     /**
@@ -144,16 +266,35 @@ public class ClientePresenter implements IClientePresenter {
      */
     private void validarClienteNuevo(Cliente body, Cliente clienteEnviado) {
 
-        if(body.getNombre().equals(clienteEnviado.getNombre())){
-            if(body.getDireccion().equals(clienteEnviado.getDireccion())){
-                if(body.getTelefono().equals(clienteEnviado.getTelefono())){
-                    if(agregarClienteDialogFragmentView != null){
-                        agregarClienteDialogFragmentView.hideProgress();
+        if(clienteEnviado != null){
+            if(body.getNombre().equals(clienteEnviado.getNombre())){
+                if(body.getDireccion().equals(clienteEnviado.getDireccion())){
+                    if(body.getTelefono().equals(clienteEnviado.getTelefono())){
+                        if(agregarClienteDialogFragmentView != null){
+                            agregarClienteDialogFragmentView.hideProgress();
+                        }
+                        if(iClienteBusquedaFragmentView != null){
+                            agregarClienteDialogFragmentView.dismissDialog();
+                            agregarClienteDialogFragmentView.mostrarMensaje(body,"EXITO_CREACION", false);
+                            iClienteBusquedaFragmentView.actualizarDatos();
+                        } else if(iDetalleClienteDialogFragment != null){
+                            agregarClienteDialogFragmentView.dismissDialog();
+                            iDetalleClienteDialogFragment.mostrarMensaje("EXITO_ACTUALIZACION");
+                        }else {
+                            agregarClienteDialogFragmentView.mostrarMensaje(body,"EXITO_CREACION", true);
+                        }
+                        System.out.println("Cliente Guardado Con Exito");
+                    } else {
+                        agregarClienteDialogFragmentView.mostrarMensaje(body,"ALVERTENCIA! No se registro.", false);
                     }
-                    agregarClienteDialogFragmentView.goToVentaDetalle(body);
-                    System.out.println("Cliente Guardado Con Exito");
+                } else {
+                    agregarClienteDialogFragmentView.mostrarMensaje(body,"ALVERTENCIA! No se registro.", false);
                 }
+            } else {
+                agregarClienteDialogFragmentView.mostrarMensaje(body,"ALVERTENCIA! No se registro.", false);
             }
+        } else {
+            agregarClienteDialogFragmentView.mostrarMensaje(body,"ALVERTENCIA! No se registro.", false);
         }
 
     }
@@ -168,16 +309,25 @@ public class ClientePresenter implements IClientePresenter {
         if(response != null){
             if(response.body() != null && !response.body().isEmpty()){
                 InformacionSession.getInstance().setClientesConsultados(response.body());
-                extraerNombresClientes(response.body());
+                if(agregarClienteDialogFragmentView != null){
+                    extraerNombresClientes(response.body());
+                } else if(iClienteBusquedaFragmentView != null){
+                    iClienteBusquedaFragmentView.cargarAdapter(response.body());
+                    iClienteBusquedaFragmentView.hideProgress();
+                }
             } else{
                 if(agregarClienteDialogFragmentView != null){
                     agregarClienteDialogFragmentView.hideProgress();
+                } else if(iClienteBusquedaFragmentView != null){
+                    iClienteBusquedaFragmentView.hideProgress();
                 }
                 System.out.println("Clientes vacios...");
             }
         } else {
             if(agregarClienteDialogFragmentView != null){
                 agregarClienteDialogFragmentView.hideProgress();
+            } else if(iClienteBusquedaFragmentView != null){
+                iClienteBusquedaFragmentView.hideProgress();
             }
             System.out.println("Respuesta Null");
         }
@@ -204,6 +354,40 @@ public class ClientePresenter implements IClientePresenter {
             agregarClienteDialogFragmentView.hideProgress();
         }
 
+    }
+
+    /**
+     * if(tipoMensaje.equals("ERROR_ELIMINACION")){
+     *             txtMensaje.setText("ALVERTENCIA! No se elimino.");
+     *         } else if(tipoMensaje.equals("ERROR_CREACION")){
+     *             txtMensaje.setText("ALVERTENCIA! No se registro.");
+     *         } else if(tipoMensaje.equals("EXITO_CREACION")){
+     *             txtMensaje.setText("Creado Con Éxito!");
+     *         } else if(tipoMensaje.equals("EXITO_ELIMINACION")){
+     *             txtMensaje.setText("Se Elimino Con Exito.");
+     *         }
+     */
+
+    /**
+     * @Autor RagooS
+     * @Descripccion Metodo permite extraer los nombres de los clientes consultados
+     * @Param Boolean variable tipo boolean indica si se elimino o no con exito
+     * @Fecha 03/01/2022
+     */
+    private void validarClienteEliminado(Boolean body) {
+
+        if(body){
+            if(iDetalleClienteDialogFragment != null ){
+                iDetalleClienteDialogFragment.hideProgress();
+                iDetalleClienteDialogFragment.mostrarMensaje("EXITO_ELIMINACION");
+            }
+        } else {
+            if(iDetalleClienteDialogFragment != null ){
+                iDetalleClienteDialogFragment.hideProgress();
+                iDetalleClienteDialogFragment.mostrarMensaje("ERROR_ELIMINACION");
+            }
+            System.out.println("Cliente No Eliminado");
+        }
     }
 
 }

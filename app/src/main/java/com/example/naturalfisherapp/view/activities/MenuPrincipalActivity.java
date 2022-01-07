@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.example.naturalfisherapp.R;
+import com.example.naturalfisherapp.view.dialog.AgregarClienteDialogFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import butterknife.BindView;
@@ -72,6 +73,11 @@ public class MenuPrincipalActivity extends AppCompatActivity {
         goToProductoPrinsipalActivity();
     }
 
+    @OnClick(R.id.btnClientes)
+    void goToClientes(){
+        goToClientesPrinsipalActivity();
+    }
+
     @OnClick(R.id.btnOpenMenu)
     void openMenu(){
         if(isFABOpen){
@@ -123,6 +129,17 @@ public class MenuPrincipalActivity extends AppCompatActivity {
         finish();
     }
 
+    /**
+     * @Descripccion Metodo permite ir a la actividad ClientePrincipal
+     * @Autor RagooS
+     * @Date 29/12/21
+     */
+    void goToClientesPrinsipalActivity(){
+        Intent intent = new Intent(this, ClientePrincipalActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
 
     /**
      * @Descripccion Metodo permite ir a la actividad VentaPrincipal para generar una venta
@@ -130,10 +147,12 @@ public class MenuPrincipalActivity extends AppCompatActivity {
      * @Date 13/07/21
      */
     void goToVender(){
-        Intent intent = new Intent(this, VentaPrinsipalActivity.class);
-        intent.putExtra("vender", true);
-        startActivity(intent);
-        finish();
+        AgregarClienteDialogFragment agregarClienteDialogFragment = AgregarClienteDialogFragment.newInstance(this, getSupportFragmentManager(), "Agregar Cliente a la Venta");
+        agregarClienteDialogFragment.show(getSupportFragmentManager(), "AgregarCliente");
+        android.app.Fragment fragment = getFragmentManager().findFragmentByTag("AgregarCliente");
+        if (fragment != null) {
+            getFragmentManager().beginTransaction().remove(fragment).commit();
+        }
     }
 
     /**
