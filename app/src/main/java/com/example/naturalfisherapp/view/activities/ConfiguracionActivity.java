@@ -4,12 +4,18 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.example.naturalfisherapp.R;
 import com.example.naturalfisherapp.data.system.Configuracion;
+import com.example.naturalfisherapp.sqlite.crud.Insert;
+import com.example.naturalfisherapp.sqlite.crud.Select;
+import com.example.naturalfisherapp.sqlite.crud.Update;
+import com.example.naturalfisherapp.sqlite.tables.ConfiguracionTable;
 import com.example.naturalfisherapp.utilidades.InformacionSession;
+import com.example.naturalfisherapp.utilidades.Utilidades;
 import com.example.naturalfisherapp.view.dialog.InformacionDialogFragment;
 import com.example.naturalfisherapp.view.interfaces.IConfiguracionView;
 
@@ -29,6 +35,7 @@ public class ConfiguracionActivity extends AppCompatActivity implements IConfigu
     private String direccionIp;
     private String puerto;
     private String baseDatos;
+    private boolean existeConfiguracion = false;
 
     @BindView(R.id.edtDireccionIp)
     EditText edtDireccionIp;
@@ -52,6 +59,7 @@ public class ConfiguracionActivity extends AppCompatActivity implements IConfigu
         ButterKnife.bind(this);
 
         setCamposDefault();
+
     }
 
 
@@ -68,7 +76,14 @@ public class ConfiguracionActivity extends AppCompatActivity implements IConfigu
     void onClickConfirmar(){
         if(validarCampos()){
             setDatos();
-            mostrarDialogoInformativo("Exito", "Se ha realizado la configuracion con exito!..");
+            if(InformacionSession.getInstance().getConfiguracion() != null){
+                if(Utilidades.permisosEscritura(this, this)){
+                    if(Utilidades.escribirFicheroConfiguracion(InformacionSession.getInstance().getConfiguracion())){
+                        Log.i("ArchivoCreado:", " Se registro con exito en el archivo");
+                        mostrarDialogoInformativo("Exito", "Se ha realizado la configuracion con exito!..");
+                    }
+                }
+            }
         }
      }
 
@@ -90,6 +105,12 @@ public class ConfiguracionActivity extends AppCompatActivity implements IConfigu
         Configuracion confi = new Configuracion();
         confi.setIp(direccionIp);
         confi.setPuerto(puerto);
+
+        if(existeConfiguracion){
+            Update.actualizar(getApplicationContext(), confi, ConfiguracionTable.TABLA);
+        } else {
+            Insert.registrar(getApplicationContext(), confi, ConfiguracionTable.TABLA);
+        }
         InformacionSession.getInstance().setConfiguracion(confi);
     }
 
@@ -108,10 +129,6 @@ public class ConfiguracionActivity extends AppCompatActivity implements IConfigu
 
         if( direccionIp != null && !direccionIp.equals("") ){
             if( puerto != null && !puerto.equals("") ){
-                /*if( baseDatos != null && !baseDatos.equals("") ){
-                    valido = true;
-                } else {
-                }*/
                 valido = true;
             } else {
                 mostrarDialogoInformativo("Error", "El campo puerto no debe estar vacio!...");
@@ -148,8 +165,41 @@ public class ConfiguracionActivity extends AppCompatActivity implements IConfigu
      * @Descripcion Metodo permite setear informacion default en los campos editext
      */
     private void setCamposDefault() {
-        edtDireccionIp.setText("192.168.1.10");
-        edtPuerto.setText("6111");
+
+        Configuracion configuracion = InformacionSession.getInstance().getConfiguracion();
+
+        if(configuracion == null){
+            configuracion = Select.seleccionarConfiguracion(getApplicationContext());
+
+            if(configuracion != null){
+                edtDireccionIp.setText(configuracion.getIp());
+                edtPuerto.setText(configuracion.getPuerto());
+                existeConfiguracion = true;
+
+                InformacionSession.getInstance().setConfiguracion(configuracion);
+            } else {
+
+                configuracion = Utilidades.leerFicheroConfiguracion();
+
+                if(configuracion != null){
+                    edtDireccionIp.setText(configuracion.getIp());
+                    edtPuerto.setText(configuracion.getPuerto());
+                    existeConfiguracion = true;
+
+                    InformacionSession.getInstance().setConfiguracion(configuracion);
+                } else {
+                    edtDireccionIp.setText("192.000.000.000");
+                    edtPuerto.setText("0000");
+                    existeConfiguracion = false;
+                }
+            }
+        } else {
+            edtDireccionIp.setText(configuracion.getIp());
+            edtPuerto.setText(configuracion.getPuerto());
+            existeConfiguracion = true;
+        }
+
+
     }
 
     /**

@@ -1,7 +1,23 @@
 package com.example.naturalfisherapp.utilidades;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
+import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Environment;
+import android.util.Log;
+
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import com.example.naturalfisherapp.data.system.Configuracion;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -107,5 +123,144 @@ public class Utilidades {
         }
 
         return date;
+    }
+
+    /**
+     * @Autor RagooS
+     * @Fecha 10/01/2022
+     * @Descripccion Metodo permite obtener permisis de escritura sobre la aplicacion
+     * @param context contexto de la aplicacion
+     * @param activity activity de la aplicacion
+     * @return boolean true cuando se obtienen correctamente de lo contrario false
+     */
+    public static boolean permisosEscritura(Context context, Activity activity) {
+        boolean permiso = false;
+
+        int permissionCheck = ContextCompat.checkSelfPermission(
+                context, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            Log.i("Mensaje", "No se tiene permiso para leer.");
+            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 225);
+        } else {
+            Log.i("Mensaje", "Se tiene permiso para leer y escribir!");
+            permiso = true;
+        }
+
+        return permiso;
+    }
+
+    /**
+     * @Autor RagooS
+     * @Fecha 10/01/2022
+     * @Descripccion Metodo permite concatenar una lista de objetos
+     * @param lista objetos a concatenar
+     * @return String con los objetos cocatenados
+     */
+    public static String concatenar(Object [] lista){
+        String cadena = "";
+
+        for(Object item: lista){
+            cadena += item.toString();
+        }
+
+        return cadena;
+    }
+
+    /**
+     * @Autor RagooS
+     * @Fecha 10/01/2022
+     * @Descripccion Metodo permite obtener la informacion del archivo creado
+     * @return Objeto de la clase Configuracion con los datos leidos en el archivo
+     */
+    public static Configuracion leerFicheroConfiguracion(){
+
+        Configuracion confi = new Configuracion();
+
+        try {
+            File carpeta = new File(Environment.getExternalStorageDirectory(),"DataNaturalFisherMarket");
+
+            if(carpeta.exists()){
+                File fileRegistro = new File(carpeta, "configuracion.txt");
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(fileRegistro)));
+                String lei = "";
+
+                while(lei != null){
+                    lei = reader.readLine();
+                    if(lei != null){
+                        if(lei.contains(EnumVariables.DIRECCION_IP_SERVIDOR.getValor())){
+                            String info[] = lei.split(":");
+                            confi.setIp(info[1].trim());
+                        } else if(lei.contains(EnumVariables.PUERTO_SERVIDOR.getValor())){
+                            String info[] = lei.split(":");
+                            confi.setPuerto(info[1].trim());
+                        }
+                    }
+                }
+
+                reader.close();
+            } else {
+                confi = null;
+                Log.i("ERROR", "No existe la carpeta contenedora del archivo de configuracion");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.i("ERROR", "Error al crear el archivo " + e.toString());
+            confi = null;
+        }
+
+        return confi;
+    }
+
+    /**
+     * @Date 10/01/2022
+     * @Descripccion Metodo permite escribir sobre el archivo de configuracion
+     * @param configuracion
+     * @return
+     */
+    public static boolean escribirFicheroConfiguracion(Configuracion configuracion){
+
+        boolean escrito = false;
+
+        if(configuracion != null){
+            try {
+                File carpeta = new File(Environment.getExternalStorageDirectory(),"DataNaturalFisherMarket");
+
+                if(!carpeta.exists()){
+                    carpeta.mkdir();
+                }
+
+                File fileRegistro = new File(carpeta, "configuracion.txt");
+
+                if(fileRegistro.delete()){
+
+                    fileRegistro = new File(carpeta, "configuracion.txt");
+
+                    FileWriter escribir = new FileWriter(fileRegistro.getAbsoluteFile(), true);
+
+                    escribir.append(EnumVariables.DIRECCION_IP_SERVIDOR.getValor()+ ":" + configuracion.getIp() );
+                    escribir.flush();
+                    escribir.append("\n");
+                    escribir.flush();
+                    escribir.append(EnumVariables.PUERTO_SERVIDOR.getValor()+ ":" + configuracion.getPuerto() );
+                    escribir.flush();
+
+                    escrito = true;
+
+                    Log.i("ArchivoCreado:", " Utilidades Se registro con exito en el archivo");
+                } else {
+                    Log.i("ERROR:", " No se elimino el archivo");
+
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.i("ERROR", "Error al crear el archivo " + e.toString());
+            }
+        } else {
+            Log.i("ERROR", "Objeto configuracion NULL");
+        }
+
+        return escrito;
     }
 }

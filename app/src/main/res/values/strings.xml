@@ -1,11 +1,9 @@
 <resources>
-    <string name="app_name">NaturalFisherApp</string>
+    <string name="app_name">NaturalFisherMarcket</string>
 
     <!-- Aplicacion -->
-    <string name="version">NaturalFisherApp V 2.0 RS ED0002 </string>
+    <string name="version">NaturalFisherApp V 2.0 RS ED0003</string>
     <string name="buscador">Buscar</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>
