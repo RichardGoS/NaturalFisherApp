@@ -17,6 +17,7 @@ import androidx.fragment.app.DialogFragment;
 import com.example.naturalfisherapp.R;
 import com.example.naturalfisherapp.view.interfaces.adapter.IVentaRegistroHolderView;
 import com.example.naturalfisherapp.view.interfaces.dialog.IDetalleClienteDialogFragment;
+import com.example.naturalfisherapp.view.interfaces.dialog.IDetalleProductoDialogFragment;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -38,6 +39,7 @@ public class ConfirmarDialogFragment extends DialogFragment {
     private String tipoMensaje = "";
     private IVentaRegistroHolderView ventaRegistroHolderView;
     private IDetalleClienteDialogFragment iDetalleClienteDialogFragment;
+    private IDetalleProductoDialogFragment iDetalleProductoDialogFragment;
 
     @BindView(R.id.txtTitulo)
     TextView txtTitulo;
@@ -69,6 +71,15 @@ public class ConfirmarDialogFragment extends DialogFragment {
         confirmarDialogFragment.descripcion = descripcion;
         confirmarDialogFragment.tipoMensaje = tipoMensaje;
         confirmarDialogFragment.iDetalleClienteDialogFragment = iDetalleClienteDialogFragment;
+        return confirmarDialogFragment;
+    }
+
+    public static ConfirmarDialogFragment newInstance(String titulo, String descripcion, String tipoMensaje, IDetalleProductoDialogFragment iDetalleProductoDialogFragment){
+        ConfirmarDialogFragment confirmarDialogFragment = new ConfirmarDialogFragment();
+        confirmarDialogFragment.titulo = titulo;
+        confirmarDialogFragment.descripcion = descripcion;
+        confirmarDialogFragment.tipoMensaje = tipoMensaje;
+        confirmarDialogFragment.iDetalleProductoDialogFragment = iDetalleProductoDialogFragment;
         return confirmarDialogFragment;
     }
 
@@ -128,6 +139,13 @@ public class ConfirmarDialogFragment extends DialogFragment {
             ventaRegistroHolderView.realizarVenta();
         } else if(iDetalleClienteDialogFragment != null){
             iDetalleClienteDialogFragment.eliminarCliente();
+        } else if(iDetalleProductoDialogFragment != null){
+            if(titulo.contains("Eliminar")){
+                iDetalleProductoDialogFragment.eliminarProducto();
+            } else if(titulo.contains("Actualizar")){
+
+            }
+
         }
         dialog.dismiss();
     }

@@ -1,5 +1,7 @@
 package com.example.naturalfisherapp.presenter.interfaces;
 
+import com.example.naturalfisherapp.data.models.Producto;
+
 /**
  * de RagooS
  * Autor: Richard Gomez O.
@@ -10,5 +12,7 @@ package com.example.naturalfisherapp.presenter.interfaces;
 public interface IProductoPresenter {
 
     void consultarProductos();
+    void guardarProducto(Producto producto);
+    void eliminarProducto(Producto producto);
 
 }

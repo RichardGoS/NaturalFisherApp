@@ -128,8 +128,6 @@ public class DetalleClienteDialogFragment extends DialogFragment implements IDet
 
         telefonoCliente.setText(cliente.getTelefono());
 
-
-
         dialog = builder.create();
 
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -186,14 +184,12 @@ public class DetalleClienteDialogFragment extends DialogFragment implements IDet
      * @Fecha 04/01/2021
      */
     private void mostrarDialogoConfirmacion() {
-
         ConfirmarDialogFragment confirmarDialogFragment = ConfirmarDialogFragment.newInstance("Eliminar Cliente", "Esta seguro que desea eliminar el cliente...", "ALVERTENCIA", this);
         confirmarDialogFragment.show(getFragmentManager(), "EliminarCliente");
         android.app.Fragment fragment = activity.getFragmentManager().findFragmentByTag("EliminarCliente");
         if (fragment != null) {
             activity.getFragmentManager().beginTransaction().remove(fragment).commit();
         }
-
     }
 
 

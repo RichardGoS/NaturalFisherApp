@@ -36,6 +36,29 @@ public interface InterfaceApiService {
     Call<List<Producto>> getProductos();
 
     /**
+     * @Descripcion Metodo permite guardar un Producto
+     * @return Producto objeto tipo Producto
+     */
+    @POST("producto/save/")
+    @Headers({
+            "Accept: application/json",
+            "Content-Type: application/json"
+    })
+    Call<Producto> saveProducto(@Body Producto productoNew);
+
+    /**
+     * @Fecha 16/01/2022
+     * @Descripcion Metodo permite eliminar un producto
+     * @return Boolean true si se elimina con exito de lo contrario false
+     */
+    @POST("producto/eliminar")
+    @Headers({
+            "Accept: application/json",
+            "Content-Type: application/json"
+    })
+    Call<Boolean> eliminarProducto(@Body Producto productoEliminar);
+
+    /**
      * ===================================================== VENTAS =============================================================================================
      */
 
@@ -58,7 +81,7 @@ public interface InterfaceApiService {
             "Accept: application/json",
             "Content-Type: application/json"
     })
-    @GET("venta/ventasRangoDefault")
+    @GET("/appi/venta/ventasRangoDefault")
     Call<List<Venta>> getVentasRangoDefault();
 
     /**
@@ -91,7 +114,7 @@ public interface InterfaceApiService {
      * @Descripcion Metodo permite guardar un cliente
      * @return Cliente objeto tipo cliente
      */
-    @POST("/appi/cliente/save")
+    @POST("cliente/save")
     @Headers({
             "Accept: application/json",
             "Content-Type: application/json"
@@ -114,7 +137,7 @@ public interface InterfaceApiService {
      * @Descripcion Metodo permite eliminar un cliente
      * @return Boolean true si se elimina con exito de lo contrario false
      */
-    @POST("/appi/cliente/eliminar")
+    @POST("cliente/eliminar")
     @Headers({
             "Accept: application/json",
             "Content-Type: application/json"
@@ -125,7 +148,7 @@ public interface InterfaceApiService {
      * @Descripcion Metodo permite actualizar un cliente
      * @return Cliente objeto tipo cliente
      */
-    @POST("/appi/cliente/save")
+    @POST("cliente/save")
     @Headers({
             "Accept: application/json",
             "Content-Type: application/json"

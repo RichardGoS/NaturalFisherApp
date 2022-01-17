@@ -9,16 +9,36 @@ package com.example.naturalfisherapp.data.models;
 
 public class Producto {
 
-    private Long codigo;
+    private Long id;
+    private String codigo;
     private String nombre;
     private String unidad;
     private Double precio;
+    private String estado;
+    private String descripcion_unidad;
+    private Double variacion;
 
-    public Long getCodigo() {
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
+    public String getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(Long codigo) {
+    public void setCodigo(String codigo) {
         this.codigo = codigo;
     }
 
@@ -44,5 +64,21 @@ public class Producto {
 
     public void setPrecio(Double precio) {
         this.precio = precio;
+    }
+
+    public String getDescripcion_unidad() {
+        return descripcion_unidad;
+    }
+
+    public void setDescripcion_unidad(String descripcion_unidad) {
+        this.descripcion_unidad = descripcion_unidad;
+    }
+
+    public Double getVariacion() {
+        return variacion;
+    }
+
+    public void setVariacion(Double variacion) {
+        this.variacion = variacion;
     }
 }

@@ -16,4 +16,5 @@ public interface IProductoBusquedaFragmentView {
     void cargarAdapter(List<Producto> productos);
     void showProgress();
     void hideProgress();
+    void actualizarDatos();
 }

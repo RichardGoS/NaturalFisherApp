@@ -5,15 +5,19 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.naturalfisherapp.R;
 import com.example.naturalfisherapp.data.models.Producto;
 import com.example.naturalfisherapp.utilidades.Utilidades;
+import com.example.naturalfisherapp.view.dialog.DetalleProductoDialogFragment;
+import com.example.naturalfisherapp.view.interfaces.IProductoBusquedaFragmentView;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -21,6 +25,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * de RagooS
@@ -35,12 +40,14 @@ public class ItemProductoAdapter extends RecyclerView.Adapter<ItemProductoAdapte
     private FragmentManager fragmentManager;
     private Activity activity;
     private List<Producto> productos;
+    private IProductoBusquedaFragmentView iProductoBusquedaFragmentView;
 
-    public ItemProductoAdapter(Context context, FragmentManager fragmentManager, Activity activity, List<Producto> productos) {
+    public ItemProductoAdapter(Context context, FragmentManager fragmentManager, Activity activity, List<Producto> productos, IProductoBusquedaFragmentView iProductoBusquedaFragmentView) {
         this.context = context;
         this.fragmentManager = fragmentManager;
         this.activity = activity;
         this.productos = productos;
+        this.iProductoBusquedaFragmentView = iProductoBusquedaFragmentView;
     }
 
     @NonNull
@@ -79,6 +86,9 @@ public class ItemProductoAdapter extends RecyclerView.Adapter<ItemProductoAdapte
         @BindView(R.id.precioProductoKg)
         TextView precioProductoKg;
 
+        @BindView(R.id.llProducto)
+        LinearLayout llProducto;
+
         public ItemProductoHolder(@NonNull @NotNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -97,18 +107,21 @@ public class ItemProductoAdapter extends RecyclerView.Adapter<ItemProductoAdapte
                 } else {
                     nombreProducto.setText(producto.getNombre());
                 }
-
-
                 if(producto.getUnidad().equals("Kg")){
                     precioProductoKg.setText("$" + Utilidades.puntoMil(producto.getPrecio()) + " Kg");
                     precioProductoLb.setText("$" + Utilidades.puntoMil(producto.getPrecio()/2) + " Lb");
                 } else if (producto.getUnidad().equals("Lb")){
                     precioProductoKg.setText("$" + Utilidades.puntoMil(producto.getPrecio()*2)  + " Kg");
                     precioProductoLb.setText("$" + Utilidades.puntoMil(producto.getPrecio())  + " Lb");
-                } else if (producto.getUnidad().equals("Uni")){
-                    precioProductoKg.setText("$" + Utilidades.puntoMil(producto.getPrecio()*2) + " - Unidad");
-                    precioProductoLb.setVisibility(View.GONE);
-                } else if(producto.getUnidad().equals("200 g/12 Unidades")){
+                } else if (producto.getUnidad().equals("Unidad")){
+                    precioProductoKg.setText("$" + Utilidades.puntoMil(producto.getPrecio()) + " - Unidad");
+                    if(producto.getDescripcion_unidad()!=null && !producto.getDescripcion_unidad().equals("")){
+                        precioProductoLb.setText(producto.getDescripcion_unidad());
+                    } else {
+                        precioProductoLb.setVisibility(View.GONE);
+                    }
+
+                } /*else if(producto.getUnidad().equals("200 g/12 Unidades")){
                     String[] unidades = producto.getUnidad().split("/");
                     precioProductoKg.setText("$" + Utilidades.puntoMil(producto.getPrecio()) + " - " + unidades[0]);
                     precioProductoLb.setText(unidades[1]);
@@ -116,9 +129,28 @@ public class ItemProductoAdapter extends RecyclerView.Adapter<ItemProductoAdapte
                     String[] unidades = producto.getUnidad().split("/");
                     precioProductoKg.setText("$" + Utilidades.puntoMil(producto.getPrecio()) + " - " + unidades[0]);
                     precioProductoLb.setText(unidades[1]);
-                }
+                }*/
 
             }
         }
+
+        /**
+         * --------------================ METODOS =================--------------------------------
+         */
+
+        /**
+         * -------------- METODOS ONCLICK BUTTERKNIFE --------------------------------
+         */
+
+        @OnClick(R.id.llProducto)
+        void onClickLlProducto(){
+            DetalleProductoDialogFragment detalleProductoDialogFragment = DetalleProductoDialogFragment.newInstance(activity, producto, iProductoBusquedaFragmentView);
+            detalleProductoDialogFragment.show(fragmentManager, "DetalleProducto");
+            Fragment fragment = fragmentManager.findFragmentByTag("DetalleProducto");
+            if (fragment != null) {
+                fragmentManager.beginTransaction().remove(fragment).commit();
+            }
+        }
+
     }
 }

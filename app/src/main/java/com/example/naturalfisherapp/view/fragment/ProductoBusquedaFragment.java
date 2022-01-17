@@ -19,12 +19,15 @@ import com.example.naturalfisherapp.data.models.Producto;
 import com.example.naturalfisherapp.presenter.activities.ProductoPresenter;
 import com.example.naturalfisherapp.presenter.interfaces.IProductoPresenter;
 import com.example.naturalfisherapp.view.adapter.ItemProductoAdapter;
+import com.example.naturalfisherapp.view.dialog.CrearProductoDialogFragment;
 import com.example.naturalfisherapp.view.interfaces.IProductoBusquedaFragmentView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * de RagooS
@@ -44,6 +47,9 @@ public class ProductoBusquedaFragment extends Fragment implements IProductoBusqu
 
     @BindView(R.id.efRvProductoBusqueda)
     RecyclerView efRvProductoBusqueda;
+
+    @BindView(R.id.btnCrearProducto)
+    FloatingActionButton btnCrearProducto;
 
     public ProductoBusquedaFragment() {
         // Required empty public constructor
@@ -92,7 +98,7 @@ public class ProductoBusquedaFragment extends Fragment implements IProductoBusqu
     public void cargarAdapter(List<Producto> productos) {
         gridLayoutManager = new GridLayoutManager(getActivity(), 3);
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        ItemProductoAdapter adapter = new ItemProductoAdapter(getContext(), fragmentManager, activity, productos);
+        ItemProductoAdapter adapter = new ItemProductoAdapter(getContext(), fragmentManager, activity, productos, this);
         efRvProductoBusqueda.setAdapter(adapter);
         efRvProductoBusqueda.setLayoutManager(gridLayoutManager);
     }
@@ -105,5 +111,37 @@ public class ProductoBusquedaFragment extends Fragment implements IProductoBusqu
     @Override
     public void hideProgress() {
         progress.dismiss();
+    }
+
+    @Override
+    public void actualizarDatos() {
+        productoPresenter.consultarProductos();
+    }
+
+    /**
+     * -------------- METODOS ONCLICK BUTTERKNIFE --------------------------------
+     */
+
+    @OnClick(R.id.btnCrearProducto)
+    void onClickCrearProducto(){
+        goToDialogCrearProducto();
+    }
+
+    /**
+     * -------------- METODOS PROPIOS --------------------------------
+     */
+
+    /**
+     * @Descripccion Metodo permite ir a la dialog crearProducto
+     * @Autor RagooS
+     * @Date 12/01/2022
+     */
+    private void goToDialogCrearProducto() {
+        CrearProductoDialogFragment crearProductoDialogFragment = CrearProductoDialogFragment.newInstance(activity,  "Crear Producto", this);
+        crearProductoDialogFragment.show(getFragmentManager(), "CrearProducto");
+        Fragment fragment = getFragmentManager().findFragmentByTag("CrearProducto");
+        if (fragment != null) {
+            getFragmentManager().beginTransaction().remove(fragment).commit();
+        }
     }
 }
