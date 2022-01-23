@@ -2,6 +2,7 @@ package com.example.naturalfisherapp.view.interfaces;
 
 import com.example.naturalfisherapp.data.models.Venta;
 import com.example.naturalfisherapp.data.models.interpretes.BusquedaVentas;
+import com.example.naturalfisherapp.data.models.interpretes.DetalleVentas;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
 
 public interface VentaBusquedaFragmentView {
 
-    void cargarAdapter(List<BusquedaVentas> busquedaVentas);
+    void cargarDatos(List<BusquedaVentas> busquedaVentas, DetalleVentas detalleVentas);
     void showProgress();
     void hideProgress();
 

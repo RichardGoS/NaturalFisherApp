@@ -5,6 +5,7 @@ import android.content.Context;
 import com.example.naturalfisherapp.data.models.Venta;
 import com.example.naturalfisherapp.data.models.interpretes.BusquedaClientesVenta;
 import com.example.naturalfisherapp.data.models.interpretes.BusquedaVentas;
+import com.example.naturalfisherapp.data.models.interpretes.DetalleVentas;
 import com.example.naturalfisherapp.retrofit.ClientApiService;
 import com.example.naturalfisherapp.retrofit.InterfaceApiService;
 import com.example.naturalfisherapp.utilidades.Utilidades;
@@ -66,11 +67,11 @@ public class ventaPresenter implements com.example.naturalfisherapp.presenter.in
             }
             service = ClientApiService.getClient().create(InterfaceApiService.class);
 
-            Call<List<Venta>> call = service.getVentasRangoDefault();
+            Call<DetalleVentas> call = service.getVentasRangoDefault();
 
-            call.enqueue(new Callback<List<Venta>>() {
+            call.enqueue(new Callback<DetalleVentas>() {
                 @Override
-                public void onResponse(Call<List<Venta>> call, Response<List<Venta>> response) {
+                public void onResponse(Call<DetalleVentas> call, Response<DetalleVentas> response) {
                     if(response != null){
                         organizarRespuesta(response.body());
                         //ventaBusquedaFragmentView.cargarAdapter(response.body());
@@ -81,7 +82,7 @@ public class ventaPresenter implements com.example.naturalfisherapp.presenter.in
                 }
 
                 @Override
-                public void onFailure(Call<List<Venta>> call, Throwable t) {
+                public void onFailure(Call<DetalleVentas> call, Throwable t) {
                     if(ventaBusquedaFragmentView != null){
                         ventaBusquedaFragmentView.hideProgress();
                     }
@@ -192,7 +193,9 @@ public class ventaPresenter implements com.example.naturalfisherapp.presenter.in
      * @Fecha 07/07/21
      * @Param ventas devueltas en la respuesta
      */
-    private void organizarRespuesta(List<Venta> ventas) {
+    private void organizarRespuesta(DetalleVentas detalleVentas) {
+
+        List<Venta> ventas = detalleVentas.getVentas();
 
         List<BusquedaVentas> busquedaVentas = new ArrayList<>();
 
@@ -269,7 +272,7 @@ public class ventaPresenter implements com.example.naturalfisherapp.presenter.in
                 busquedaVentas = ordenarBusquedaPorFecha(busquedaVentas);
                 if(ventaBusquedaFragmentView != null){
                     ventaBusquedaFragmentView.hideProgress();
-                    ventaBusquedaFragmentView.cargarAdapter(busquedaVentas);
+                    ventaBusquedaFragmentView.cargarDatos(busquedaVentas, detalleVentas);
                 }
             }
         } else {

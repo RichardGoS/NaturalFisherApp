@@ -90,6 +90,9 @@ public class ItemVentaBusquedaAdapter extends RecyclerView.Adapter<ItemVentaBusq
         @BindView(R.id.precioVenta)
         TextView precioVenta;
 
+        @BindView(R.id.txtCantVentasDia)
+        TextView txtCantVentasDia;
+
         public ItemVentaBusquedaHolder(@NonNull @NotNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -104,6 +107,7 @@ public class ItemVentaBusquedaAdapter extends RecyclerView.Adapter<ItemVentaBusq
                 precioVenta.setText(Utilidades.puntoMil(this.busquedaVenta.getTotal()));
 
                 if(busquedaVenta.getClientesVenta() != null && !busquedaVenta.getClientesVenta().isEmpty()){
+                    txtCantVentasDia.setText("" + busquedaVenta.getClientesVenta().size());
                     cargarItemsAdapter(busquedaVenta.getClientesVenta());
                 }
                 //precioVenta.setText(Utilidades.puntoMil(venta.getTotal()));

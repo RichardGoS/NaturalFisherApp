@@ -12,11 +12,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.example.naturalfisherapp.R;
 import com.example.naturalfisherapp.data.models.interpretes.BusquedaVentas;
+import com.example.naturalfisherapp.data.models.interpretes.DetalleVentas;
 import com.example.naturalfisherapp.presenter.activities.ventaPresenter;
 import com.example.naturalfisherapp.retrofit.InterfaceApiService;
+import com.example.naturalfisherapp.utilidades.Utilidades;
 import com.example.naturalfisherapp.view.adapter.ItemVentaBusquedaAdapter;
 import com.example.naturalfisherapp.view.interfaces.VentaBusquedaFragmentView;
 
@@ -41,6 +45,18 @@ public class VentaBusquedaFragment extends Fragment implements VentaBusquedaFrag
 
     @BindView(R.id.efRvVentaBusqueda)
     RecyclerView recyclerViewVentaBusqueda;
+
+    @BindView(R.id.totalVentaRango)
+    TextView totalVentaRango;
+
+    @BindView(R.id.fechaRangoVenta)
+    TextView fechaRangoVenta;
+
+    @BindView(R.id.cantRangoVenta)
+    TextView cantRangoVenta;
+
+    @BindView(R.id.llDatosDetalleVenta)
+    LinearLayout llDatosDetalleVenta;
 
     private ProgressDialog progress;
 
@@ -68,6 +84,8 @@ public class VentaBusquedaFragment extends Fragment implements VentaBusquedaFrag
 
         ButterKnife.bind(this, view);
 
+        llDatosDetalleVenta.setVisibility(View.GONE);
+
         progress = new ProgressDialog(getContext());
 
         ventaPresenter = new ventaPresenter(activity.getApplicationContext(), this);
@@ -86,12 +104,17 @@ public class VentaBusquedaFragment extends Fragment implements VentaBusquedaFrag
      */
 
     @Override
-    public void cargarAdapter(List<BusquedaVentas> busquedaVentas) {
+    public void cargarDatos(List<BusquedaVentas> busquedaVentas, DetalleVentas detalleVentas) {
         linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         ItemVentaBusquedaAdapter itemVentaBusquedaAdapter = new ItemVentaBusquedaAdapter(busquedaVentas, getActivity().getApplicationContext(), fragmentManager, getActivity());
         recyclerViewVentaBusqueda.setAdapter(itemVentaBusquedaAdapter);
         recyclerViewVentaBusqueda.setLayoutManager(linearLayoutManager);
+
+        llDatosDetalleVenta.setVisibility(View.VISIBLE);
+        totalVentaRango.setText(Utilidades.puntoMil(detalleVentas.getTotal()));
+        fechaRangoVenta.setText(detalleVentas.getFecha());
+        cantRangoVenta.setText("" + detalleVentas.getCantVentas());
     }
 
     @Override

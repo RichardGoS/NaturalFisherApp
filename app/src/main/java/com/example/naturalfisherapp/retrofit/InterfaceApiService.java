@@ -3,6 +3,7 @@ package com.example.naturalfisherapp.retrofit;
 import com.example.naturalfisherapp.data.models.Cliente;
 import com.example.naturalfisherapp.data.models.Producto;
 import com.example.naturalfisherapp.data.models.Venta;
+import com.example.naturalfisherapp.data.models.interpretes.DetalleVentas;
 
 import java.util.List;
 
@@ -82,7 +83,7 @@ public interface InterfaceApiService {
             "Content-Type: application/json"
     })
     @GET("/appi/venta/ventasRangoDefault")
-    Call<List<Venta>> getVentasRangoDefault();
+    Call<DetalleVentas> getVentasRangoDefault();
 
     /**
      * @Descripcion Metodo permite obtener la lista de ventas en un rango de fecha indicado

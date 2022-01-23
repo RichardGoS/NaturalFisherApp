@@ -1,49 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".view.fragment.VentaBusquedaFragment">
 
     <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
-        <EditText
-            android:focusable="false"
-            android:id="@+id/edtBuscador"
-            android:hint="@string/buscador"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="10dp"
-            android:textColor="@color/azul_primario"
-            android:textSize="12dp"
-            android:paddingLeft="10dp"
-            android:paddingBottom="4dp"
-            android:paddingTop="4dp"
-            android:background="@drawable/edit_text_buscador"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-    </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/efRvVentaBusqueda"
-            android:scrollbars="vertical"
-            android:orientation="vertical"
+        <LinearLayout
+            android:layout_weight="0.01"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        </androidx.recyclerview.widget.RecyclerView>
+            <EditText
+                android:focusable="false"
+                android:id="@+id/edtBuscador"
+                android:hint="@string/buscador"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="10dp"
+                android:textColor="@color/azul_primario"
+                android:textSize="12dp"
+                android:paddingLeft="10dp"
+                android:paddingBottom="4dp"
+                android:paddingTop="4dp"
+                android:background="@drawable/edit_text_buscador"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_weight="0.79"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/efRvVentaBusqueda"
+                android:scrollbars="vertical"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </androidx.recyclerview.widget.RecyclerView>
 
 
-    </RelativeLayout>
+        </RelativeLayout>
 
-</LinearLayout>
+        <LinearLayout
+            android:id="@+id/llDatosDetalleVenta"
+            android:orientation="vertical"
+            android:background="@drawable/shape_pie_azul"
+            android:layout_width="match_parent"
+            android:layout_height="90dp">
+
+            <LinearLayout
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:layout_weight="0.2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_margin="1dp"
+                    android:src="@drawable/ic_date1"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"/>
+
+                <TextView
+                    android:id="@+id/fechaRangoVenta"
+                    android:textSize="14dp"
+                    android:layout_marginLeft="5dp"
+                    android:textColor="@color/white"
+                    android:textStyle="italic"
+                    android:text="22/12/2021 || 22/01/2022"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <ImageView
+                    android:layout_marginLeft="7dp"
+                    android:src="@drawable/ic_numeral"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"/>
+
+                <TextView
+                    android:id="@+id/cantRangoVenta"
+                    android:textSize="14dp"
+                    android:layout_marginLeft="5dp"
+                    android:textColor="@color/white"
+                    android:textStyle="italic"
+                    android:text="100"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:gravity="center"
+                android:layout_weight="0.7"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_margin="1dp"
+                    android:src="@drawable/ic_bolsa_dinero"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"/>
+
+                <TextView
+                    android:id="@+id/totalVentaRango"
+                    android:textSize="30dp"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:text="1.659.478"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
+</RelativeLayout>
