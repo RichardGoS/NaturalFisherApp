@@ -12,6 +12,8 @@ public class ItemVenta {
     private Long id;
     private Producto producto;
     private Double cant_peso;
+    private String usa_precio_distinto;
+    private Double precio_distinto;
     private Double total;
 
     public Long getId() {
@@ -44,5 +46,21 @@ public class ItemVenta {
 
     public void setTotal(Double total) {
         this.total = total;
+    }
+
+    public String getUsa_precio_distinto() {
+        return usa_precio_distinto;
+    }
+
+    public void setUsa_precio_distinto(String usa_precio_distinto) {
+        this.usa_precio_distinto = usa_precio_distinto;
+    }
+
+    public Double getPrecio_distinto() {
+        return precio_distinto;
+    }
+
+    public void setPrecio_distinto(Double precio_distinto) {
+        this.precio_distinto = precio_distinto;
     }
 }

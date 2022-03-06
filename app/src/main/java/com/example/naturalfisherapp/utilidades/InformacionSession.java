@@ -1,5 +1,6 @@
 package com.example.naturalfisherapp.utilidades;
 
+import com.example.naturalfisherapp.data.models.Bodega;
 import com.example.naturalfisherapp.data.models.Cliente;
 import com.example.naturalfisherapp.data.models.Producto;
 import com.example.naturalfisherapp.data.system.Configuracion;
@@ -20,6 +21,8 @@ public class InformacionSession {
     private List<Producto> productosConsultados;
     private Configuracion configuracion;
     private Cliente clienteNewVenta;
+    private List<Bodega> bodegaList;
+    private List<Producto> productosActivosVentas;
 
     public static InformacionSession getInstance() {
         if (instance == null) {
@@ -62,5 +65,21 @@ public class InformacionSession {
 
     public void setClienteNewVenta(Cliente clienteNewVenta) {
         this.clienteNewVenta = clienteNewVenta;
+    }
+
+    public List<Bodega> getBodegaList() {
+        return bodegaList;
+    }
+
+    public void setBodegaList(List<Bodega> bodegaList) {
+        this.bodegaList = bodegaList;
+    }
+
+    public List<Producto> getProductosActivosVentas() {
+        return productosActivosVentas;
+    }
+
+    public void setProductosActivosVentas(List<Producto> productosActivosVentas) {
+        this.productosActivosVentas = productosActivosVentas;
     }
 }

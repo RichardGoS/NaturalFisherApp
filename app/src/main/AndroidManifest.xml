@@ -9,14 +9,15 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
-        android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.NaturalFisherApp">
-        <activity android:name=".view.activities.ClientePrincipalActivity"></activity>
+        android:theme="@style/Theme.NaturalFisherApp"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".view.activities.BodegaPrincipalActivity"></activity>
+        <activity android:name=".view.activities.ClientePrincipalActivity" />
         <activity android:name=".view.activities.ConfiguracionActivity" />
         <activity android:name=".view.activities.ProductoPrincipalActivity" />
         <activity android:name=".view.activities.MenuPrincipalActivity" />

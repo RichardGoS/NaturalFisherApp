@@ -26,5 +26,7 @@ public interface IVentaRegistroHolderView {
 
     void realizarVenta();
 
+    void eliminarItemVenta(Producto producto);
+
     //void mostrarDialogoInformativo(String tipo, String informacion);
 }

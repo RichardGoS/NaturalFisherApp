@@ -12,6 +12,7 @@ import com.example.naturalfisherapp.data.models.Producto;
 public interface IProductoPresenter {
 
     void consultarProductos();
+    void consultarProductosActivosVenta();
     void guardarProducto(Producto producto);
     void eliminarProducto(Producto producto);
 

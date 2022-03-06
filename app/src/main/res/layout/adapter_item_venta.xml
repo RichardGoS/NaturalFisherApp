@@ -7,6 +7,7 @@
     android:layout_height="wrap_content">
 
     <LinearLayout
+        android:padding="2dp"
         android:background="@drawable/borde_item_venta"
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -105,14 +106,21 @@
 
                         </LinearLayout>
 
+
                         <EditText
+                            android:focusableInTouchMode="true"
+                            android:focusable="true"
                             android:inputType="numberDecimal"
                             android:id="@+id/cantPeso"
                             android:textColor="@color/azul_primario"
                             android:textSize="12dp"
                             android:text="0.512"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content">
+
+                            <requestFocus></requestFocus>
+
+                        </EditText>
 
                         <LinearLayout
                             android:id="@+id/llBtnAumentarCantidad"
@@ -148,6 +156,46 @@
                             android:text="$100.000"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:visibility="visible"
+                        android:id="@+id/llBtnItem"
+                        android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <LinearLayout
+                            android:id="@+id/btnCambiarPrecio"
+                            android:layout_margin="2dp"
+                            android:background="@drawable/shape_btn_atras"
+                            android:gravity="center"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp">
+
+                            <ImageView
+                                android:background="@drawable/ic_cambiar_precio"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/btnEliminarItem"
+                            android:layout_margin="2dp"
+                            android:background="@drawable/shape_btn_cancelar"
+                            android:gravity="center"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp">
+
+                            <ImageView
+                                android:background="@drawable/ic_eliminar"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+
+                        </LinearLayout>
+
 
                     </LinearLayout>
 

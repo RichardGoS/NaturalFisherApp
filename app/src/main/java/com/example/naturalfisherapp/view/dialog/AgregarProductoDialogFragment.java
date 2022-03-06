@@ -97,12 +97,13 @@ public class AgregarProductoDialogFragment extends DialogFragment implements IAg
 
         progress = new ProgressDialog(getContext());
 
-        if(InformacionSession.getInstance().getProductosConsultados() != null && !InformacionSession.getInstance().getProductosConsultados().isEmpty()){
-            List<Producto> productosDisponibles = validarProductosDisponibles(InformacionSession.getInstance().getProductosConsultados(), items);
+        if(InformacionSession.getInstance().getProductosActivosVentas() != null && !InformacionSession.getInstance().getProductosActivosVentas().isEmpty()){
+            List<Producto> productosDisponibles = validarProductosDisponibles(InformacionSession.getInstance().getProductosActivosVentas(), items);
             cargarAdapter(productosDisponibles);
         } else {
-            productoPresenter.consultarProductos();
+            productoPresenter.consultarProductosActivosVenta();
         }
+
 
         return dialog;
     }

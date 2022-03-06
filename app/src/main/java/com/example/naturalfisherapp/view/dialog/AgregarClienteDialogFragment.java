@@ -344,7 +344,7 @@ public class AgregarClienteDialogFragment extends DialogFragment implements IAgr
 
 
     /**
-     * -------------- METODOS INTERFACE IClientePresenter --------------------------------
+     * -------------- METODOS INTERFACE IAgregarClienteDialogFragmentView --------------------------------
      */
 
     /**

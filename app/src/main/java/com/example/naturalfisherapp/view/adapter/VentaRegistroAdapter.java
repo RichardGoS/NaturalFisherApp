@@ -220,6 +220,7 @@ public class VentaRegistroAdapter extends RecyclerView.Adapter<VentaRegistroAdap
             item.setProducto(producto);
             item.setCant_peso(0d);
             item.setTotal(0d);
+            item.setUsa_precio_distinto("N");
             if(this.venta.getItems() != null && !this.venta.getItems().isEmpty()){
                 this.venta.getItems().add(item);
             } else {
@@ -291,6 +292,25 @@ public class VentaRegistroAdapter extends RecyclerView.Adapter<VentaRegistroAdap
         @Override
         public void realizarVenta() {
             ventaPresenter.realizarVenta(venta);
+        }
+
+        /**
+         * @Autor RagooS
+         * @Descripccion Metodo permite eliminar el item perteneciente al producto de la venta
+         * @Fecha 24/02/2022
+         */
+        @Override
+        public void eliminarItemVenta(Producto producto) {
+
+            for( int i=0; i < this.venta.getItems().size(); i++){
+                if(this.venta.getItems().get(i).getProducto().getId().equals(producto.getId())){
+                    this.venta.getItems().remove(i);
+                    break;
+                }
+            }
+
+            cargarAdapterItems(this.venta.getItems(), "creacion");
+
         }
 
         /*@Override

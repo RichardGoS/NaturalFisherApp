@@ -17,6 +17,7 @@ public class Producto {
     private String estado;
     private String descripcion_unidad;
     private Double variacion;
+    private String realiza_inventario;
 
     public Long getId() {
         return id;
@@ -80,5 +81,13 @@ public class Producto {
 
     public void setVariacion(Double variacion) {
         this.variacion = variacion;
+    }
+
+    public String getRealiza_inventario() {
+        return realiza_inventario;
+    }
+
+    public void setRealiza_inventario(String realiza_inventario) {
+        this.realiza_inventario = realiza_inventario;
     }
 }

@@ -2,12 +2,18 @@ package com.example.naturalfisherapp.view.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
 import com.example.naturalfisherapp.R;
+import com.example.naturalfisherapp.presenter.activities.BodegaPresenter;
+import com.example.naturalfisherapp.presenter.interfaces.IBodegaPresenter;
+import com.example.naturalfisherapp.utilidades.InformacionSession;
+import com.example.naturalfisherapp.utilidades.UtilidadesView;
 import com.example.naturalfisherapp.view.dialog.AgregarClienteDialogFragment;
+import com.example.naturalfisherapp.view.interfaces.activities.IMenuPrincipalActivitieView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import butterknife.BindView;
@@ -21,9 +27,11 @@ import butterknife.OnClick;
  * Fecha: 04/07/2021
  */
 
-public class MenuPrincipalActivity extends AppCompatActivity {
+public class MenuPrincipalActivity extends AppCompatActivity implements IMenuPrincipalActivitieView {
 
     private boolean isFABOpen = false;
+    private ProgressDialog progress;
+    private IBodegaPresenter bodegaPresenter;
 
     @BindView(R.id.btnAddProducto)
     FloatingActionButton btnAddProducto;
@@ -42,6 +50,14 @@ public class MenuPrincipalActivity extends AppCompatActivity {
         getSupportActionBar().hide();
 
         ButterKnife.bind(this);
+
+        progress = new ProgressDialog(this);
+
+        //bodegaPresenter = new BodegaPresenter(this, this);
+
+        /*if(InformacionSession.getInstance().getBodegaList() == null || InformacionSession.getInstance().getBodegaList().isEmpty()){
+            bodegaPresenter.realizarInventarioGeneral();
+        }*/
 
     }
 
@@ -76,6 +92,11 @@ public class MenuPrincipalActivity extends AppCompatActivity {
     @OnClick(R.id.btnClientes)
     void goToClientes(){
         goToClientesPrinsipalActivity();
+    }
+
+    @OnClick(R.id.btnBodega)
+    void goToBodega(){
+        goToBodegaPrinsipalActivity();
     }
 
     @OnClick(R.id.btnOpenMenu)
@@ -140,6 +161,17 @@ public class MenuPrincipalActivity extends AppCompatActivity {
         finish();
     }
 
+    /**
+     * @Descripccion Metodo permite ir a la actividad BodegaPrincipalActivity
+     * @Autor RagooS
+     * @Date 13/02/2022
+     */
+    void goToBodegaPrinsipalActivity(){
+        Intent intent = new Intent(this, BodegaPrincipalActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
 
     /**
      * @Descripccion Metodo permite ir a la actividad VentaPrincipal para generar una venta
@@ -179,5 +211,20 @@ public class MenuPrincipalActivity extends AppCompatActivity {
         btnAddProducto.animate().translationX(0);
         btnAddVenta.setVisibility(View.GONE);
         btnAddProducto.setVisibility(View.GONE);
+    }
+
+
+    /**
+     * -------------- METODOS INTERFACE IAgregarClienteDialogFragmentView --------------------------------
+     */
+
+    @Override
+    public void showProgress(String mensaje) {
+        progress= ProgressDialog.show(this, mensaje,null);
+    }
+
+    @Override
+    public void hideProgress() {
+        progress.dismiss();
     }
 }

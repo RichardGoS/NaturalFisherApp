@@ -121,6 +121,42 @@ public class ProductoPresenter implements IProductoPresenter {
 
     /**
      * @Autor RagooS
+     * @Descripccion Metodo permite consultar los productos activos para las ventas
+     * @Fecha 22/02/2022
+     */
+    @Override
+    public void consultarProductosActivosVenta() {
+        try {
+
+            service = ClientApiService.getClient().create(InterfaceApiService.class);
+
+            Call<List<Producto>> call = service.getProductosActivosVentas();
+
+            call.enqueue(new Callback<List<Producto>>() {
+                @Override
+                public void onResponse(Call<List<Producto>> call, Response<List<Producto>> response) {
+                    if(response != null && response.body() != null){
+                        InformacionSession.getInstance().setProductosActivosVentas(response.body());
+                        validarProductos(response.body());
+                    } else {
+                        InformacionSession.getInstance().setProductosActivosVentas(response.body());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<Producto>> call, Throwable t) {
+                    InformacionSession.getInstance().setProductosActivosVentas(null);
+                }
+            });
+
+        } catch (Exception e){
+            e.printStackTrace();
+            InformacionSession.getInstance().setProductosActivosVentas(null);
+        }
+    }
+
+    /**
+     * @Autor RagooS
      * @Descripccion Metodo permite consultar los productos
      * @Fecha 13/01/2022
      */

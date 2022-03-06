@@ -31,7 +31,7 @@ import butterknife.OnClick;
  * de RagooS
  * Autor: Richard Gomez O.
  * Para: EmpresaDevelopers.Frontend.NaturalFisher
- * Fecha: 29/112/2021
+ * Fecha: 29/12/2021
  */
 
 public class ItemClienteAdapter extends RecyclerView.Adapter<ItemClienteAdapter.ItemClienteHolder> {

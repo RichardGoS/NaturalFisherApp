@@ -1,5 +1,6 @@
 package com.example.naturalfisherapp.retrofit;
 
+import com.example.naturalfisherapp.data.models.Bodega;
 import com.example.naturalfisherapp.data.models.Cliente;
 import com.example.naturalfisherapp.data.models.Producto;
 import com.example.naturalfisherapp.data.models.Venta;
@@ -26,6 +27,40 @@ import retrofit2.http.Query;
 public interface InterfaceApiService {
 
     /**
+     * ===================================================== INVENTARIO =============================================================================================
+     */
+
+    /**
+     * @Descripcion Metodo permite realizar el inventario de todos los productos activos
+     * @return List<Producto> Lista de productos
+     */
+    @Headers({
+            "Accept: application/json",
+            "Content-Type: application/json"
+    })
+    @GET("inventario/realizarInventario")
+    Call<Boolean> realizarInventarioGeneral();
+
+    /**
+     * ===================================================== BODEGA =============================================================================================
+     */
+
+    /**
+     * @Descripcion Metodo permite obtener la lista de bodegas de cada producto
+     * @return List<Producto> Lista de productos
+     */
+    @Headers({
+            "Accept: application/json",
+            "Content-Type: application/json"
+    })
+    @GET("bodega/bodegas")
+    Call<List<Bodega>> getBodegas();
+
+    /**
+     * ===================================================== PRODUCTOS =============================================================================================
+     */
+
+    /**
      * @Descripcion Metodo permite obtener la lista de productos
      * @return List<Producto> Lista de productos
      */
@@ -35,6 +70,17 @@ public interface InterfaceApiService {
     })
     @GET("producto/productos")
     Call<List<Producto>> getProductos();
+
+    /**
+     * @Descripcion Metodo permite obtener la lista de productos activos para las ventas
+     * @return List<Producto> Lista de productos
+     */
+    @Headers({
+            "Accept: application/json",
+            "Content-Type: application/json"
+    })
+    @GET("producto/productosVenta")
+    Call<List<Producto>> getProductosActivosVentas();
 
     /**
      * @Descripcion Metodo permite guardar un Producto
