@@ -16,6 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.naturalfisherapp.R;
 import com.example.naturalfisherapp.data.models.ItemVenta;
 import com.example.naturalfisherapp.utilidades.Utilidades;
+import com.example.naturalfisherapp.view.dialog.CambiarPrecioItemProductoVentaDialogFragment;
+import com.example.naturalfisherapp.view.interfaces.adapter.IItemVentaHolderView;
 import com.example.naturalfisherapp.view.interfaces.adapter.IVentaRegistroHolderView;
 
 import org.jetbrains.annotations.NotNull;
@@ -40,12 +42,12 @@ public class ItemVentaAdapter extends RecyclerView.Adapter<ItemVentaAdapter.Item
 
     List<ItemVenta> items;
     private Context context;
-    private android.app.FragmentManager fragmentManager;
+    private FragmentManager fragmentManager;
     private Activity activity;
     private IVentaRegistroHolderView ventaRegistroHolderView;
     private String modo;
 
-    public ItemVentaAdapter(List<ItemVenta> items, Context context, android.app.FragmentManager fragmentManager, Activity activity, IVentaRegistroHolderView ventaRegistroHolderView, String modo) {
+    public ItemVentaAdapter(List<ItemVenta> items, Context context, FragmentManager fragmentManager, Activity activity, IVentaRegistroHolderView ventaRegistroHolderView, String modo) {
         this.items = items;
         this.context = context;
         this.fragmentManager = fragmentManager;
@@ -74,7 +76,7 @@ public class ItemVentaAdapter extends RecyclerView.Adapter<ItemVentaAdapter.Item
         return items.size();
     }
 
-    class ItemVentaHolder extends RecyclerView.ViewHolder implements View.OnFocusChangeListener {
+    class ItemVentaHolder extends RecyclerView.ViewHolder implements View.OnFocusChangeListener, IItemVentaHolderView {
 
         ItemVenta item;
         String modo;
@@ -144,17 +146,7 @@ public class ItemVentaAdapter extends RecyclerView.Adapter<ItemVentaAdapter.Item
                     precioUni = item.getProducto().getPrecio();
                 }
 
-                if(item.getProducto().getUnidad().equals("Kg")){
-                    precioKg.setText("$" + Utilidades.puntoMil(precioUni) + " Kg");
-                    precioLb.setText("$" + Utilidades.puntoMil(precioUni / 2) + " Lb");
-
-                } else if(item.getProducto().getUnidad().equals("Lb")){
-                    precioKg.setText("$" + Utilidades.puntoMil(precioUni * 2) + " Kg");
-                    precioLb.setText("$" + Utilidades.puntoMil(precioUni) + " Lb");
-                } else if(item.getProducto().getUnidad().contains("Uni")){
-                    precioKg.setText("$" + Utilidades.puntoMil(precioUni) + " - " + item.getProducto().getUnidad());
-                    precioLb.setVisibility(View.GONE);
-                }
+                setEdtPrecioProducto(precioUni);
 
                 total.setText("$" + Utilidades.puntoMil(item.getTotal()));
             }
@@ -230,6 +222,22 @@ public class ItemVentaAdapter extends RecyclerView.Adapter<ItemVentaAdapter.Item
         @OnClick(R.id.btnCambiarPrecio)
         void onClickLlBtnCambiarPrecio(){
             System.out.println("Cambiar Precio");
+
+            CambiarPrecioItemProductoVentaDialogFragment cambiarPrecioItemProductoVentaDialogFragment = CambiarPrecioItemProductoVentaDialogFragment.newInstance("Cambiar Precio Venta", activity, this);
+            cambiarPrecioItemProductoVentaDialogFragment.show(fragmentManager, "CambiarPrecio");
+            android.app.Fragment fragment = activity.getFragmentManager().findFragmentByTag("CambiarPrecio");
+            if (fragment != null) {
+                activity.getFragmentManager().beginTransaction().remove(fragment).commit();
+            }
+
+        }
+
+        @Override
+        public void onFocusChange(View v, boolean hasFocus) {
+            if(hasFocus){
+                System.out.println("-- Focus CantPeso --");
+            }
+
         }
 
 
@@ -261,17 +269,43 @@ public class ItemVentaAdapter extends RecyclerView.Adapter<ItemVentaAdapter.Item
                 e.printStackTrace();
             }
 
-
             total.setText("$ " + Utilidades.puntoMil(precio));
 
         }
 
-        @Override
-        public void onFocusChange(View v, boolean hasFocus) {
-            if(hasFocus){
-                System.out.println("-- Focus CantPeso --");
+        private void setEdtPrecioProducto(Double precioUni) {
+
+            if(item.getProducto().getUnidad().equals("Kg")){
+                precioKg.setText("$" + Utilidades.puntoMil(precioUni) + " Kg");
+                precioLb.setText("$" + Utilidades.puntoMil(precioUni / 2) + " Lb");
+
+            } else if(item.getProducto().getUnidad().equals("Lb")){
+                precioKg.setText("$" + Utilidades.puntoMil(precioUni * 2) + " Kg");
+                precioLb.setText("$" + Utilidades.puntoMil(precioUni) + " Lb");
+            } else if(item.getProducto().getUnidad().contains("Uni")){
+                precioKg.setText("$" + Utilidades.puntoMil(precioUni) + " - " + item.getProducto().getUnidad());
+                precioLb.setVisibility(View.GONE);
             }
 
+        }
+
+        /**
+         * -------------- METODOS INTERFACE IItemVentaHolderView --------------------------------
+         */
+
+        /**
+         * @Autor RagooS
+         * @Descripccion Metodo permite mostrar barra de carga
+         * @Fecha 06/03/22
+         */
+        @Override
+        public void cambiarPrecio(String precioNew) {
+            this.item.setUsa_precio_distinto("S");
+            this.item.setPrecio_distinto(Double.parseDouble(precioNew.contains(",") ? precioNew.replace(",",".") : precioNew));
+            Double precio = Double.parseDouble(precioNew);
+            setEdtPrecioProducto(precio);
+            calcularPrecio();
+            ventaRegistroHolderView.calcularPrecioTotal();
         }
     }
 }

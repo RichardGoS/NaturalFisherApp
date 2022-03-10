@@ -98,6 +98,48 @@ public class ventaPresenter implements com.example.naturalfisherapp.presenter.in
 
     /**
      * @Autor RagooS
+     * @Descripccion Metodo permite consultar las ventas en el mes
+     * @Fecha 10/03/21
+     */
+    @Override
+    public void consultarVentaEnMes(String fecha) {
+        try {
+            if(ventaBusquedaFragmentView != null){
+                ventaBusquedaFragmentView.showProgress();
+            }
+            service = ClientApiService.getClient().create(InterfaceApiService.class);
+
+            Call<DetalleVentas> call = service.getVentasDetalleMes(fecha);
+
+            call.enqueue(new Callback<DetalleVentas>() {
+                @Override
+                public void onResponse(Call<DetalleVentas> call, Response<DetalleVentas> response) {
+                    if(response != null){
+                        organizarRespuesta(response.body());
+                        //ventaBusquedaFragmentView.cargarAdapter(response.body());
+                        //cargarAdapter(response.body());
+                    } else {
+
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<DetalleVentas> call, Throwable t) {
+                    if(ventaBusquedaFragmentView != null){
+                        ventaBusquedaFragmentView.hideProgress();
+                    }
+                }
+            });
+        } catch (Exception e){
+            e.printStackTrace();
+            if(ventaBusquedaFragmentView != null){
+                ventaBusquedaFragmentView.hideProgress();
+            }
+        }
+    }
+
+    /**
+     * @Autor RagooS
      * @Descripccion Metodo permite consultar las ventas en la fecha
      * @Fecha 08/07/21
      */

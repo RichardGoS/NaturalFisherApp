@@ -132,6 +132,17 @@ public interface InterfaceApiService {
     Call<DetalleVentas> getVentasRangoDefault();
 
     /**
+     * @Descripcion Metodo permite obtener la lista de ventas en el rango de fechas por defecto
+     * @return <List<Venta>> Lista de ventas
+     */
+    @Headers({
+            "Accept: application/json",
+            "Content-Type: application/json"
+    })
+    @GET("/appi/venta/ventasDetalleEnMes")
+    Call<DetalleVentas> getVentasDetalleMes(@Query("fecha") String fecha);
+
+    /**
      * @Descripcion Metodo permite obtener la lista de ventas en un rango de fecha indicado
      * @return <List<Venta>> Lista de ventas
      */

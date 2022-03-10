@@ -17,4 +17,6 @@ public interface IVentaPresenter {
 
     void realizarVenta(Venta venta);
 
+    void consultarVentaEnMes(String fecha);
+
 }

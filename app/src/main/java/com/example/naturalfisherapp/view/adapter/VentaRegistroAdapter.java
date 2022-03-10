@@ -63,7 +63,7 @@ public class VentaRegistroAdapter extends RecyclerView.Adapter<VentaRegistroAdap
     @Override
     public VentaRegistroHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_venta_registro, parent, false);
-        VentaRegistroAdapter.VentaRegistroHolder ventaRegistroHolder = new VentaRegistroHolder(view, ventaPresenter);
+        VentaRegistroAdapter.VentaRegistroHolder ventaRegistroHolder = new VentaRegistroHolder(view, ventaPresenter, fragmentManager);
         context = parent.getContext();
         return ventaRegistroHolder;
     }
@@ -84,6 +84,7 @@ public class VentaRegistroAdapter extends RecyclerView.Adapter<VentaRegistroAdap
         private LinearLayoutManager linearLayoutManager;
         private IVentaPresenter ventaPresenter;
         Activity activity;
+        FragmentManager fragmentManager;
 
         @BindView(R.id.fechaVentaDetalle)
         TextView fechaVentaDetalle;
@@ -121,10 +122,11 @@ public class VentaRegistroAdapter extends RecyclerView.Adapter<VentaRegistroAdap
         @BindView(R.id.btnAgregarProducto)
         FloatingActionButton btnAgregarProducto;
 
-        public VentaRegistroHolder(View itemView, IVentaPresenter ventaPresenter) {
+        public VentaRegistroHolder(View itemView, IVentaPresenter ventaPresenter, FragmentManager fragmentManager) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             this.ventaPresenter = ventaPresenter;
+            this.fragmentManager = fragmentManager;
         }
 
         void bind(final Venta venta, Activity activity){
@@ -203,7 +205,7 @@ public class VentaRegistroAdapter extends RecyclerView.Adapter<VentaRegistroAdap
             //llBotonesProcesos.setVisibility(View.VISIBLE);
 
             linearLayoutManager = new LinearLayoutManager(activity,RecyclerView.VERTICAL,false);
-            android.app.FragmentManager fragmentManager = activity.getFragmentManager();
+            //FragmentManager fragmentManager = activity.getFragmentManager();
             ItemVentaAdapter itemVentaAdapter = new ItemVentaAdapter(items, activity.getApplicationContext(), fragmentManager, activity, this, modo);
             recyclerViewItems.setAdapter(itemVentaAdapter);
             recyclerViewItems.setLayoutManager(linearLayoutManager);

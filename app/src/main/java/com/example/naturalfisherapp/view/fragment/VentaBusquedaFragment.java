@@ -24,6 +24,8 @@ import com.example.naturalfisherapp.utilidades.Utilidades;
 import com.example.naturalfisherapp.view.adapter.ItemVentaBusquedaAdapter;
 import com.example.naturalfisherapp.view.interfaces.VentaBusquedaFragmentView;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -90,7 +92,9 @@ public class VentaBusquedaFragment extends Fragment implements VentaBusquedaFrag
 
         ventaPresenter = new ventaPresenter(activity.getApplicationContext(), this);
 
-        ventaPresenter.consultarVentasDefault();
+        Date fechaActual = new Date();
+        String mesActual = obtenerMesAñoMesFecha(fechaActual);
+        ventaPresenter.consultarVentaEnMes(mesActual);
 
         return view;
     }
@@ -127,6 +131,22 @@ public class VentaBusquedaFragment extends Fragment implements VentaBusquedaFrag
         if(progress != null){
             progress.dismiss();
         }
+    }
+
+    /**
+     * @Autor RagooS
+     * @Descripccion Metodo permite extraer el año y el mes de la fecha
+     * @Fecha 10/03/2022
+     */
+    private String obtenerMesAñoMesFecha(Date fechaActual) {
+        String mesReturn = "";
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM");
+
+        mesReturn = format.format(fechaActual);
+
+        return mesReturn;
+
     }
 
 }

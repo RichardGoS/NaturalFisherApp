@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -33,6 +34,7 @@ import org.jetbrains.annotations.NotNull;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import butterknife.OnItemSelected;
 
@@ -78,6 +80,9 @@ public class CrearProductoDialogFragment extends DialogFragment implements ICrea
 
     @BindView(R.id.edtDescripcionProducto)
     EditText edtDescripcionProducto;
+
+    @BindView(R.id.chbxRealizaInventario)
+    CheckBox chbxRealizaInventario;
 
 
     public static CrearProductoDialogFragment newInstance(Activity activity, String titulo, IProductoBusquedaFragmentView iProductoBusquedaFragmentView){
@@ -129,6 +134,8 @@ public class CrearProductoDialogFragment extends DialogFragment implements ICrea
 
         if(producto != null){
             llenarCampos(producto);
+        } else {
+            chbxRealizaInventario.setChecked(true);
         }
 
         builder.setView(agregarClienteDialog);
@@ -211,6 +218,12 @@ public class CrearProductoDialogFragment extends DialogFragment implements ICrea
             producto = new Producto();
         }
 
+        if(chbxRealizaInventario.isChecked()){
+            producto.setRealiza_inventario("S");
+        } else {
+            producto.setRealiza_inventario("N");
+        }
+
         producto.setNombre(edtNombreProducto.getText().toString());
         producto.setUnidad(unidad);
         producto.setPrecio(Double.parseDouble(edtPrecioProducto.getText().toString().contains(",") ? edtPrecioProducto.getText().toString().replace(",",".") : edtPrecioProducto.getText().toString()));
@@ -232,6 +245,12 @@ public class CrearProductoDialogFragment extends DialogFragment implements ICrea
             } else {
                 unidadSeleccionada = false;
             }
+        }
+
+        if(producto.getRealiza_inventario().equals("S")){
+            chbxRealizaInventario.setChecked(true);
+        } else {
+            chbxRealizaInventario.setChecked(false);
         }
     }
 

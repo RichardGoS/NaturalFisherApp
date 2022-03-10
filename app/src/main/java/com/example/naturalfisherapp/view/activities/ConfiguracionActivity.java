@@ -103,6 +103,7 @@ public class ConfiguracionActivity extends AppCompatActivity implements IConfigu
      */
     private void setDatos() {
         Configuracion confi = new Configuracion();
+        confi.setId(1);
         confi.setIp(direccionIp);
         confi.setPuerto(puerto);
 

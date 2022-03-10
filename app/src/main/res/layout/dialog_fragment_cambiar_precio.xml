@@ -80,7 +80,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/btnAgregarCliente"
+                android:id="@+id/btnAceptar"
                 android:layout_margin="2dp"
                 android:layout_weight="0.6"
                 android:background="@drawable/shape_btn_aceptar"

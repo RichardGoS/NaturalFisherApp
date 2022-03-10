@@ -60,7 +60,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.5"
+                android:layout_weight="0.4"
                 android:orientation="vertical">
 
                 <TextView
@@ -89,7 +89,7 @@
             <LinearLayout
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
-                android:layout_weight="0.1"
+                android:layout_weight="0.2"
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
@@ -113,7 +113,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_weight="0.3"
+                android:layout_weight="0.2"
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
@@ -136,6 +136,29 @@
                     android:layout_marginLeft="5dp"
                     android:textSize="10dp"
                     android:hint="1.0"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_marginTop="2dp"
+                    android:layout_marginLeft="5dp"
+                    android:textSize="12dp"
+                    android:textColor="@color/azul_oscuro"
+                    android:textStyle="normal"
+                    android:text="Inventario"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <CheckBox
+                    android:id="@+id/chbxRealizaInventario"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
 

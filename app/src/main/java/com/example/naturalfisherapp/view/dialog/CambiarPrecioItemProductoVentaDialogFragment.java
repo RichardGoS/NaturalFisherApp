@@ -1,5 +1,6 @@
 package com.example.naturalfisherapp.view.dialog;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -16,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.naturalfisherapp.R;
+import com.example.naturalfisherapp.view.interfaces.adapter.IItemVentaHolderView;
 import com.example.naturalfisherapp.view.interfaces.dialog.ICambiarPrecioItemProductoVentaDialogFragment;
 
 import org.jetbrains.annotations.NotNull;
@@ -36,6 +38,8 @@ public class CambiarPrecioItemProductoVentaDialogFragment extends DialogFragment
     private Dialog dialog;
     private ProgressDialog progress;
     private String titulo;
+    private Activity activity;
+    private IItemVentaHolderView iItemVentaHolderView;
 
     @BindView(R.id.txtTitulo)
     TextView txtTitulo;
@@ -43,7 +47,13 @@ public class CambiarPrecioItemProductoVentaDialogFragment extends DialogFragment
     @BindView(R.id.edtPrecioProducto)
     EditText edtPrecioProducto;
 
-
+    public static CambiarPrecioItemProductoVentaDialogFragment newInstance(String titulo, Activity activity, IItemVentaHolderView iItemVentaHolderView){
+        CambiarPrecioItemProductoVentaDialogFragment cambiarPrecio = new CambiarPrecioItemProductoVentaDialogFragment();
+        cambiarPrecio.activity = activity;
+        cambiarPrecio.titulo = titulo;
+        cambiarPrecio.iItemVentaHolderView = iItemVentaHolderView;
+        return cambiarPrecio;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,7 +70,7 @@ public class CambiarPrecioItemProductoVentaDialogFragment extends DialogFragment
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(getActivity().LAYOUT_INFLATER_SERVICE);
-        View agregarClienteDialog = inflater.inflate(R.layout.dialog_fragment_agregar_cliente, null);
+        View agregarClienteDialog = inflater.inflate(R.layout.dialog_fragment_cambiar_precio, null);
 
         ButterKnife.bind(this, agregarClienteDialog);
 
@@ -88,6 +98,22 @@ public class CambiarPrecioItemProductoVentaDialogFragment extends DialogFragment
     void onClickCancelar(){
         System.out.println("Cancelar");
         dismissDialog();
+    }
+
+    @OnClick(R.id.btnAceptar)
+    void onClickbtnAceptar(){
+
+        System.out.println("Aceptar");
+
+        if(!edtPrecioProducto.getText().toString().equals("")){
+            if(iItemVentaHolderView != null){
+                iItemVentaHolderView.cambiarPrecio(edtPrecioProducto.getText().toString());
+                dismissDialog();
+            }
+        } else {
+            System.out.println("El Campo Precio Esta Vacio");
+        }
+
     }
 
 
