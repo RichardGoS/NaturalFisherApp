@@ -15,17 +15,22 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.naturalfisherapp.R;
 import com.example.naturalfisherapp.data.models.Producto;
+import com.example.naturalfisherapp.data.models.Promocion;
 import com.example.naturalfisherapp.presenter.activities.ProductoPresenter;
 import com.example.naturalfisherapp.presenter.interfaces.IProductoPresenter;
+import com.example.naturalfisherapp.utilidades.EnumVariables;
 import com.example.naturalfisherapp.utilidades.Utilidades;
+import com.example.naturalfisherapp.view.fragment.PromocionDetalleFragment;
 import com.example.naturalfisherapp.view.interfaces.IProductoBusquedaFragmentView;
 import com.example.naturalfisherapp.view.interfaces.dialog.ICrearProductoDialogFragmentView;
 import com.example.naturalfisherapp.view.interfaces.dialog.IDetalleProductoDialogFragment;
@@ -58,6 +63,12 @@ public class CrearProductoDialogFragment extends DialogFragment implements ICrea
     private IDetalleProductoDialogFragment iDetalleProductoDialogFragment;
     private Producto producto;
 
+    /**
+     * Fase III T2  PROMOCIONES
+     */
+    private boolean isPromocion = false;
+    private Promocion promocion;
+
     String[] unidades = new String[] { "Seleccionar", "Kg", "Lb", "Unidad", "Otro" };
 
     @BindView(R.id.spUnidadProducto)
@@ -68,6 +79,9 @@ public class CrearProductoDialogFragment extends DialogFragment implements ICrea
 
     @BindView(R.id.btnCancelar)
     LinearLayout btnCancelar;
+
+    @BindView(R.id.txtTitulo)
+    TextView txtTitulo;
 
     @BindView(R.id.edtNombreProducto)
     EditText edtNombreProducto;
@@ -84,6 +98,15 @@ public class CrearProductoDialogFragment extends DialogFragment implements ICrea
     @BindView(R.id.chbxRealizaInventario)
     CheckBox chbxRealizaInventario;
 
+    @BindView(R.id.llUnidad)
+    LinearLayout llUnidad;
+
+    @BindView(R.id.llVariacion)
+    LinearLayout llVariacion;
+
+    @BindView(R.id.llInventario)
+    LinearLayout llInventario;
+
 
     public static CrearProductoDialogFragment newInstance(Activity activity, String titulo, IProductoBusquedaFragmentView iProductoBusquedaFragmentView){
         CrearProductoDialogFragment crearProductoDialogFragment = new CrearProductoDialogFragment();
@@ -99,6 +122,15 @@ public class CrearProductoDialogFragment extends DialogFragment implements ICrea
         crearProductoDialogFragment.producto = producto;
         crearProductoDialogFragment.titulo = titulo;
         crearProductoDialogFragment.iDetalleProductoDialogFragment = iDetalleProductoDialogFragment;
+        return crearProductoDialogFragment;
+    }
+
+    public static CrearProductoDialogFragment newInstance(boolean isPromocion, Promocion promocion, Activity activity, String titulo){
+        CrearProductoDialogFragment crearProductoDialogFragment = new CrearProductoDialogFragment();
+        crearProductoDialogFragment.activity = activity;
+        crearProductoDialogFragment.titulo = titulo;
+        crearProductoDialogFragment.isPromocion = isPromocion;
+        crearProductoDialogFragment.promocion = promocion;
         return crearProductoDialogFragment;
     }
 
@@ -121,22 +153,30 @@ public class CrearProductoDialogFragment extends DialogFragment implements ICrea
 
         ButterKnife.bind(this, agregarClienteDialog);
 
-        if(iProductoBusquedaFragmentView != null){
-            iProductoPresenter = new ProductoPresenter(getContext(), iProductoBusquedaFragmentView, this);
-        } else if(iDetalleProductoDialogFragment != null){
-            iProductoPresenter = new ProductoPresenter(getContext(),  this, iDetalleProductoDialogFragment);
-        }
-
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_item, unidades);
-
-        spUnidadProducto.setAdapter(adapter);
-
-        if(producto != null){
-            llenarCampos(producto);
+        if(isPromocion){
+            llUnidad.setVisibility(View.GONE);
+            llVariacion.setVisibility(View.GONE);
+            llInventario.setVisibility(View.GONE);
         } else {
-            chbxRealizaInventario.setChecked(true);
+            if(iProductoBusquedaFragmentView != null){
+                iProductoPresenter = new ProductoPresenter(getContext(), iProductoBusquedaFragmentView, this);
+            } else if(iDetalleProductoDialogFragment != null){
+                iProductoPresenter = new ProductoPresenter(getContext(),  this, iDetalleProductoDialogFragment);
+            }
+
+
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_item, unidades);
+
+            spUnidadProducto.setAdapter(adapter);
+
+            if(producto != null){
+                llenarCampos(producto);
+            } else {
+                chbxRealizaInventario.setChecked(true);
+            }
         }
+
+        txtTitulo.setText(titulo);
 
         builder.setView(agregarClienteDialog);
 
@@ -161,10 +201,27 @@ public class CrearProductoDialogFragment extends DialogFragment implements ICrea
         if(validarCampos()){
             System.out.println("Valido");
             setDatos();
-            if(producto != null){
-                iProductoPresenter.guardarProducto(producto);
+
+            if(isPromocion){
+                if(promocion != null){
+                    //iProductoPresenter.guardarProducto(producto);
+                    goToPromocionDetalle();
+                    dismissDialog();
+                }
+            } else {
+                if(producto != null){
+                    iProductoPresenter.guardarProducto(producto);
+                }
             }
+
         }
+    }
+
+    private void goToPromocionDetalle() {
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.producto_container, PromocionDetalleFragment.newInstance(activity, promocion, EnumVariables.MODO_CREACION.getValor()));
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
     @OnClick(R.id.btnCancelar)
@@ -197,12 +254,22 @@ public class CrearProductoDialogFragment extends DialogFragment implements ICrea
 
         boolean valido = false;
 
-        if(!edtNombreProducto.getText().toString().equals("")){
-            if(!edtPrecioProducto.getText().toString().equals("")){
-                if(unidadSeleccionada && !unidad.equals("")){
-                    if(!edtVariacionProducto.getText().toString().equals("")){
-                        if(!edtDescripcionProducto.getText().toString().equals("")){
-                            valido = true;
+        if(isPromocion){
+            if(!edtNombreProducto.getText().toString().equals("")){
+                if(!edtPrecioProducto.getText().toString().equals("")){
+                    if(!edtDescripcionProducto.getText().toString().equals("")){
+                        valido = true;
+                    }
+                }
+            }
+        } else {
+            if(!edtNombreProducto.getText().toString().equals("")){
+                if(!edtPrecioProducto.getText().toString().equals("")){
+                    if(unidadSeleccionada && !unidad.equals("")){
+                        if(!edtVariacionProducto.getText().toString().equals("")){
+                            if(!edtDescripcionProducto.getText().toString().equals("")){
+                                valido = true;
+                            }
                         }
                     }
                 }
@@ -214,24 +281,36 @@ public class CrearProductoDialogFragment extends DialogFragment implements ICrea
 
     private void setDatos() {
 
-        if(producto == null){
-            producto = new Producto();
-        }
+        if(isPromocion){
+            if(promocion == null){
+                promocion = new Promocion();
+            }
 
-        if(chbxRealizaInventario.isChecked()){
-            producto.setRealiza_inventario("S");
+            promocion.setNombre(edtNombreProducto.getText().toString());
+            promocion.setTotal(Double.parseDouble(edtPrecioProducto.getText().toString().contains(",") ? edtPrecioProducto.getText().toString().replace(",",".") : edtPrecioProducto.getText().toString()));
+            promocion.setDescripccion(edtDescripcionProducto.getText().toString().trim());
+
         } else {
-            producto.setRealiza_inventario("N");
-        }
 
-        producto.setNombre(edtNombreProducto.getText().toString());
-        producto.setUnidad(unidad);
-        producto.setPrecio(Double.parseDouble(edtPrecioProducto.getText().toString().contains(",") ? edtPrecioProducto.getText().toString().replace(",",".") : edtPrecioProducto.getText().toString()));
-        producto.setDescripcion_unidad(edtDescripcionProducto.getText().toString().trim());
-        producto.setVariacion(Double.parseDouble(edtVariacionProducto.getText().toString().contains(",") ? edtVariacionProducto.getText().toString().replace(",",".") : edtVariacionProducto.getText().toString()));
+            if(producto == null){
+                producto = new Producto();
+            }
+
+            if(chbxRealizaInventario.isChecked()){
+                producto.setRealiza_inventario("S");
+            } else {
+                producto.setRealiza_inventario("N");
+            }
+            producto.setNombre(edtNombreProducto.getText().toString());
+            producto.setUnidad(unidad);
+            producto.setPrecio(Double.parseDouble(edtPrecioProducto.getText().toString().contains(",") ? edtPrecioProducto.getText().toString().replace(",",".") : edtPrecioProducto.getText().toString()));
+            producto.setDescripcion_unidad(edtDescripcionProducto.getText().toString().trim());
+            producto.setVariacion(Double.parseDouble(edtVariacionProducto.getText().toString().contains(",") ? edtVariacionProducto.getText().toString().replace(",",".") : edtVariacionProducto.getText().toString()));
+
+        }
     }
 
-    private void llenarCampos(Producto producto) {
+    private void llenarCampos(Producto product) {
         edtNombreProducto.setText(producto.getNombre());
         edtPrecioProducto.setText("" + producto.getPrecio());
         edtVariacionProducto.setText("" + producto.getVariacion());

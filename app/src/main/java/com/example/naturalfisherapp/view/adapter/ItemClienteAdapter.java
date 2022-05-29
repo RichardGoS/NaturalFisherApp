@@ -114,7 +114,7 @@ public class ItemClienteAdapter extends RecyclerView.Adapter<ItemClienteAdapter.
         void onClickCliente(){
             System.out.println("Detalle Cliente");
 
-            DetalleClienteDialogFragment detalleClienteDialogFragment = DetalleClienteDialogFragment.newInstance(activity, cliente, iClienteBusquedaFragmentView);
+            DetalleClienteDialogFragment detalleClienteDialogFragment = DetalleClienteDialogFragment.newInstance(activity, this.cliente, iClienteBusquedaFragmentView);
             detalleClienteDialogFragment.show(fragmentManager, "DetalleCliente");
             Fragment fragment = fragmentManager.findFragmentByTag("DetalleCliente");
             if (fragment != null) {

@@ -1,6 +1,7 @@
 package com.example.naturalfisherapp.presenter.interfaces;
 
 import com.example.naturalfisherapp.data.models.Producto;
+import com.example.naturalfisherapp.data.models.Promocion;
 
 /**
  * de RagooS
@@ -13,7 +14,12 @@ public interface IProductoPresenter {
 
     void consultarProductos();
     void consultarProductosActivosVenta();
+    void consultarProductosPromocion();
+
     void guardarProducto(Producto producto);
-    void eliminarProducto(Producto producto);
+    void eliminarProducto(Object producto);
+
+    void guardarPromocion(Promocion promocion);
+    void eliminarPromocion(Promocion promocion);
 
 }

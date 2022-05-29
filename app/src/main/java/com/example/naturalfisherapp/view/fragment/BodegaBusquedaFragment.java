@@ -85,6 +85,16 @@ public class BodegaBusquedaFragment extends Fragment implements IBodegaBusquedaF
      */
 
     /**
+     * -------------- METODOS SOBRESCRITOS --------------------------------
+     */
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        hideProgress();
+    }
+
+    /**
      * -------------- METODOS INTERFACE IBodegaBusquedaFragmentView --------------------------------
      */
 

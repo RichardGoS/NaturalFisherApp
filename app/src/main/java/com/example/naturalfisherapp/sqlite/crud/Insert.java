@@ -46,6 +46,7 @@ public class Insert {
             case ConfiguracionTable
                     .TABLA:
 
+                //Configuracion configuracionAnterior = Select.seleccionarConfiguracion(context);
                 Configuracion config = (Configuracion) param;
 
                 values.put(ConfiguracionTable.CFG_ID, config.getId());

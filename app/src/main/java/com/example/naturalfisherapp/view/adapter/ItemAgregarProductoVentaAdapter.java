@@ -14,9 +14,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.naturalfisherapp.R;
 import com.example.naturalfisherapp.data.models.Producto;
+import com.example.naturalfisherapp.data.models.Promocion;
+import com.example.naturalfisherapp.data.models.interpretes.GeneralProductos;
 import com.example.naturalfisherapp.utilidades.Utilidades;
 import com.example.naturalfisherapp.view.interfaces.adapter.IVentaRegistroHolderView;
 import com.example.naturalfisherapp.view.interfaces.dialog.IAgregarProductoDialogFragment;
+import com.example.naturalfisherapp.view.interfaces.fragment.IPromocionDetalleFragmentView;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -38,11 +41,12 @@ public class ItemAgregarProductoVentaAdapter extends RecyclerView.Adapter<ItemAg
     private Context context;
     private FragmentManager fragmentManager;
     private Activity activity;
-    private List<Producto> productos;
+    private List<GeneralProductos> productos;
     private IVentaRegistroHolderView ventaRegistroHolderView;
     private IAgregarProductoDialogFragment agregarProductoDialogFragment;
+    private IPromocionDetalleFragmentView promocionDetalleFragmentView;
 
-    public ItemAgregarProductoVentaAdapter(Context context, FragmentManager fragmentManager, Activity activity, List<Producto> productos, IVentaRegistroHolderView ventaRegistroHolderView, IAgregarProductoDialogFragment agregarProductoDialogFragment) {
+    public ItemAgregarProductoVentaAdapter(Context context, FragmentManager fragmentManager, Activity activity, List<GeneralProductos> productos, IVentaRegistroHolderView ventaRegistroHolderView, IAgregarProductoDialogFragment agregarProductoDialogFragment) {
         this.context = context;
         this.fragmentManager = fragmentManager;
         this.activity = activity;
@@ -50,6 +54,16 @@ public class ItemAgregarProductoVentaAdapter extends RecyclerView.Adapter<ItemAg
         this.ventaRegistroHolderView = ventaRegistroHolderView;
         this.agregarProductoDialogFragment = agregarProductoDialogFragment;
     }
+
+    public ItemAgregarProductoVentaAdapter(Context context, FragmentManager fragmentManager, Activity activity, List<GeneralProductos> productos, IPromocionDetalleFragmentView promocionDetalleFragmentView, IAgregarProductoDialogFragment agregarProductoDialogFragment) {
+        this.context = context;
+        this.fragmentManager = fragmentManager;
+        this.activity = activity;
+        this.productos = productos;
+        this.promocionDetalleFragmentView = promocionDetalleFragmentView;
+        this.agregarProductoDialogFragment = agregarProductoDialogFragment;
+    }
+
 
     @NonNull
     @NotNull
@@ -63,7 +77,7 @@ public class ItemAgregarProductoVentaAdapter extends RecyclerView.Adapter<ItemAg
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull ItemAgregarProductoVentaHolder holder, int position) {
-        holder.bind(productos.get(position));
+        holder.bind(this.productos.get(position));
     }
 
     @Override
@@ -71,9 +85,11 @@ public class ItemAgregarProductoVentaAdapter extends RecyclerView.Adapter<ItemAg
         return productos.size();
     }
 
-    class ItemAgregarProductoVentaHolder extends RecyclerView.ViewHolder{
+    public class ItemAgregarProductoVentaHolder extends RecyclerView.ViewHolder{
 
-        private Producto producto;
+        private GeneralProductos producto;
+        private Producto product;
+        private Promocion promocion;
 
         @BindView(R.id.txtNombreProducto)
         TextView txtNombreProducto;
@@ -89,26 +105,30 @@ public class ItemAgregarProductoVentaAdapter extends RecyclerView.Adapter<ItemAg
             ButterKnife.bind(this, itemView);
         }
 
-        void bind(Producto producto){
+        void bind(GeneralProductos producto){
             this.producto = producto;
 
-            if(this.producto != null){
-                txtNombreProducto.setText(producto.getNombre());
-                if(producto.getUnidad().equals("Kg")){
-                    txtPrecio.setText(Utilidades.cortarCadena("$" + Utilidades.puntoMil(producto.getPrecio()) + " Kg - $" + Utilidades.puntoMil(producto.getPrecio()/2) + " Lb", 23));
-                } else if (producto.getUnidad().equals("Lb")){
-                    txtPrecio.setText(Utilidades.cortarCadena("$" + Utilidades.puntoMil(producto.getPrecio()*2)  + " Kg - " + "$" + Utilidades.puntoMil(producto.getPrecio())  + " Lb", 23));
-                } else if (producto.getUnidad().equals("Uni")){
-                    txtPrecio.setText(Utilidades.cortarCadena("$" + Utilidades.puntoMil(producto.getPrecio()*2) + " - Unidad", 23));
-                } else if(producto.getUnidad().equals("200 g/12 Unidades")){
-                    String[] unidades = producto.getUnidad().split("/");
-                    txtPrecio.setText(Utilidades.cortarCadena("$" + Utilidades.puntoMil(producto.getPrecio()) + " - " + unidades[0] + " - " + unidades[1], 23));
-                } else if(producto.getUnidad().equals("400 g/12 Unidades")){
-                    String[] unidades = producto.getUnidad().split("/");
-                    txtPrecio.setText(Utilidades.cortarCadena("$" + Utilidades.puntoMil(producto.getPrecio()) + " - " + unidades[0] + " - " + unidades[1], 23));
+            if(producto != null){
+                if(producto.getProducto() != null){
+                    product = producto.getProducto();
+
+                    txtNombreProducto.setText(product.getNombre());
+
+                    if(product.getUnidad().equals("Kg")){
+                        txtPrecio.setText(Utilidades.cortarCadena("$" + Utilidades.puntoMil(product.getPrecio()) + " Kg - $" + Utilidades.puntoMil(product.getPrecio()/2) + " Lb", 23));
+                    } else if (product.getUnidad().equals("Lb")){
+                        txtPrecio.setText(Utilidades.cortarCadena("$" + Utilidades.puntoMil(product.getPrecio()*2)  + " Kg - " + "$" + Utilidades.puntoMil(product.getPrecio())  + " Lb", 23));
+                    } else if (product.getUnidad().equals("Unidad")){
+                        txtPrecio.setText(Utilidades.cortarCadena("$" + Utilidades.puntoMil(product.getPrecio()) + " - Unidad", 23));
+                    }
+
+                } else if(producto.getPromocion() != null){
+                    promocion = producto.getPromocion();
+
+                    txtNombreProducto.setText(promocion.getNombre());
+                    txtPrecio.setText(Utilidades.cortarCadena("$" + Utilidades.puntoMil(promocion.getTotal()) + " - Unidad", 23));
                 }
             }
-
         }
 
         /**
@@ -121,9 +141,26 @@ public class ItemAgregarProductoVentaAdapter extends RecyclerView.Adapter<ItemAg
 
         @OnClick(R.id.llItemProducto)
         void OnClickProcuto(){
-            System.out.println("Producto Agregar...." + producto.getNombre());
 
-            ventaRegistroHolderView.agregarProducto(producto);
+            if( ventaRegistroHolderView != null ){
+                ventaRegistroHolderView.agregarProducto(producto);
+            } else if( promocionDetalleFragmentView != null ){
+                System.out.println("Producto Agregar...." + product.getNombre());
+                if(product != null){
+                    promocionDetalleFragmentView.agregarProducto(product);
+                }
+            }
+            /*if(this.object.getClass() == Producto.class){
+                Producto producto = (Producto) this.object;
+
+                System.out.println("Producto Agregar...." + producto.getNombre());
+
+                if( ventaRegistroHolderView != null ){
+                    ventaRegistroHolderView.agregarProducto(producto);
+                } else if( promocionDetalleFragmentView != null ){
+                    promocionDetalleFragmentView.agregarProducto(producto);
+                }
+            }*/
             agregarProductoDialogFragment.dismissDialog();
 
         }

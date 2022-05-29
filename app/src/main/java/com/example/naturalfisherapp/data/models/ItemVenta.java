@@ -15,6 +15,9 @@ public class ItemVenta {
     private String usa_precio_distinto;
     private Double precio_distinto;
     private Double total;
+    private PromocionVenta promocion_venta;
+
+    private int codigoItemApp;
 
     public Long getId() {
         return id;
@@ -62,5 +65,21 @@ public class ItemVenta {
 
     public void setPrecio_distinto(Double precio_distinto) {
         this.precio_distinto = precio_distinto;
+    }
+
+    public PromocionVenta getPromocionVenta() {
+        return promocion_venta;
+    }
+
+    public void setPromocionVenta(PromocionVenta promocionVenta) {
+        this.promocion_venta = promocionVenta;
+    }
+
+    public int getCodigoItemApp() {
+        return codigoItemApp;
+    }
+
+    public void setCodigoItemApp(int codigoItemApp) {
+        this.codigoItemApp = codigoItemApp;
     }
 }

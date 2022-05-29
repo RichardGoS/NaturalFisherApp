@@ -115,6 +115,6 @@
 
     </LinearLayout>
 
-    <include  layout="@layout/menu_floating_button"/>
+    <include layout="@layout/menu_floating_button" />
 
 </RelativeLayout>

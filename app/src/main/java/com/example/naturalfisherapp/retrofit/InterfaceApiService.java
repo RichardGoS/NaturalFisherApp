@@ -3,8 +3,10 @@ package com.example.naturalfisherapp.retrofit;
 import com.example.naturalfisherapp.data.models.Bodega;
 import com.example.naturalfisherapp.data.models.Cliente;
 import com.example.naturalfisherapp.data.models.Producto;
+import com.example.naturalfisherapp.data.models.Promocion;
 import com.example.naturalfisherapp.data.models.Venta;
 import com.example.naturalfisherapp.data.models.interpretes.DetalleVentas;
+import com.example.naturalfisherapp.data.models.interpretes.ProductosTransporte;
 
 import java.util.List;
 
@@ -27,12 +29,38 @@ import retrofit2.http.Query;
 public interface InterfaceApiService {
 
     /**
+     * ===================================================== PROMOCION =============================================================================================
+     */
+
+    /**
+     * @Descripcion Metodo permite guardar un Producto
+     * @return Producto objeto tipo Producto
+     */
+    @POST("promocion/save/")
+    @Headers({
+            "Accept: application/json",
+            "Content-Type: application/json"
+    })
+    Call<Promocion> savePromocion(@Body Promocion promocionNew);
+
+    /**
+     * @Descripcion Metodo permite eliminar una promocion
+     * @return boolean true correcto de lo contrario false
+     */
+    @POST("promocion/delete/")
+    @Headers({
+            "Accept: application/json",
+            "Content-Type: application/json"
+    })
+    Call<Boolean> eliminarPromocion(@Body Promocion promocion);
+
+    /**
      * ===================================================== INVENTARIO =============================================================================================
      */
 
     /**
      * @Descripcion Metodo permite realizar el inventario de todos los productos activos
-     * @return List<Producto> Lista de productos
+     * @return boolean true correcto de lo contrario false
      */
     @Headers({
             "Accept: application/json",
@@ -62,25 +90,36 @@ public interface InterfaceApiService {
 
     /**
      * @Descripcion Metodo permite obtener la lista de productos
-     * @return List<Producto> Lista de productos
+     * @return List<ProductosTransporte> Lista de productos
      */
     @Headers({
             "Accept: application/json",
             "Content-Type: application/json"
     })
     @GET("producto/productos")
-    Call<List<Producto>> getProductos();
+    Call<ProductosTransporte> getProductos();
 
     /**
      * @Descripcion Metodo permite obtener la lista de productos activos para las ventas
-     * @return List<Producto> Lista de productos
+     * @return List<ProductosTransporte> Lista de productos
      */
     @Headers({
             "Accept: application/json",
             "Content-Type: application/json"
     })
     @GET("producto/productosVenta")
-    Call<List<Producto>> getProductosActivosVentas();
+    Call<ProductosTransporte> getProductosActivosVentas();
+
+    /**
+     * @Descripcion Metodo permite obtener la lista de productos activos para la promocion
+     * @return List<Producto> Lista de productos
+     */
+    @Headers({
+            "Accept: application/json",
+            "Content-Type: application/json"
+    })
+    @GET("producto/productosPromoVenta")
+    Call<List<Producto>> getProductosPromoVentas();
 
     /**
      * @Descripcion Metodo permite guardar un Producto

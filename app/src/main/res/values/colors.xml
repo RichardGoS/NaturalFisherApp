@@ -15,6 +15,7 @@
     <color name="azul_bajo">#E9F1FF</color>
     <color name="azul_medio">#99BCFA</color>
     <color name="transparente">#00FFFFFF</color>
+    <color name="verde">#85FF0A</color>
 
     <color name="rojo">#FE4E70</color>
 </resources>

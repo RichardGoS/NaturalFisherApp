@@ -161,7 +161,7 @@ public class BodegaPresenter implements IBodegaPresenter {
             if(iBodegaBusquedaFragmentView != null){
                 iBodegaBusquedaFragmentView.hideProgress();
                 consultarBodega();
-                InformacionSession.getInstance().setProductosActivosVentas(null);
+                InformacionSession.getInstance().setProductosActivosVenta(null);
             }
         } else {
             if(iBodegaBusquedaFragmentView != null){

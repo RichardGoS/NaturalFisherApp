@@ -1,6 +1,7 @@
 package com.example.naturalfisherapp.view.interfaces.dialog;
 
 import com.example.naturalfisherapp.data.models.Producto;
+import com.example.naturalfisherapp.data.models.interpretes.GeneralProductos;
 
 import java.util.List;
 
@@ -16,6 +17,6 @@ public interface IAgregarProductoDialogFragment {
     void showProgress(String mensaje);
     void hideProgress();
     void dismissDialog();
-    void cargarAdapter(List<Producto> productos);
+    void cargarAdapter(List<GeneralProductos> productos);
 
 }

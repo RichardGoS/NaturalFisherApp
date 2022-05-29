@@ -9,11 +9,29 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:visibility="visible"
-        android:id="@+id/btnCrearProducto"
+        android:id="@+id/btnMenuCreacion"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="40dp"
         android:layout_width="60dp"
         android:layout_height="60dp"
         app:backgroundTint="@color/azul_oscuro"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:visibility="gone"
+        android:id="@+id/btnCrearProducto"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="40dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        app:backgroundTint="@color/azul_medio"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:visibility="gone"
+        android:id="@+id/btnCrearPromocion"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="40dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        app:backgroundTint="@color/azul_bajo"/>
 
 </RelativeLayout>

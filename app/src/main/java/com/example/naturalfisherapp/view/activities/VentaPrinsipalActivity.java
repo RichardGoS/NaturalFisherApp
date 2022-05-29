@@ -16,6 +16,7 @@ import com.example.naturalfisherapp.data.models.Cliente;
 import com.example.naturalfisherapp.data.models.Venta;
 import com.example.naturalfisherapp.retrofit.ClientApiService;
 import com.example.naturalfisherapp.retrofit.InterfaceApiService;
+import com.example.naturalfisherapp.utilidades.EnumVariables;
 import com.example.naturalfisherapp.utilidades.InformacionSession;
 import com.example.naturalfisherapp.view.adapter.VentaRegistroAdapter;
 import com.example.naturalfisherapp.view.dialog.AgregarClienteDialogFragment;
@@ -81,8 +82,20 @@ public class VentaPrinsipalActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        goToMenuPrincipal();
+        //super.onBackPressed();
+        if(InformacionSession.getInstance().getFragmentActual() != null){
+            if(InformacionSession.getInstance().getFragmentActual().equals(EnumVariables.FRAGMENT_VENTA_BUSQUEDA.getValor())){
+                InformacionSession.getInstance().setDetalleVentas(null);
+                InformacionSession.getInstance().setVentasConsultadas(null);
+
+                InformacionSession.getInstance().setProductosActivosVenta(null);
+                goToMenuPrincipal();
+            } else if(InformacionSession.getInstance().getFragmentActual().equals(EnumVariables.FRAGMENT_DETALLE_REGISTRO_VENTA.getValor())){
+                goToVentaBusqueda();
+            }
+        } else {
+            goToMenuPrincipal();
+        }
     }
 
     /**
@@ -118,7 +131,7 @@ public class VentaPrinsipalActivity extends AppCompatActivity {
      */
     private void goToVentaBusqueda() {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.venta_container, VentaBusquedaFragment.newInstance(this));
+        fragmentTransaction.replace(R.id.venta_container, VentaBusquedaFragment.newInstance(this, getSupportFragmentManager()));
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }

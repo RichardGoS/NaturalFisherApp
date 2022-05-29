@@ -18,6 +18,7 @@ import com.example.naturalfisherapp.R;
 import com.example.naturalfisherapp.view.interfaces.adapter.IVentaRegistroHolderView;
 import com.example.naturalfisherapp.view.interfaces.dialog.IDetalleClienteDialogFragment;
 import com.example.naturalfisherapp.view.interfaces.dialog.IDetalleProductoDialogFragment;
+import com.example.naturalfisherapp.view.interfaces.fragment.IPromocionDetalleFragmentView;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -40,6 +41,7 @@ public class ConfirmarDialogFragment extends DialogFragment {
     private IVentaRegistroHolderView ventaRegistroHolderView;
     private IDetalleClienteDialogFragment iDetalleClienteDialogFragment;
     private IDetalleProductoDialogFragment iDetalleProductoDialogFragment;
+    private IPromocionDetalleFragmentView iPromocionDetalleFragmentView;
 
     @BindView(R.id.txtTitulo)
     TextView txtTitulo;
@@ -83,6 +85,15 @@ public class ConfirmarDialogFragment extends DialogFragment {
         return confirmarDialogFragment;
     }
 
+    public static ConfirmarDialogFragment newInstance(String titulo, String descripcion, String tipoMensaje, IPromocionDetalleFragmentView iPromocionDetalleFragmentView){
+        ConfirmarDialogFragment confirmarDialogFragment = new ConfirmarDialogFragment();
+        confirmarDialogFragment.titulo = titulo;
+        confirmarDialogFragment.descripcion = descripcion;
+        confirmarDialogFragment.tipoMensaje = tipoMensaje;
+        confirmarDialogFragment.iPromocionDetalleFragmentView = iPromocionDetalleFragmentView;
+        return confirmarDialogFragment;
+    }
+
     @Override
     public void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,6 +119,8 @@ public class ConfirmarDialogFragment extends DialogFragment {
             llImageConfirmacion.setBackgroundResource(R.drawable.ic_warning);
         } else if(tipoMensaje.equals("CONFIRMAR_VENTA")){
             llImageConfirmacion.setBackgroundResource(R.drawable.ic_confirmarcompra);
+        } else if(tipoMensaje.equals("CONFIRMAR_PROMOCION")){
+            llImageConfirmacion.setBackgroundResource(R.drawable.ic_mega_promocion);
         }
 
         builder.setView(agregarProductoDialog);
@@ -146,6 +159,8 @@ public class ConfirmarDialogFragment extends DialogFragment {
 
             }
 
+        } else if(iPromocionDetalleFragmentView != null){
+            iPromocionDetalleFragmentView.crearPromocion();
         }
         dialog.dismiss();
     }

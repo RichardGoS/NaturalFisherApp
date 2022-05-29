@@ -1,6 +1,7 @@
 package com.example.naturalfisherapp.presenter.activities;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.example.naturalfisherapp.data.models.Venta;
 import com.example.naturalfisherapp.data.models.interpretes.BusquedaClientesVenta;
@@ -8,6 +9,7 @@ import com.example.naturalfisherapp.data.models.interpretes.BusquedaVentas;
 import com.example.naturalfisherapp.data.models.interpretes.DetalleVentas;
 import com.example.naturalfisherapp.retrofit.ClientApiService;
 import com.example.naturalfisherapp.retrofit.InterfaceApiService;
+import com.example.naturalfisherapp.utilidades.InformacionSession;
 import com.example.naturalfisherapp.utilidades.Utilidades;
 import com.example.naturalfisherapp.view.interfaces.IDetalleRegistroVentaFragmentView;
 import com.example.naturalfisherapp.view.interfaces.VentaBusquedaFragmentView;
@@ -72,27 +74,18 @@ public class ventaPresenter implements com.example.naturalfisherapp.presenter.in
             call.enqueue(new Callback<DetalleVentas>() {
                 @Override
                 public void onResponse(Call<DetalleVentas> call, Response<DetalleVentas> response) {
-                    if(response != null){
-                        organizarRespuesta(response.body());
-                        //ventaBusquedaFragmentView.cargarAdapter(response.body());
-                        //cargarAdapter(response.body());
-                    } else {
-
-                    }
+                    organizarRespuesta(response.body());
                 }
 
                 @Override
                 public void onFailure(Call<DetalleVentas> call, Throwable t) {
-                    if(ventaBusquedaFragmentView != null){
-                        ventaBusquedaFragmentView.hideProgress();
-                    }
+                    organizarRespuesta(null);
                 }
             });
         } catch (Exception e){
             e.printStackTrace();
-            if(ventaBusquedaFragmentView != null){
-                ventaBusquedaFragmentView.hideProgress();
-            }
+            Log.e("CanchConsultaVentas", "Error al consultar las vemtas " + e.getMessage());
+            organizarRespuesta(null);
         }
     }
 
@@ -114,27 +107,18 @@ public class ventaPresenter implements com.example.naturalfisherapp.presenter.in
             call.enqueue(new Callback<DetalleVentas>() {
                 @Override
                 public void onResponse(Call<DetalleVentas> call, Response<DetalleVentas> response) {
-                    if(response != null){
-                        organizarRespuesta(response.body());
-                        //ventaBusquedaFragmentView.cargarAdapter(response.body());
-                        //cargarAdapter(response.body());
-                    } else {
-
-                    }
+                    organizarRespuesta(response.body());
                 }
 
                 @Override
                 public void onFailure(Call<DetalleVentas> call, Throwable t) {
-                    if(ventaBusquedaFragmentView != null){
-                        ventaBusquedaFragmentView.hideProgress();
-                    }
+                    organizarRespuesta(null);
                 }
             });
         } catch (Exception e){
             e.printStackTrace();
-            if(ventaBusquedaFragmentView != null){
-                ventaBusquedaFragmentView.hideProgress();
-            }
+            Log.e("CanchConsultaVentas", "Error al consultar las vemtas " + e.getMessage());
+            organizarRespuesta(null);
         }
     }
 
@@ -159,28 +143,19 @@ public class ventaPresenter implements com.example.naturalfisherapp.presenter.in
             call.enqueue(new Callback<List<Venta>>() {
                 @Override
                 public void onResponse(Call<List<Venta>> call, Response<List<Venta>> response) {
-                    if(response != null){
-                        validarRespuestaVentas(response.body());
-                    } else {
-                        if(iDetalleRegistroVentaFragmentView != null){
-                            iDetalleRegistroVentaFragmentView.hideProgress();
-                        }
-                    }
+                    validarRespuestaVentas(response.body());
                 }
 
                 @Override
                 public void onFailure(Call<List<Venta>> call, Throwable t) {
-                    if(iDetalleRegistroVentaFragmentView != null){
-                        iDetalleRegistroVentaFragmentView.hideProgress();
-                    }
+                    validarRespuestaVentas(null);
                 }
             });
 
         }catch (Exception e){
             e.printStackTrace();
-            if(iDetalleRegistroVentaFragmentView != null){
-                iDetalleRegistroVentaFragmentView.hideProgress();
-            }
+            Log.e("CanchConsultaVentas", "Error al consultar las vemtas " + e.getMessage());
+            validarRespuestaVentas(null);
         }
     }
 
@@ -210,17 +185,14 @@ public class ventaPresenter implements com.example.naturalfisherapp.presenter.in
 
                 @Override
                 public void onFailure(Call<Venta> call, Throwable t) {
-                    if(iDetalleRegistroVentaFragmentView != null){
-                        iDetalleRegistroVentaFragmentView.hideProgress();
-                    }
+                    validarRespuestaVentaNueva(null, venta);
                 }
             });
 
         } catch (Exception e){
             e.printStackTrace();
-            if(iDetalleRegistroVentaFragmentView != null){
-                iDetalleRegistroVentaFragmentView.hideProgress();
-            }
+            Log.e("CanchRealizarVenta", "Error al reaslizar la venta " + e.getMessage());
+            validarRespuestaVentaNueva(null, venta);
         }
 
     }
@@ -237,42 +209,71 @@ public class ventaPresenter implements com.example.naturalfisherapp.presenter.in
      */
     private void organizarRespuesta(DetalleVentas detalleVentas) {
 
-        List<Venta> ventas = detalleVentas.getVentas();
+        if(detalleVentas != null){
+            List<Venta> ventas = detalleVentas.getVentas();
 
-        List<BusquedaVentas> busquedaVentas = new ArrayList<>();
+            List<BusquedaVentas> busquedaVentas = new ArrayList<>();
 
-        if(ventas != null && !ventas.isEmpty()){
-            List<Venta> ventasComparar = new ArrayList<>(ventas);
-            //List<Venta> ventasReciduo = new ArrayList<>(ventas);
-            //ventasComparar.remove(0);
+            if(ventas != null && !ventas.isEmpty()){
+                List<Venta> ventasComparar = new ArrayList<>(ventas);
+                //List<Venta> ventasReciduo = new ArrayList<>(ventas);
+                //ventasComparar.remove(0);
 
-            for(Venta venta: ventas){
-                //ventasIguales.add(venta);
-                if(!ventasComparar.isEmpty()){
-                    List<Venta> ventasIguales = new ArrayList<>();
-                    for (int i = 0; i < ventasComparar.size();){
-                        if((venta.getId() != ventasComparar.get(i).getId()) && (Utilidades.formatearFecha(venta.getFecha()).equals(Utilidades.formatearFecha(ventasComparar.get(i).getFecha())))){
-                            if(!buscarIgual(venta, ventasIguales)){
+                //System.out.println("==================================== INICIO ======================================");
+                for(int j = 0; j < ventas.size();){
+                    Venta venta = ventas.get(j);
+                    //System.out.println("========================== VENTA ============================");
+                    //System.out.println("========================== "+ Utilidades.formatearFecha(venta.getFecha()) + "============================");
+                    //System.out.println("========================== "+ Utilidades.formatearFecha2(venta.getFecha()) + "============================");
+                    //System.out.println("======================================================");
+                    //System.out.println();
+                    //ventasIguales.add(venta);
+                    if(!ventasComparar.isEmpty()){
+
+                        System.out.println("========================== COMPARACION ============================");
+                        List<Venta> ventasIguales = new ArrayList<>();
+
+                        for (int i = 0; i < ventasComparar.size();){
+                            //System.out.println("========================== "+ Utilidades.formatearFecha(ventasComparar.get(i).getFecha()) + "============================");
+                            //System.out.println("========================== "+ Utilidades.formatearFecha2(ventasComparar.get(i).getFecha()) + "============================");
+                            //System.out.println("======================================================");
+                            //System.out.println("=== ID VENTA ===" + venta.getId() + " -- " + "=== ID VENTACOMPARAR ===" + ventasComparar.get(i).getId());//Utilidades.formatearFecha(venta.getFecha()).equals(Utilidades.formatearFecha(ventasComparar.get(i).getFecha())))
+                            if((venta.getId() != ventasComparar.get(i).getId()) && (Utilidades.compararFechasMismoDia(venta.getFecha(), ventasComparar.get(i).getFecha()))){
+                                System.out.println("=== ID DIFERENTE Y FECHA IGUAL ===");
+
+                                //.out.println("=== FECHA VENTA ===" + Utilidades.formatearFecha(venta.getFecha()) + " -- " + "=== FECHA VENTACOMPARAR ===" + Utilidades.formatearFecha(ventasComparar.get(i).getFecha()));
+                            /*if(!buscarIgual(venta, ventasIguales)){
                                 ventasIguales.add(venta);
                             }
                             if(!buscarIgual(ventasComparar.get(i), ventasIguales)){
                                 ventasIguales.add(ventasComparar.get(i));
-                            }
-                            ventasComparar.remove(i);
-                        } else if((venta.getId() == ventasComparar.get(i).getId()) && (Utilidades.formatearFecha(venta.getFecha()).equals(Utilidades.formatearFecha(ventasComparar.get(i).getFecha())))) {
-                            if(!buscarIgual(venta, ventasIguales)){
+                            }*/
+                                ventasIguales.add(ventasComparar.get(i));
+                                ventasComparar.remove(i);
+                            } else if((venta.getId() == ventasComparar.get(i).getId()) && (Utilidades.compararFechasMismoDia(venta.getFecha(), ventasComparar.get(i).getFecha()))) {
+                            /*if(!buscarIgual(venta, ventasIguales)){
                                 ventasIguales.add(venta);
+                            }*/
+                                //System.out.println("=== ID Y FECHA IGUAL ===");
+                                //System.out.println("=== ID VENTA ===" + venta.getId() + " -- " + "=== ID VENTACOMPARAR ===" + ventasComparar.get(i).getId());
+                                //System.out.println("=== FECHA VENTA ===" + Utilidades.formatearFecha(venta.getFecha()) + " -- " + "=== FECHA VENTACOMPARAR ===" + Utilidades.formatearFecha(ventasComparar.get(i).getFecha()));
+                                ventasIguales.add(ventasComparar.get(i));
+                                ventasComparar.remove(i);
+                            }else {
+                                //System.out.println("=== ID DIFERENTE Y FECHA DIFERENTE ===");
+                                //System.out.println("=== ID VENTA ===" + venta.getId() + " -- " + "=== ID VENTACOMPARAR ===" + ventasComparar.get(i).getId());
+                                //System.out.println("=== FECHA VENTA ===" + Utilidades.formatearFecha(venta.getFecha()) + " -- " + "=== FECHA VENTACOMPARAR ===" + Utilidades.formatearFecha(ventasComparar.get(i).getFecha()));
+                                i++;
                             }
-                            ventasComparar.remove(i);
-                        }else {
-                            i++;
+                        }
+                        if(!ventasIguales.isEmpty()){
+                            ingresarObjetosVentaBusqueda(busquedaVentas, ventasIguales);
                         }
                     }
-                    if(!ventasIguales.isEmpty()){
-                        ingresarObjetosVentaBusqueda(busquedaVentas, ventasIguales);
-                    }
+                    ventas = ventasComparar;
                 }
-            }
+
+                //System.out.println("==================================== FIN ======================================");
 
             /*if(ventasIguales != null && !ventasIguales.isEmpty()){
                 BusquedaVentas busqueda = new BusquedaVentas();
@@ -291,7 +292,7 @@ public class ventaPresenter implements com.example.naturalfisherapp.presenter.in
                 busquedaVentas.add(busqueda);
             }*/
 
-            if(ventasComparar != null && !ventasComparar.isEmpty()){
+            /*if(ventasComparar != null && !ventasComparar.isEmpty()){
                 for (Venta ventaAdd: ventasComparar){
                     BusquedaVentas busqueda = new BusquedaVentas();
                     List<BusquedaClientesVenta> clientesVenta = new ArrayList<>();
@@ -306,22 +307,31 @@ public class ventaPresenter implements com.example.naturalfisherapp.presenter.in
                     busqueda.setClientesVenta(clientesVenta);
                     busquedaVentas.add(busqueda);
                 }
-            }
+            }*/
 
-            //cargarAdapter(busquedaVentas);
-            if(busquedaVentas != null && !busquedaVentas.isEmpty()){
-                busquedaVentas = calcularTotales(busquedaVentas);
-                busquedaVentas = ordenarBusquedaPorFecha(busquedaVentas);
+                //cargarAdapter(busquedaVentas);
+                if(busquedaVentas != null && !busquedaVentas.isEmpty()){
+                    busquedaVentas = calcularTotales(busquedaVentas);
+                    busquedaVentas = ordenarBusquedaPorFecha(busquedaVentas);
+                    if(ventaBusquedaFragmentView != null){
+                        InformacionSession.getInstance().setVentasConsultadas(busquedaVentas);
+                        InformacionSession.getInstance().setDetalleVentas(detalleVentas);
+                        ventaBusquedaFragmentView.hideProgress();
+                        ventaBusquedaFragmentView.cargarDatos(busquedaVentas, detalleVentas);
+                    }
+                }
+            } else {
                 if(ventaBusquedaFragmentView != null){
                     ventaBusquedaFragmentView.hideProgress();
-                    ventaBusquedaFragmentView.cargarDatos(busquedaVentas, detalleVentas);
                 }
             }
         } else {
             if(ventaBusquedaFragmentView != null){
                 ventaBusquedaFragmentView.hideProgress();
+                Log.e("RespuestaVentas", "Error el objecto DetalleVentas es NULL");
             }
         }
+
     }
 
     /**
@@ -336,6 +346,11 @@ public class ventaPresenter implements com.example.naturalfisherapp.presenter.in
             if(iDetalleRegistroVentaFragmentView != null){
                 iDetalleRegistroVentaFragmentView.hideProgress();
                 iDetalleRegistroVentaFragmentView.cargarAdapter(ventas);
+            }
+        } else {
+            if(iDetalleRegistroVentaFragmentView != null){
+                iDetalleRegistroVentaFragmentView.hideProgress();
+                iDetalleRegistroVentaFragmentView.goToVentaPrinsipalActivity();
             }
         }
     }
@@ -443,8 +458,8 @@ public class ventaPresenter implements com.example.naturalfisherapp.presenter.in
 
         if(response != null && response.body() != null){
             if(response.body().getId() > 0 ){
-                if(response.body().getCliente() != null && (response.body().getCliente().getId() == venta.getCliente().getId())){
-                    if(response.body().getItems() != null && (response.body().getItems().size() == venta.getItems().size())){
+                if(response.body().getCliente() != null ){
+
                         System.out.println("Venta Exitosa....");
 
                         if(iDetalleRegistroVentaFragmentView != null){
@@ -452,17 +467,26 @@ public class ventaPresenter implements com.example.naturalfisherapp.presenter.in
                             iDetalleRegistroVentaFragmentView.mostrarDialogoInformativo("Exito", "Se ha realizado la venta con exito!..");
                         }
 
-                    } else {
-                        System.out.println("Venta Error....");
-                    }
                 } else {
                     System.out.println("Venta Error....");
+                    if(iDetalleRegistroVentaFragmentView != null){
+                        iDetalleRegistroVentaFragmentView.hideProgress();
+                        iDetalleRegistroVentaFragmentView.mostrarDialogoInformativo("Error", "A Ocurrido un Error consulte al administrador...");
+                    }
                 }
             } else {
                 System.out.println("Venta Error....");
+                if(iDetalleRegistroVentaFragmentView != null){
+                    iDetalleRegistroVentaFragmentView.hideProgress();
+                    iDetalleRegistroVentaFragmentView.mostrarDialogoInformativo("Error", "A Ocurrido un Error consulte al administrador...");
+                }
             }
         } else {
             System.out.println("Venta Error....");
+            if(iDetalleRegistroVentaFragmentView != null){
+                iDetalleRegistroVentaFragmentView.hideProgress();
+                iDetalleRegistroVentaFragmentView.mostrarDialogoInformativo("Error", "A Ocurrido un Error consulte al administrador...");
+            }
         }
     }
 
