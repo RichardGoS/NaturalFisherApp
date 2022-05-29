@@ -1,5 +1,6 @@
 package com.example.naturalfisherapp.view.dialog;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -19,19 +20,24 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.naturalfisherapp.R;
+import com.example.naturalfisherapp.data.models.ItemPromocion;
 import com.example.naturalfisherapp.data.models.ItemVenta;
 import com.example.naturalfisherapp.data.models.Producto;
+import com.example.naturalfisherapp.data.models.Promocion;
+import com.example.naturalfisherapp.data.models.interpretes.GeneralProductos;
 import com.example.naturalfisherapp.presenter.activities.ProductoPresenter;
 import com.example.naturalfisherapp.presenter.interfaces.IProductoPresenter;
 import com.example.naturalfisherapp.utilidades.InformacionSession;
 import com.example.naturalfisherapp.view.adapter.ItemAgregarProductoVentaAdapter;
 import com.example.naturalfisherapp.view.interfaces.adapter.IVentaRegistroHolderView;
 import com.example.naturalfisherapp.view.interfaces.dialog.IAgregarProductoDialogFragment;
+import com.example.naturalfisherapp.view.interfaces.fragment.IPromocionDetalleFragmentView;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -52,6 +58,10 @@ public class AgregarProductoDialogFragment extends DialogFragment implements IAg
     private LinearLayoutManager linearLayoutManager;
     private IVentaRegistroHolderView ventaRegistroHolderView;
     private List<ItemVenta> items;
+    private List<Producto> productos;
+    private List<ItemPromocion> itemsPromocion;
+    private IPromocionDetalleFragmentView promocionDetalleFragmentView;
+    private Activity activity;
 
     @BindView(R.id.edtBuscador)
     EditText edtBuscador;
@@ -59,11 +69,20 @@ public class AgregarProductoDialogFragment extends DialogFragment implements IAg
     @BindView(R.id.efRvProductos)
     RecyclerView efRvProductos;
 
-    public static AgregarProductoDialogFragment newInstance(FragmentManager fragmentManager, IVentaRegistroHolderView ventaRegistroHolderView, List<ItemVenta> items){
+    public static AgregarProductoDialogFragment newInstance(FragmentManager fragmentManager, IVentaRegistroHolderView ventaRegistroHolderView, List<ItemVenta> items, Activity activity){
         AgregarProductoDialogFragment agregarProductoDialogFragment = new AgregarProductoDialogFragment();
         agregarProductoDialogFragment.fragmentManager = fragmentManager;
         agregarProductoDialogFragment.ventaRegistroHolderView = ventaRegistroHolderView;
         agregarProductoDialogFragment.items = items;
+        agregarProductoDialogFragment.activity = activity;
+        return agregarProductoDialogFragment;
+    }
+
+    public static AgregarProductoDialogFragment newInstance(FragmentManager fragmentManager, IPromocionDetalleFragmentView promocionDetalleFragmentView, List<ItemPromocion> itemsPromocion){
+        AgregarProductoDialogFragment agregarProductoDialogFragment = new AgregarProductoDialogFragment();
+        agregarProductoDialogFragment.fragmentManager = fragmentManager;
+        agregarProductoDialogFragment.promocionDetalleFragmentView = promocionDetalleFragmentView;
+        agregarProductoDialogFragment.itemsPromocion = itemsPromocion;
 
         return agregarProductoDialogFragment;
     }
@@ -97,12 +116,41 @@ public class AgregarProductoDialogFragment extends DialogFragment implements IAg
 
         progress = new ProgressDialog(getContext());
 
-        if(InformacionSession.getInstance().getProductosActivosVentas() != null && !InformacionSession.getInstance().getProductosActivosVentas().isEmpty()){
-            List<Producto> productosDisponibles = validarProductosDisponibles(InformacionSession.getInstance().getProductosActivosVentas(), items);
+        productos = new ArrayList<>();
+
+        if(items != null && !items.isEmpty()){
+            productos = extraerProductos(items);
+        } else if(itemsPromocion != null && !itemsPromocion.isEmpty()){
+            productos = extraerProductosPromocion(itemsPromocion);
+        }
+
+        if(ventaRegistroHolderView != null){
+            if(InformacionSession.getInstance().getProductosActivosVenta() != null && !InformacionSession.getInstance().getProductosActivosVenta().isEmpty()){
+                List<GeneralProductos> productosDisponibles = validarProductosDisponibles(InformacionSession.getInstance().getProductosActivosVenta(), productos);
+                cargarAdapter(productosDisponibles);
+            } else {
+                productoPresenter.consultarProductosActivosVenta();
+            }
+        } else if(promocionDetalleFragmentView != null){
+            if(InformacionSession.getInstance().getProductosActivosPromo() != null && !InformacionSession.getInstance().getProductosActivosPromo().isEmpty()){
+                List<GeneralProductos> productosDisponibles = validarProductosDisponibles(InformacionSession.getInstance().getProductosActivosPromo(), productos);
+                cargarAdapter(productosDisponibles);
+            } else {
+                productoPresenter.consultarProductosPromocion();
+            }
+
+        }
+        /*if(InformacionSession.getInstance().getProductosActivosVenta() != null && !InformacionSession.getInstance().getProductosActivosVenta().isEmpty()){
+            List<GeneralProductos> productosDisponibles = validarProductosDisponibles(InformacionSession.getInstance().getProductosActivosVenta(), productos);
             cargarAdapter(productosDisponibles);
         } else {
-            productoPresenter.consultarProductosActivosVenta();
-        }
+            if(ventaRegistroHolderView != null){
+                productoPresenter.consultarProductosActivosVenta();
+            } else if(promocionDetalleFragmentView != null){
+
+            }
+
+        }*/
 
 
         return dialog;
@@ -156,13 +204,21 @@ public class AgregarProductoDialogFragment extends DialogFragment implements IAg
      * @Fecha 18/07/21
      */
     @Override
-    public void cargarAdapter(List<Producto> productos) {
+    public void cargarAdapter(List<GeneralProductos> productos) {
+
         if(productos != null && !productos.isEmpty()){
-            linearLayoutManager = new LinearLayoutManager(getActivity());
-            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-            ItemAgregarProductoVentaAdapter itemAgregarProductoVentaAdapter = new ItemAgregarProductoVentaAdapter(getContext(), fragmentManager, getActivity(), productos, ventaRegistroHolderView, this);
-            efRvProductos.setAdapter(itemAgregarProductoVentaAdapter);
-            efRvProductos.setLayoutManager(linearLayoutManager);
+            if( ventaRegistroHolderView != null ){
+                linearLayoutManager = new LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false);
+                ItemAgregarProductoVentaAdapter itemAgregarProductoVentaAdapter = new ItemAgregarProductoVentaAdapter(activity.getApplicationContext(), fragmentManager, activity, productos, ventaRegistroHolderView, this);
+                efRvProductos.setAdapter(itemAgregarProductoVentaAdapter);
+                efRvProductos.setLayoutManager(linearLayoutManager);
+            } else if( promocionDetalleFragmentView != null ){
+                linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+                ItemAgregarProductoVentaAdapter itemAgregarProductoVentaAdapter = new ItemAgregarProductoVentaAdapter(getContext(), fragmentManager, getActivity(), productos, promocionDetalleFragmentView, this);
+                efRvProductos.setAdapter(itemAgregarProductoVentaAdapter);
+                efRvProductos.setLayoutManager(linearLayoutManager);
+            }
+
         } else {
             dismissDialog();
         }
@@ -177,28 +233,27 @@ public class AgregarProductoDialogFragment extends DialogFragment implements IAg
      * @Descripccion Metodo permite validar los productos disponibles para agregar a la venta
      * @Fecha 10/08/21
      */
-    private List<Producto> validarProductosDisponibles(List<Producto> productosConsultados, List<ItemVenta> items) {
+    private List<GeneralProductos> validarProductosDisponibles(List<GeneralProductos> productosConsultados, List<Producto> productosOcupados) {
 
-        List<Producto> productosDis = new ArrayList<>(productosConsultados);
-
-        if(items != null && !items.isEmpty()){
-            List<Producto> productosOcupados = extraerProductos(items);
-
+        if(productosConsultados != null && !productosConsultados.isEmpty()){
+            List<GeneralProductos> productosDis = new ArrayList<>(productosConsultados);
 
             if(productosOcupados != null && !productosOcupados.isEmpty()){
 
                 for(Producto productoOcupado: productosOcupados){
                     for(int i = 0; i < productosDis.size(); i++){
-                        if(productoOcupado.getCodigo() == productosDis.get(i).getCodigo()){
+                        if(productosDis.get(i).getProducto() != null && productoOcupado.getCodigo() == productosDis.get(i).getProducto().getCodigo()){
                             productosDis.remove(i);
                         }
 
                     }
                 }
             }
-        }
 
-        return productosDis;
+            return productosDis;
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -211,6 +266,23 @@ public class AgregarProductoDialogFragment extends DialogFragment implements IAg
         List<Producto> productos = new ArrayList<>();
 
         for( ItemVenta item:items){
+            if(item.getProducto() != null){
+                productos.add(item.getProducto());
+            }
+        }
+        return productos;
+    }
+
+    /**
+     * @Autor RagooS
+     * @Descripccion Metodo permite extraer los productos de los item venta
+     * @Fecha 01/05/22
+     */
+    private List<Producto> extraerProductosPromocion(List<ItemPromocion> items) {
+
+        List<Producto> productos = new ArrayList<>();
+
+        for( ItemPromocion item:items){
             if(item.getProducto() != null){
                 productos.add(item.getProducto());
             }

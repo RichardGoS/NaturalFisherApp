@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.naturalfisherapp.R;
+import com.example.naturalfisherapp.utilidades.EnumVariables;
+import com.example.naturalfisherapp.utilidades.InformacionSession;
 import com.example.naturalfisherapp.view.fragment.ProductoBusquedaFragment;
 import com.example.naturalfisherapp.view.fragment.VentaBusquedaFragment;
 
@@ -44,8 +46,18 @@ public class ProductoPrincipalActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        goToMenuPrincipal();
+        //super.onBackPressed();
+        if(InformacionSession.getInstance().getFragmentActual() != null){
+            if(InformacionSession.getInstance().getFragmentActual().equals(EnumVariables.FRAGMENT_PROMOCION_DETALLE.getValor())){
+                goToProductoBusqueda();
+            } else if(InformacionSession.getInstance().getFragmentActual().equals(EnumVariables.FRAGMENT_PRODUCTO_BUSQUEDA.getValor())){
+                InformacionSession.getInstance().setProductosConsultados(null);
+                InformacionSession.getInstance().setProductosActivosPromo(null);
+                goToMenuPrincipal();
+            }
+        } else {
+            goToMenuPrincipal();
+        }
     }
 
     /**

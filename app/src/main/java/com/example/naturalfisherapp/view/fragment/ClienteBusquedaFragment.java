@@ -86,6 +86,16 @@ public class ClienteBusquedaFragment extends Fragment implements IClienteBusqued
      */
 
     /**
+     * -------------- METODOS SOBRESCRITOS --------------------------------
+     */
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        hideProgress();
+    }
+
+    /**
      * -------------- METODOS ONCLICK BUTTERKNIFE --------------------------------
      */
 

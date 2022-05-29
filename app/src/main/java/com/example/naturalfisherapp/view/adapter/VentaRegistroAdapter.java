@@ -3,6 +3,7 @@ package com.example.naturalfisherapp.view.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,10 +16,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.naturalfisherapp.R;
+import com.example.naturalfisherapp.data.models.ItemPromocion;
+import com.example.naturalfisherapp.data.models.ItemPromocionVenta;
 import com.example.naturalfisherapp.data.models.ItemVenta;
 import com.example.naturalfisherapp.data.models.Producto;
+import com.example.naturalfisherapp.data.models.PromocionVenta;
 import com.example.naturalfisherapp.data.models.Venta;
+import com.example.naturalfisherapp.data.models.interpretes.GeneralProductos;
 import com.example.naturalfisherapp.presenter.interfaces.IVentaPresenter;
+import com.example.naturalfisherapp.utilidades.EnumVariables;
 import com.example.naturalfisherapp.utilidades.Utilidades;
 import com.example.naturalfisherapp.view.activities.MenuPrincipalActivity;
 import com.example.naturalfisherapp.view.activities.VentaPrinsipalActivity;
@@ -83,8 +89,8 @@ public class VentaRegistroAdapter extends RecyclerView.Adapter<VentaRegistroAdap
         private Venta venta;
         private LinearLayoutManager linearLayoutManager;
         private IVentaPresenter ventaPresenter;
-        Activity activity;
-        FragmentManager fragmentManager;
+        private Activity activity;
+        private FragmentManager fragmentManager;
 
         @BindView(R.id.fechaVentaDetalle)
         TextView fechaVentaDetalle;
@@ -144,7 +150,7 @@ public class VentaRegistroAdapter extends RecyclerView.Adapter<VentaRegistroAdap
                     llAgregarProducto.setVisibility(View.GONE);
                     llBotonesProcesos.setVisibility(View.GONE);
                     btnAgregarProducto.setVisibility(View.GONE);
-                    cargarAdapterItems(this.venta.getItems(), "consulta");
+                    cargarAdapterItems(this.venta.getItems(), EnumVariables.MODO_CONSULTA.getValor());
                 } else {
                     recyclerViewItems.setVisibility(View.GONE);
                     llAgregarProducto.setVisibility(View.VISIBLE);
@@ -217,28 +223,63 @@ public class VentaRegistroAdapter extends RecyclerView.Adapter<VentaRegistroAdap
          * @Fecha 18/07/21
          */
         @Override
-        public void agregarProducto(Producto producto) {
+        public void agregarProducto(GeneralProductos gProducto) {
             ItemVenta item = new ItemVenta();
-            item.setProducto(producto);
-            item.setCant_peso(0d);
-            item.setTotal(0d);
+            if( gProducto != null){
+                if(gProducto.getProducto() != null){
+                    item.setProducto(gProducto.getProducto());
+
+                    item.setCant_peso(0d);
+                    item.setTotal(0d);
+                } else if(gProducto.getPromocion() != null){
+                    PromocionVenta promocionVenta = new PromocionVenta();
+                    promocionVenta.setPromocion(gProducto.getPromocion());
+                    List<ItemPromocionVenta> itemPromocionVentas = new ArrayList<>();
+
+                    if(gProducto.getPromocion().getItems() != null && !gProducto.getPromocion().getItems().isEmpty()){
+                        for(ItemPromocion itemPromocion:gProducto.getPromocion().getItems()){
+                            ItemPromocionVenta itemPromocionVenta = new ItemPromocionVenta();
+                            itemPromocionVenta.setProducto(itemPromocion.getProducto());
+                            itemPromocionVenta.setPrecio_venta(itemPromocion.getPrecio_venta());
+                            itemPromocionVenta.setCant_peso(itemPromocion.getCant_peso());
+                            itemPromocionVenta.setTotal(itemPromocion.getTotal());
+
+                            itemPromocionVentas.add(itemPromocionVenta);
+                        }
+                    }
+
+                    promocionVenta.setItemsPromocionVenta(itemPromocionVentas);
+
+                    promocionVenta.setTotal(gProducto.getPromocion().getTotal());
+                    promocionVenta.setPorcentage(gProducto.getPromocion().getPorcentage());
+                    promocionVenta.setGanancia(gProducto.getPromocion().getGanancia());
+                    promocionVenta.setTotalCalculado(gProducto.getPromocion().getTotalCalculado());
+                    item.setPromocionVenta(promocionVenta);
+
+                    item.setCant_peso(1d);
+                    item.setTotal(gProducto.getPromocion().getTotal());
+
+                }
+            }
+
+
             item.setUsa_precio_distinto("N");
             if(this.venta.getItems() != null && !this.venta.getItems().isEmpty()){
+                item.setCodigoItemApp(this.venta.getItems().size());
                 this.venta.getItems().add(item);
             } else {
                 List<ItemVenta> items = new ArrayList<>();
+                item.setCodigoItemApp(0);
                 items.add(item);
                 this.venta.setItems(items);
 
             }
-
             mostrarLlProcesos();
             calcularPrecioTotal();
 
             btnAgregarProducto.setVisibility(View.VISIBLE);
 
-            cargarAdapterItems(this.venta.getItems(), "creacion");
-
+            cargarAdapterItems(this.venta.getItems(), EnumVariables.MODO_CREACION.getValor());
 
         }
 
@@ -302,16 +343,26 @@ public class VentaRegistroAdapter extends RecyclerView.Adapter<VentaRegistroAdap
          * @Fecha 24/02/2022
          */
         @Override
-        public void eliminarItemVenta(Producto producto) {
+        public void eliminarItemVenta(ItemVenta itemVenta) {
 
-            for( int i=0; i < this.venta.getItems().size(); i++){
-                if(this.venta.getItems().get(i).getProducto().getId().equals(producto.getId())){
-                    this.venta.getItems().remove(i);
-                    break;
+            if(itemVenta != null){
+                if(venta.getItems() != null && !venta.getItems().isEmpty()){
+                    for( int i=0; i < venta.getItems().size(); i++){
+                        if(venta.getItems().get(i).getCodigoItemApp() == itemVenta.getCodigoItemApp()){
+                            venta.getItems().remove(i);
+                            calcularPrecioTotal();
+                            break;
+                        } else {
+                            Log.e("EliminarItemVenta", "Error al eliminar el item de la venta no se encontro el item a eliminar");
+                        }
+                    }
+                    cargarAdapterItems(venta.getItems(), EnumVariables.MODO_CREACION.getValor());
+                } else {
+                    Log.e("EliminarItemVenta", "Error al eliminar el item de la venta no existen items");
                 }
+            } else {
+                Log.e("EliminarItemVenta", "Error al eliminar el item de la venta es NULL");
             }
-
-            cargarAdapterItems(this.venta.getItems(), "creacion");
 
         }
 
@@ -336,7 +387,7 @@ public class VentaRegistroAdapter extends RecyclerView.Adapter<VentaRegistroAdap
          */
         private void goToAgregarProducto() {
             System.out.println("Agregar Producto....");
-            AgregarProductoDialogFragment agregarProductoDialogFragment = AgregarProductoDialogFragment.newInstance(fragmentManager, this, venta.getItems());
+            AgregarProductoDialogFragment agregarProductoDialogFragment = AgregarProductoDialogFragment.newInstance(fragmentManager, this, venta.getItems(), activity);
             agregarProductoDialogFragment.show(fragmentManager, "AgregarProducto");
             android.app.Fragment fragment = activity.getFragmentManager().findFragmentByTag("AgregarProducto");
             if (fragment != null) {
@@ -359,7 +410,24 @@ public class VentaRegistroAdapter extends RecyclerView.Adapter<VentaRegistroAdap
                 if(venta.getItems() != null && !venta.getItems().isEmpty()){
                     for (ItemVenta item: venta.getItems()){
                         if(item.getCant_peso() > 0 && item.getTotal() > 0 ){
-                            valido = true;
+                            if(item.getProducto() != null){
+                                valido = true;
+                            } else if(item.getPromocionVenta() != null){
+                                if(item.getPromocionVenta().getPromocion() != null){
+                                    if(item.getPromocionVenta().getItemsPromocionVenta() != null && !item.getPromocionVenta().getItemsPromocionVenta().isEmpty()){
+                                        valido = true;
+                                    } else {
+                                        System.out.println("Item Promocion Venta no tiene Items");
+                                        valido = false;
+                                    }
+                                } else {
+                                    System.out.println("Item Promocion Venta no tiene Promocion");
+                                    valido = false;
+                                }
+                            } else {
+                                System.out.println("Item no tiene ni Producto ni Promocion");
+                                valido = false;
+                            }
                         } else {
                             System.out.println("Item en 0....");
                             valido = false;

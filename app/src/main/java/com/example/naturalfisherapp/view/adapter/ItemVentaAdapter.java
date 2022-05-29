@@ -2,6 +2,8 @@ package com.example.naturalfisherapp.view.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +12,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.naturalfisherapp.R;
+import com.example.naturalfisherapp.data.models.ItemPromocionVenta;
 import com.example.naturalfisherapp.data.models.ItemVenta;
+import com.example.naturalfisherapp.data.models.Producto;
+import com.example.naturalfisherapp.data.models.PromocionVenta;
+import com.example.naturalfisherapp.utilidades.EnumVariables;
 import com.example.naturalfisherapp.utilidades.Utilidades;
 import com.example.naturalfisherapp.view.dialog.CambiarPrecioItemProductoVentaDialogFragment;
 import com.example.naturalfisherapp.view.interfaces.adapter.IItemVentaHolderView;
@@ -81,6 +89,11 @@ public class ItemVentaAdapter extends RecyclerView.Adapter<ItemVentaAdapter.Item
         ItemVenta item;
         String modo;
         IVentaRegistroHolderView ventaRegistroHolderView;
+        private LinearLayoutManager linearLayoutManager;
+
+        /**
+         *  ========= PRODUCTO ===========
+         */
 
         @BindView(R.id.nombreProducto)
         TextView nombreProducto;
@@ -106,6 +119,43 @@ public class ItemVentaAdapter extends RecyclerView.Adapter<ItemVentaAdapter.Item
         @BindView(R.id.llBtnItem)
         LinearLayout llBtnItem;
 
+        @BindView(R.id.llItemVentaProducto)
+        LinearLayout llItemVentaProducto;
+
+        /**
+         *  ========= PROMOCION ===========
+         */
+
+        @BindView(R.id.nombrePromocion)
+        TextView nombrePromocion;
+
+        @BindView(R.id.porcentageGananciaPromocion)
+        TextView porcentageGananciaPromocion;
+
+        @BindView(R.id.gananciaPromocion)
+        TextView gananciaPromocion;
+
+        @BindView(R.id.precioCalculadoPromocion)
+        TextView precioCalculadoPromocion;
+
+        @BindView(R.id.precioPromocion)
+        TextView precioPromocion;
+
+        @BindView(R.id.llBtnItemPromocion)
+        LinearLayout llBtnItemPromocion;
+
+        @BindView(R.id.llItemVentaPromocion)
+        LinearLayout llItemVentaPromocion;
+
+        @BindView(R.id.efRvProductoPromocion)
+        RecyclerView efRvProductoPromocion;
+
+        @BindView(R.id.btnCambiarPrecioPromocion)
+        LinearLayout btnCambiarPrecioPromocion;
+
+        @BindView(R.id.btnEliminarItemPromocion)
+        LinearLayout btnEliminarItemPromocion;
+
         public ItemVentaHolder(@NonNull @NotNull View itemView, String modo, IVentaRegistroHolderView ventaRegistroHolderView) {
             super(itemView);
             this.modo = modo;
@@ -118,37 +168,70 @@ public class ItemVentaAdapter extends RecyclerView.Adapter<ItemVentaAdapter.Item
 
             if(this.item != null){
 
-                nombreProducto.setText(item.getProducto().getNombre());
-                cantPeso.setText(item.getCant_peso().toString());
+                if(item.getProducto() != null){
 
-                if( modo != null && !modo.equals("creacion") ){
-                    llBtnAumentarCantidad.setVisibility(View.GONE);
-                    llBtnReducirCantidad.setVisibility(View.GONE);
-                    llBtnItem.setVisibility(View.GONE);
+                    llItemVentaPromocion.setVisibility(View.GONE);
+                    llItemVentaProducto.setVisibility(View.VISIBLE);
+                    nombreProducto.setText(item.getProducto().getNombre());
+                    cantPeso.setText(item.getCant_peso().toString());
 
-                } else {
-                    llBtnAumentarCantidad.setVisibility(View.VISIBLE);
-                    llBtnReducirCantidad.setVisibility(View.VISIBLE);
-                    llBtnItem.setVisibility(View.VISIBLE);
-                    cantPeso.setFocusable(true);
-                    cantPeso.setOnFocusChangeListener(this);
-                    cantPeso.requestFocusFromTouch();
-                    //cantPeso.requestFocus();
-                }
-
-                Double precioUni = 0.0;
-
-                if(this.item.getUsa_precio_distinto() != null && this.item.getUsa_precio_distinto().equals("S")){
-                    if(this.item.getPrecio_distinto() != null && this.item.getPrecio_distinto() > 0){
-                        precioUni = this.item.getPrecio_distinto();
+                    if( modo != null && !modo.equals(EnumVariables.MODO_CREACION.getValor()) ){
+                        llBtnAumentarCantidad.setVisibility(View.GONE);
+                        llBtnReducirCantidad.setVisibility(View.GONE);
+                        llBtnItem.setVisibility(View.GONE);
+                        cantPeso.setFocusable(false);
+                        cantPeso.setEnabled(false);
+                        //efRvProductoPromocion.setScrollbarFadingEnabled(true);
+                    } else {
+                        llBtnAumentarCantidad.setVisibility(View.VISIBLE);
+                        llBtnReducirCantidad.setVisibility(View.VISIBLE);
+                        llBtnItem.setVisibility(View.VISIBLE);
+                        cantPeso.setFocusable(true);
+                        cantPeso.setOnFocusChangeListener(this);
+                        cantPeso.requestFocusFromTouch();
+                        cantPeso.setEnabled(true);
+                        //efRvProductoPromocion.setScrollbarFadingEnabled(false);
+                        //cantPeso.requestFocus();
                     }
-                } else {
-                    precioUni = item.getProducto().getPrecio();
+
+                    Double precioUni = 0.0;
+
+                    if(this.item.getUsa_precio_distinto() != null && this.item.getUsa_precio_distinto().equals("S")){
+                        if(this.item.getPrecio_distinto() != null && this.item.getPrecio_distinto() > 0){
+                            precioUni = this.item.getPrecio_distinto();
+                        }
+                    } else {
+                        precioUni = item.getProducto().getPrecio();
+                    }
+
+                    setEdtPrecioProducto(precioUni);
+
+                    total.setText("$" + Utilidades.puntoMil(item.getTotal()));
+
+                } else if(item.getPromocionVenta() != null){
+
+                    llItemVentaPromocion.setVisibility(View.VISIBLE);
+                    llItemVentaProducto.setVisibility(View.GONE);
+
+
+                    nombrePromocion.setText(item.getPromocionVenta().getPromocion().getNombre());
+                    precioPromocion.setText("$"+ Utilidades.puntoMil(item.getPromocionVenta().getTotal()));
+                    gananciaPromocion.setText("$"+ Utilidades.puntoMil(item.getPromocionVenta().getGanancia()));
+                    porcentageGananciaPromocion.setText(Utilidades.restringirDecimales(item.getPromocionVenta().getPorcentage()) + "%");
+                    precioCalculadoPromocion.setText("$"+ Utilidades.puntoMil(item.getPromocionVenta().getTotalCalculado()));
+
+                    if(modo.equals(EnumVariables.MODO_CREACION.getValor())){
+                        btnEliminarItemPromocion.setVisibility(View.VISIBLE);
+                        btnCambiarPrecioPromocion.setVisibility(View.VISIBLE);
+                    } else {
+                        btnEliminarItemPromocion.setVisibility(View.GONE);
+                        btnCambiarPrecioPromocion.setVisibility(View.GONE);
+                    }
+
+                    cargarAdapterProductosPromocion(item.getPromocionVenta().getItemsPromocionVenta(), modo);
                 }
 
-                setEdtPrecioProducto(precioUni);
 
-                total.setText("$" + Utilidades.puntoMil(item.getTotal()));
             }
 
 
@@ -216,7 +299,13 @@ public class ItemVentaAdapter extends RecyclerView.Adapter<ItemVentaAdapter.Item
         @OnClick(R.id.btnEliminarItem)
         void onClickLlBtnEliminarItem(){
             System.out.println("Eliminar Item");
-            ventaRegistroHolderView.eliminarItemVenta(this.item.getProducto());
+            ventaRegistroHolderView.eliminarItemVenta(this.item);
+        }
+
+        @OnClick(R.id.btnEliminarItemPromocion)
+        void onClickLlBtnEliminarItemPromocion(){
+            System.out.println("Eliminar Item");
+            ventaRegistroHolderView.eliminarItemVenta(this.item);
         }
 
         @OnClick(R.id.btnCambiarPrecio)
@@ -229,7 +318,18 @@ public class ItemVentaAdapter extends RecyclerView.Adapter<ItemVentaAdapter.Item
             if (fragment != null) {
                 activity.getFragmentManager().beginTransaction().remove(fragment).commit();
             }
+        }
 
+        @OnClick(R.id.btnCambiarPrecioPromocion)
+        void onClickLlBtnCambiarPrecioPromocion(){
+            System.out.println("Cambiar Precio");
+
+            CambiarPrecioItemProductoVentaDialogFragment cambiarPrecioItemProductoVentaDialogFragment = CambiarPrecioItemProductoVentaDialogFragment.newInstance("Cambiar Precio Venta", activity, this);
+            cambiarPrecioItemProductoVentaDialogFragment.show(fragmentManager, "CambiarPrecio");
+            android.app.Fragment fragment = activity.getFragmentManager().findFragmentByTag("CambiarPrecio");
+            if (fragment != null) {
+                activity.getFragmentManager().beginTransaction().remove(fragment).commit();
+            }
         }
 
         @Override
@@ -247,7 +347,7 @@ public class ItemVentaAdapter extends RecyclerView.Adapter<ItemVentaAdapter.Item
 
         /**
          * @Autor RagooS
-         * @Descripccion Metodo permite calcular el presio conforme a la cantidad que se va a llevar
+         * @Descripccion Metodo permite calcular el precio conforme a la cantidad que se va a llevar
          * @Fecha 18/07/21
          */
         private void calcularPrecio() {
@@ -273,18 +373,43 @@ public class ItemVentaAdapter extends RecyclerView.Adapter<ItemVentaAdapter.Item
 
         }
 
+        /**
+         * @Autor RagooS
+         * @Descripccion Metodo permite setear los campos del precio unitario
+         * @Fecha 18/07/21
+         */
         private void setEdtPrecioProducto(Double precioUni) {
 
-            if(item.getProducto().getUnidad().equals("Kg")){
-                precioKg.setText("$" + Utilidades.puntoMil(precioUni) + " Kg");
-                precioLb.setText("$" + Utilidades.puntoMil(precioUni / 2) + " Lb");
+            if(item.getProducto() != null){
+                if(item.getProducto().getUnidad().equals("Kg")){
+                    precioKg.setText("$" + Utilidades.puntoMil(precioUni) + " Kg");
+                    precioLb.setText("$" + Utilidades.puntoMil(precioUni / 2) + " Lb");
 
-            } else if(item.getProducto().getUnidad().equals("Lb")){
-                precioKg.setText("$" + Utilidades.puntoMil(precioUni * 2) + " Kg");
-                precioLb.setText("$" + Utilidades.puntoMil(precioUni) + " Lb");
-            } else if(item.getProducto().getUnidad().contains("Uni")){
-                precioKg.setText("$" + Utilidades.puntoMil(precioUni) + " - " + item.getProducto().getUnidad());
-                precioLb.setVisibility(View.GONE);
+                } else if(item.getProducto().getUnidad().equals("Lb")){
+                    precioKg.setText("$" + Utilidades.puntoMil(precioUni * 2) + " Kg");
+                    precioLb.setText("$" + Utilidades.puntoMil(precioUni) + " Lb");
+                } else if(item.getProducto().getUnidad().contains("Uni")){
+                    precioKg.setText("$" + Utilidades.puntoMil(precioUni) + " - " + item.getProducto().getUnidad());
+                    precioLb.setVisibility(View.GONE);
+                }
+            } else if(item.getPromocionVenta() != null){
+                item.getPromocionVenta().setTotal(precioUni);
+                calcularPrecioTotalPromocion();
+            }
+        }
+
+        /**
+         * @Autor RagooS
+         * @Descripccion Metodo permite cargar el reciclerView con los items de la promocion
+         * @Fecha 10/05/22
+         */
+        private void cargarAdapterProductosPromocion(List<ItemPromocionVenta> itemPromocionVentas, String modo){
+
+            if(itemPromocionVentas != null && !itemPromocionVentas.isEmpty()){
+                linearLayoutManager = new LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false);
+                ItemProductoPromocionAdapter itemProductoPromocionAdapter = new ItemProductoPromocionAdapter(itemPromocionVentas, context, fragmentManager, activity, modo, this);
+                efRvProductoPromocion.setAdapter(itemProductoPromocionAdapter);
+                efRvProductoPromocion.setLayoutManager(linearLayoutManager);
             }
 
         }
@@ -306,6 +431,51 @@ public class ItemVentaAdapter extends RecyclerView.Adapter<ItemVentaAdapter.Item
             setEdtPrecioProducto(precio);
             calcularPrecio();
             ventaRegistroHolderView.calcularPrecioTotal();
+        }
+
+        /**
+         * @Autor RagooS
+         * @Descripccion Metodo permite calcular los valores de la promocion
+         * @Fecha 11/05/22
+         */
+        @Override
+        public void calcularPrecioTotalPromocion() {
+
+            if(item.getPromocionVenta().getItemsPromocionVenta() != null && !item.getPromocionVenta().getItemsPromocionVenta().isEmpty()){
+                Double totalCalculado = 0D;
+                Double ganancia = 0D;
+                Double porcentageGanancia = 0D;
+
+                for(ItemPromocionVenta itemPromocionVenta: item.getPromocionVenta().getItemsPromocionVenta()){
+                    totalCalculado = totalCalculado + itemPromocionVenta.getTotal();
+                }
+
+                ganancia = item.getPromocionVenta().getTotal() - totalCalculado;
+                porcentageGanancia = (ganancia / item.getPromocionVenta().getTotal())*100;
+                porcentageGanancia = Utilidades.restringirDecimalesPorcentage(porcentageGanancia);
+
+                item.getPromocionVenta().setGanancia(ganancia);
+                item.getPromocionVenta().setTotalCalculado(totalCalculado);
+                item.getPromocionVenta().setPorcentage(porcentageGanancia);
+
+                if(ganancia < 0 ){
+                    gananciaPromocion.setTextColor(ContextCompat.getColor(context,R.color.rojo));
+                    porcentageGananciaPromocion.setTextColor(ContextCompat.getColor(context,R.color.rojo));
+                    precioCalculadoPromocion.setTextColor(ContextCompat.getColor(context,R.color.rojo));
+                } else {
+                    gananciaPromocion.setTextColor(ContextCompat.getColor(context,R.color.azul_oscuro));
+                    porcentageGananciaPromocion.setTextColor(ContextCompat.getColor(context,R.color.azul_oscuro));
+                    precioCalculadoPromocion.setTextColor(ContextCompat.getColor(context,R.color.azul_oscuro));
+                }
+
+                gananciaPromocion.setText("$"+ Utilidades.puntoMil(item.getPromocionVenta().getGanancia()));
+                porcentageGananciaPromocion.setText(Utilidades.restringirDecimales(item.getPromocionVenta().getPorcentage()) + "%");
+                precioCalculadoPromocion.setText("$"+ Utilidades.puntoMil(item.getPromocionVenta().getTotalCalculado()));
+                precioPromocion.setText("$" + Utilidades.puntoMil(item.getPromocionVenta().getTotal()));
+
+                ventaRegistroHolderView.calcularPrecioTotal();
+            }
+
         }
     }
 }

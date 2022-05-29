@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.naturalfisherapp.R;
 import com.example.naturalfisherapp.data.models.Producto;
+import com.example.naturalfisherapp.data.models.Promocion;
 import com.example.naturalfisherapp.presenter.activities.ProductoPresenter;
 import com.example.naturalfisherapp.presenter.interfaces.IProductoPresenter;
 import com.example.naturalfisherapp.view.interfaces.IProductoBusquedaFragmentView;
@@ -44,7 +45,7 @@ public class DetalleProductoDialogFragment extends DialogFragment implements IDe
     private ProgressDialog progress;
     private String tipoMensaje;
     private IProductoPresenter iProductoPresenter;
-    private Producto producto;
+    private Object producto;
     private IProductoBusquedaFragmentView iProductoBusquedaFragmentView;
 
     @BindView(R.id.txtTitulo)
@@ -74,7 +75,7 @@ public class DetalleProductoDialogFragment extends DialogFragment implements IDe
     @BindView(R.id.llMensajeDetalleProducto)
     LinearLayout llMensajeDetalleProducto;
 
-    public static DetalleProductoDialogFragment newInstance(Activity activity, Producto producto, IProductoBusquedaFragmentView iProductoBusquedaFragmentView){
+    public static DetalleProductoDialogFragment newInstance(Activity activity, Object producto, IProductoBusquedaFragmentView iProductoBusquedaFragmentView){
         DetalleProductoDialogFragment detalleProductoDialogFragment = new DetalleProductoDialogFragment();
         detalleProductoDialogFragment.activity = activity;
         detalleProductoDialogFragment.producto = producto;
@@ -106,15 +107,10 @@ public class DetalleProductoDialogFragment extends DialogFragment implements IDe
 
         progress = new ProgressDialog(getContext());
 
-        txtTitulo.setText(producto.getNombre());
-
-        precioProducto.setText(producto.getPrecio() + " - " + producto.getUnidad());
-
-        if(producto.getDescripcion_unidad() != null && !producto.getDescripcion_unidad().equals("")){
-            llDescripcionProducto.setVisibility(View.VISIBLE);
-            descripcionProducto.setText(producto.getDescripcion_unidad());
-        } else {
-            llDescripcionProducto.setVisibility(View.GONE);
+        if(producto.getClass() == Producto.class){
+            setInfoProducto((Producto)producto);
+        } else if(producto.getClass() == Promocion.class){
+            setInfoPromocion((Promocion)producto);
         }
 
         dialog = builder.create();
@@ -123,6 +119,9 @@ public class DetalleProductoDialogFragment extends DialogFragment implements IDe
 
         return dialog;
     }
+
+
+
 
     /**
      * --------------================ METODOS =================--------------------------------
@@ -168,6 +167,35 @@ public class DetalleProductoDialogFragment extends DialogFragment implements IDe
             activity.getFragmentManager().beginTransaction().remove(fragment).commit();
         }
 
+    }
+
+    /**
+     * @Autor RagooS
+     * @Descripccion Metodo permite setear la informacion del producto
+     * @Fecha 06/05/2022
+     */
+    private void setInfoProducto(Producto producto) {
+        txtTitulo.setText(producto.getNombre());
+
+        precioProducto.setText(producto.getPrecio() + " - " + producto.getUnidad());
+
+        if(producto.getDescripcion_unidad() != null && !producto.getDescripcion_unidad().equals("")){
+            llDescripcionProducto.setVisibility(View.VISIBLE);
+            descripcionProducto.setText(producto.getDescripcion_unidad());
+        } else {
+            llDescripcionProducto.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * @Autor RagooS
+     * @Descripccion Metodo permite setear la informacion de la promocion
+     * @Fecha 06/05/2022
+     */
+    private void setInfoPromocion(Promocion promocion) {
+        txtTitulo.setText(promocion.getNombre());
+
+        precioProducto.setText(promocion.getTotal() + "");
     }
 
     /**
@@ -269,11 +297,14 @@ public class DetalleProductoDialogFragment extends DialogFragment implements IDe
 
     @Override
     public void actualizarProducto() {
-        CrearProductoDialogFragment crearProductoDialogFragment = CrearProductoDialogFragment.newInstance(activity, producto,"Actualizar Producto", this);
-        crearProductoDialogFragment.show(getChildFragmentManager(), "ActualizarProducto");
-        Fragment fragment = getFragmentManager().findFragmentByTag("ActualizarProducto");
-        if (fragment != null) {
-            getFragmentManager().beginTransaction().remove(fragment).commit();
+        if(producto.getClass() == Producto.class){
+            CrearProductoDialogFragment crearProductoDialogFragment = CrearProductoDialogFragment.newInstance(activity, (Producto) producto,"Actualizar Producto", this);
+            crearProductoDialogFragment.show(getChildFragmentManager(), "ActualizarProducto");
+            Fragment fragment = getFragmentManager().findFragmentByTag("ActualizarProducto");
+            if (fragment != null) {
+                getFragmentManager().beginTransaction().remove(fragment).commit();
+            }
         }
+
     }
 }

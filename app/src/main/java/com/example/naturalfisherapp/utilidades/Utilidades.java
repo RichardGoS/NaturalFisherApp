@@ -1,6 +1,7 @@
 package com.example.naturalfisherapp.utilidades;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -22,6 +23,7 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * de RagooS
@@ -97,9 +99,23 @@ public class Utilidades {
      * @param valor a formatear
      * @return Doble valor formateado
      */
-    public static Double restringirDecimales (Double valor){
+    public static Double restringirDecimales(Double valor){
 
         valor = Math.round(valor * Math.pow(10, 3)) / Math.pow(10, 3);
+
+        return valor;
+    }
+
+    /**
+     * @Autor RagooS
+     * @Fecha 04/05/2022
+     * @Descripccion Metodo permite restringir la cantidad de decimales maximo 2
+     * @param valor a formatear
+     * @return Doble valor formateado
+     */
+    public static Double restringirDecimalesPorcentage(Double valor){
+
+        valor = Math.round(valor * Math.pow(10, 2)) / Math.pow(10, 2);
 
         return valor;
     }
@@ -232,10 +248,28 @@ public class Utilidades {
 
                 File fileRegistro = new File(carpeta, "configuracion.txt");
 
-                if(fileRegistro.delete()){
+                if(fileRegistro.exists()){
+                    if(fileRegistro.delete()){
 
-                    fileRegistro = new File(carpeta, "configuracion.txt");
+                        fileRegistro = new File(carpeta, "configuracion.txt");
 
+                        FileWriter escribir = new FileWriter(fileRegistro.getAbsoluteFile(), true);
+
+                        escribir.append(EnumVariables.DIRECCION_IP_SERVIDOR.getValor()+ ":" + configuracion.getIp() );
+                        escribir.flush();
+                        escribir.append("\n");
+                        escribir.flush();
+                        escribir.append(EnumVariables.PUERTO_SERVIDOR.getValor()+ ":" + configuracion.getPuerto() );
+                        escribir.flush();
+
+                        escrito = true;
+
+                        Log.i("ArchivoCreado:", " Utilidades Se registro con exito en el archivo");
+                    } else {
+                        Log.i("ERROR:", " No se elimino el archivo");
+
+                    }
+                } else {
                     FileWriter escribir = new FileWriter(fileRegistro.getAbsoluteFile(), true);
 
                     escribir.append(EnumVariables.DIRECCION_IP_SERVIDOR.getValor()+ ":" + configuracion.getIp() );
@@ -248,9 +282,6 @@ public class Utilidades {
                     escrito = true;
 
                     Log.i("ArchivoCreado:", " Utilidades Se registro con exito en el archivo");
-                } else {
-                    Log.i("ERROR:", " No se elimino el archivo");
-
                 }
 
             } catch (IOException e) {
@@ -263,4 +294,74 @@ public class Utilidades {
 
         return escrito;
     }
+
+    /**
+     * @Date 10/01/2022
+     * @Descripccion Metodo permite comparar fechas
+     * @param fecha1
+     * @param fecha2
+     * @return boolean
+     */
+    public static boolean compararFechasMismoDia(Date fecha1, Date fecha2){
+
+        boolean igual = false;
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+
+        String fechaStr1 = "";
+        String fechaStr2 = "";
+
+        try{
+            fechaStr1 = format.format(fecha1);
+            fechaStr2 = format.format(fecha2);
+            fecha1 = format.parse(fechaStr1);
+            fecha2 = format.parse(fechaStr2);
+
+            if(fecha1.equals(fecha2)){
+                igual = true;
+            }
+
+
+        } catch (Exception e){
+            e.printStackTrace();
+            igual = false;
+        }
+
+        return igual;
+    }
+
+    public static String formatearFecha2(Date date){
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+
+        String fechaReturn = "";
+
+        try{
+            fechaReturn = format.format(date);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return fechaReturn;
+    }
+
+    /**
+     * @Date 24/05/2022
+     * @Descripccion Metodo permite obtener la hora
+     * @return String
+     */
+    @SuppressLint("SimpleDateFormat")
+    public static String getHora(){
+        return new SimpleDateFormat("HH:mm").format(new Date());
+    }
+
+    /**
+     * @Date 24/05/2022
+     * @Descripccion Metodo permite obtener la fecha
+     * @return String
+     */
+    public static String getFecha(){
+        return new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+    }
+
+
 }

@@ -21,6 +21,8 @@ import com.example.naturalfisherapp.presenter.activities.ventaPresenter;
 import com.example.naturalfisherapp.presenter.interfaces.IVentaPresenter;
 import com.example.naturalfisherapp.retrofit.ClientApiService;
 import com.example.naturalfisherapp.retrofit.InterfaceApiService;
+import com.example.naturalfisherapp.utilidades.EnumVariables;
+import com.example.naturalfisherapp.utilidades.InformacionSession;
 import com.example.naturalfisherapp.utilidades.Utilidades;
 import com.example.naturalfisherapp.view.activities.VentaPrinsipalActivity;
 import com.example.naturalfisherapp.view.adapter.VentaRegistroAdapter;
@@ -93,6 +95,8 @@ public class DetalleRegistroVentaFragment extends Fragment implements IDetalleRe
 
         ButterKnife.bind(this, view);
 
+        InformacionSession.getInstance().setFragmentActual(EnumVariables.FRAGMENT_DETALLE_REGISTRO_VENTA.getValor());
+
         progress = new ProgressDialog(getContext());
         //consultarVentas();
         ventaPresenter = new ventaPresenter(getContext(), this);
@@ -115,6 +119,16 @@ public class DetalleRegistroVentaFragment extends Fragment implements IDetalleRe
     /**
      * --------------================ METODOS =================--------------------------------
      */
+
+    /**
+     * -------------- METODOS SOBRESCRITOS --------------------------------
+     */
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        hideProgress();
+    }
 
     /**
      * -------------- METODOS PROPIOS --------------------------------

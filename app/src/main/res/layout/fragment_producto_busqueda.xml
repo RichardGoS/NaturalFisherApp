@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".view.fragment.ProductoBusquedaFragment">
 
     <LinearLayout
@@ -35,6 +36,7 @@
         </LinearLayout>
 
         <RelativeLayout
+            android:layout_weight="0.9"
             android:layout_marginLeft="2dp"
             android:layout_marginRight="2dp"
             android:layout_width="match_parent"
@@ -52,10 +54,101 @@
 
         </RelativeLayout>
 
+        <LinearLayout
+            android:visibility="gone"
+            android:layout_weight="0.02"
+            android:id="@+id/llDatosProductos"
+            android:orientation="vertical"
+            android:background="@drawable/shape_pie_azul_redondo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:visibility="gone"
+                android:id="@+id/llNumProductos"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:layout_weight="0.2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_marginRight="5dp"
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:layout_margin="1dp"
+                        android:src="@drawable/ic_numeral"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"/>
+
+                    <TextView
+                        android:textSize="14dp"
+                        android:layout_marginLeft="5dp"
+                        android:textColor="@color/white"
+                        android:textStyle="italic"
+                        android:text="Productos"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        android:id="@+id/numProductos"
+                        android:textSize="14dp"
+                        android:layout_marginLeft="5dp"
+                        android:textColor="@color/white"
+                        android:textStyle="italic"
+                        android:text="30"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:visibility="gone"
+                    android:id="@+id/llNumPromociones"
+                    android:layout_marginLeft="5dp"
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:layout_margin="1dp"
+                        android:src="@drawable/ic_numeral"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"/>
+
+                    <TextView
+                        android:textSize="14dp"
+                        android:layout_marginLeft="5dp"
+                        android:textColor="@color/white"
+                        android:textStyle="italic"
+                        android:text="Promociones"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        android:id="@+id/numPromociones"
+                        android:textSize="14dp"
+                        android:layout_marginLeft="5dp"
+                        android:textColor="@color/white"
+                        android:textStyle="italic"
+                        android:text="30"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
     </LinearLayout>
 
-
-
     <include layout="@layout/floating_button_crear_producto"/>
+
+
 
 </RelativeLayout>

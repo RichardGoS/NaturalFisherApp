@@ -87,6 +87,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/llUnidad"
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_weight="0.2"
@@ -113,6 +114,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/llVariacion"
                 android:layout_weight="0.2"
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
@@ -142,6 +144,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/llInventario"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.1"
@@ -172,7 +175,7 @@
             android:textSize="12dp"
             android:textColor="@color/azul_oscuro"
             android:textStyle="normal"
-            android:text="Descripcion Unidad"
+            android:text="Descripcion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 

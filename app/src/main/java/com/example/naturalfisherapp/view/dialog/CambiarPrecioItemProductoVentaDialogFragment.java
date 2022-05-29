@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.naturalfisherapp.R;
+import com.example.naturalfisherapp.view.interfaces.adapter.IItemPromocionHolderView;
 import com.example.naturalfisherapp.view.interfaces.adapter.IItemVentaHolderView;
 import com.example.naturalfisherapp.view.interfaces.dialog.ICambiarPrecioItemProductoVentaDialogFragment;
 
@@ -40,6 +41,7 @@ public class CambiarPrecioItemProductoVentaDialogFragment extends DialogFragment
     private String titulo;
     private Activity activity;
     private IItemVentaHolderView iItemVentaHolderView;
+    private IItemPromocionHolderView iItemPromocionHolderView;
 
     @BindView(R.id.txtTitulo)
     TextView txtTitulo;
@@ -52,6 +54,14 @@ public class CambiarPrecioItemProductoVentaDialogFragment extends DialogFragment
         cambiarPrecio.activity = activity;
         cambiarPrecio.titulo = titulo;
         cambiarPrecio.iItemVentaHolderView = iItemVentaHolderView;
+        return cambiarPrecio;
+    }
+
+    public static CambiarPrecioItemProductoVentaDialogFragment newInstance(String titulo, Activity activity, IItemPromocionHolderView iItemPromocionHolderView){
+        CambiarPrecioItemProductoVentaDialogFragment cambiarPrecio = new CambiarPrecioItemProductoVentaDialogFragment();
+        cambiarPrecio.activity = activity;
+        cambiarPrecio.titulo = titulo;
+        cambiarPrecio.iItemPromocionHolderView = iItemPromocionHolderView;
         return cambiarPrecio;
     }
 
@@ -108,6 +118,9 @@ public class CambiarPrecioItemProductoVentaDialogFragment extends DialogFragment
         if(!edtPrecioProducto.getText().toString().equals("")){
             if(iItemVentaHolderView != null){
                 iItemVentaHolderView.cambiarPrecio(edtPrecioProducto.getText().toString());
+                dismissDialog();
+            } else if(iItemPromocionHolderView != null){
+                iItemPromocionHolderView.cambiarPrecio(edtPrecioProducto.getText().toString());
                 dismissDialog();
             }
         } else {
