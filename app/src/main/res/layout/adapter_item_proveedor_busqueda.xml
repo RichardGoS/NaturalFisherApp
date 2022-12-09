@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:gravity="center_horizontal"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_margin="5dp"
+        android:id="@+id/llProveedor"
+        android:background="@color/azul_bajo"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="170dp">
+
+        <LinearLayout
+            android:layout_gravity="center"
+            android:layout_weight="0.9"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="140dp">
+
+            <LinearLayout
+                android:layout_margin="12dp"
+                android:layout_weight="0.7"
+                android:background="@drawable/ic_proveedor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginLeft="1dp"
+                android:orientation="vertical"
+                android:layout_weight="0.3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/nombreProveedor"
+                    android:textStyle="bold"
+                    android:textColor="@color/azul_oscuro"
+                    android:textSize="18dp"
+                    android:text="Comercializadora Fresmar SAS"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <LinearLayout
+                    android:id="@+id/llNitProveedor"
+                    android:layout_marginTop="4dp"
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_marginRight="2dp"
+                        android:textSize="12dp"
+                        android:textColor="@color/azul_oscuro"
+                        android:textStyle="bold"
+                        android:text="NIT: "
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        android:id="@+id/nitProveedor"
+                        android:textSize="12dp"
+                        android:textColor="@color/azul_oscuro"
+                        android:textStyle="italic"
+                        android:text="900481902-6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llCiudadProveedor"
+                    android:layout_marginTop="4dp"
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_marginRight="2dp"
+                        android:textSize="12dp"
+                        android:textColor="@color/azul_oscuro"
+                        android:textStyle="bold"
+                        android:text="Direccion: "
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        android:id="@+id/direccionProveedor"
+                        android:textSize="12dp"
+                        android:textColor="@color/azul_oscuro"
+                        android:textStyle="italic"
+                        android:text="Calle 8 # 25 – 20 Alameda"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llDireccionProveedor"
+                    android:layout_marginTop="4dp"
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_marginRight="2dp"
+                        android:textSize="12dp"
+                        android:textColor="@color/azul_oscuro"
+                        android:textStyle="bold"
+                        android:text="Ciudad: "
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        android:id="@+id/ciudadProveedor"
+                        android:textSize="12dp"
+                        android:textColor="@color/azul_oscuro"
+                        android:textStyle="italic"
+                        android:text="Cali - Valle Del Cauca"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llTelefonoProveedor"
+                    android:layout_marginTop="2dp"
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_marginRight="2dp"
+                        android:textSize="12dp"
+                        android:textColor="@color/azul_oscuro"
+                        android:textStyle="bold"
+                        android:text="Telefono: "
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        android:id="@+id/telefonoProveedor"
+                        android:textSize="12dp"
+                        android:textColor="@color/azul_oscuro"
+                        android:textStyle="italic"
+                        android:text="3104010148 - 5577172"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_weight="0.1"
+            android:layout_gravity="center"
+            android:id="@+id/llDescripcionProveedor"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="4dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:gravity="center"
+                android:id="@+id/descripcionProveedor"
+                android:textSize="13dp"
+                android:textColor="@color/azul_oscuro"
+                android:textStyle="bold|italic"
+                android:text="Comercializadora de pescado y mariscos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

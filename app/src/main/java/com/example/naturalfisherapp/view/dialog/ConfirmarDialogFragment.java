@@ -15,9 +15,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.naturalfisherapp.R;
+import com.example.naturalfisherapp.view.interfaces.adapter.IInversionRegistroHolderView;
 import com.example.naturalfisherapp.view.interfaces.adapter.IVentaRegistroHolderView;
 import com.example.naturalfisherapp.view.interfaces.dialog.IDetalleClienteDialogFragment;
 import com.example.naturalfisherapp.view.interfaces.dialog.IDetalleProductoDialogFragment;
+import com.example.naturalfisherapp.view.interfaces.dialog.IDetalleProveedorDialogFragmentView;
 import com.example.naturalfisherapp.view.interfaces.fragment.IPromocionDetalleFragmentView;
 
 import org.jetbrains.annotations.NotNull;
@@ -42,6 +44,8 @@ public class ConfirmarDialogFragment extends DialogFragment {
     private IDetalleClienteDialogFragment iDetalleClienteDialogFragment;
     private IDetalleProductoDialogFragment iDetalleProductoDialogFragment;
     private IPromocionDetalleFragmentView iPromocionDetalleFragmentView;
+    private IDetalleProveedorDialogFragmentView iDetalleProveedorDialogFragmentView;
+    private IInversionRegistroHolderView iInversionRegistroHolderView;
 
     @BindView(R.id.txtTitulo)
     TextView txtTitulo;
@@ -94,6 +98,24 @@ public class ConfirmarDialogFragment extends DialogFragment {
         return confirmarDialogFragment;
     }
 
+    public static ConfirmarDialogFragment newInstance(String titulo, String descripcion, String tipoMensaje, IDetalleProveedorDialogFragmentView iDetalleProveedorDialogFragmentView){
+        ConfirmarDialogFragment confirmarDialogFragment = new ConfirmarDialogFragment();
+        confirmarDialogFragment.titulo = titulo;
+        confirmarDialogFragment.descripcion = descripcion;
+        confirmarDialogFragment.tipoMensaje = tipoMensaje;
+        confirmarDialogFragment.iDetalleProveedorDialogFragmentView = iDetalleProveedorDialogFragmentView;
+        return confirmarDialogFragment;
+    }
+
+    public static ConfirmarDialogFragment newInstance(String titulo, String descripcion, String tipoMensaje, IInversionRegistroHolderView iInversionRegistroHolderView){
+        ConfirmarDialogFragment confirmarDialogFragment = new ConfirmarDialogFragment();
+        confirmarDialogFragment.titulo = titulo;
+        confirmarDialogFragment.descripcion = descripcion;
+        confirmarDialogFragment.tipoMensaje = tipoMensaje;
+        confirmarDialogFragment.iInversionRegistroHolderView = iInversionRegistroHolderView;
+        return confirmarDialogFragment;
+    }
+
     @Override
     public void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -121,6 +143,8 @@ public class ConfirmarDialogFragment extends DialogFragment {
             llImageConfirmacion.setBackgroundResource(R.drawable.ic_confirmarcompra);
         } else if(tipoMensaje.equals("CONFIRMAR_PROMOCION")){
             llImageConfirmacion.setBackgroundResource(R.drawable.ic_mega_promocion);
+        } else if(tipoMensaje.equals("CONFIRMAR_INVERSION")){
+            llImageConfirmacion.setBackgroundResource(R.drawable.ic_inversion);
         }
 
         builder.setView(agregarProductoDialog);
@@ -158,9 +182,16 @@ public class ConfirmarDialogFragment extends DialogFragment {
             } else if(titulo.contains("Actualizar")){
 
             }
-
         } else if(iPromocionDetalleFragmentView != null){
             iPromocionDetalleFragmentView.crearPromocion();
+        } else if(iDetalleProveedorDialogFragmentView != null){
+            if(titulo.contains("Eliminar")){
+                iDetalleProveedorDialogFragmentView.eliminarProveedor();
+            } else if(titulo.contains("Actualizar")){
+
+            }
+        } else if(iInversionRegistroHolderView != null){
+            iInversionRegistroHolderView.realizarInversion();
         }
         dialog.dismiss();
     }

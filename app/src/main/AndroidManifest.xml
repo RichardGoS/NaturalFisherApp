@@ -9,15 +9,24 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
-        android:requestLegacyExternalStorage="true"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.NaturalFisherApp"
         android:usesCleartextTraffic="true">
-        <activity android:name=".view.activities.BodegaPrincipalActivity"></activity>
+        <activity
+            android:name=".view.activities.ProveedorPrincipalActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.activities.InversionPrincipalActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.activities.EstadisticaPrincipalActivity"
+            android:exported="false" />
+        <activity android:name=".view.activities.BodegaPrincipalActivity" />
         <activity android:name=".view.activities.ClientePrincipalActivity" />
         <activity android:name=".view.activities.ConfiguracionActivity" />
         <activity android:name=".view.activities.ProductoPrincipalActivity" />

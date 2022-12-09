@@ -86,9 +86,9 @@ public class ItemVentaAdapter extends RecyclerView.Adapter<ItemVentaAdapter.Item
 
     class ItemVentaHolder extends RecyclerView.ViewHolder implements View.OnFocusChangeListener, IItemVentaHolderView {
 
-        ItemVenta item;
-        String modo;
-        IVentaRegistroHolderView ventaRegistroHolderView;
+        private ItemVenta item;
+        private String modo;
+        private IVentaRegistroHolderView ventaRegistroHolderView;
         private LinearLayoutManager linearLayoutManager;
 
         /**
@@ -206,6 +206,11 @@ public class ItemVentaAdapter extends RecyclerView.Adapter<ItemVentaAdapter.Item
 
                     setEdtPrecioProducto(precioUni);
 
+                    if( modo != null && modo.equals(EnumVariables.MODO_CREACION.getValor()) ){
+                        this.item.setUsa_precio_distinto("S");
+                        this.item.setPrecio_distinto(precioUni);
+                    }
+
                     total.setText("$" + Utilidades.puntoMil(item.getTotal()));
 
                 } else if(item.getPromocionVenta() != null){
@@ -223,6 +228,9 @@ public class ItemVentaAdapter extends RecyclerView.Adapter<ItemVentaAdapter.Item
                     if(modo.equals(EnumVariables.MODO_CREACION.getValor())){
                         btnEliminarItemPromocion.setVisibility(View.VISIBLE);
                         btnCambiarPrecioPromocion.setVisibility(View.VISIBLE);
+
+                        this.item.setUsa_precio_distinto("S");
+                        this.item.setPrecio_distinto(item.getPromocionVenta().getTotal());
                     } else {
                         btnEliminarItemPromocion.setVisibility(View.GONE);
                         btnCambiarPrecioPromocion.setVisibility(View.GONE);

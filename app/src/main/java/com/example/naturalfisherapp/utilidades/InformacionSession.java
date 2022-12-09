@@ -3,7 +3,10 @@ package com.example.naturalfisherapp.utilidades;
 import com.example.naturalfisherapp.data.models.Bodega;
 import com.example.naturalfisherapp.data.models.Cliente;
 import com.example.naturalfisherapp.data.models.Producto;
+import com.example.naturalfisherapp.data.models.Proveedor;
+import com.example.naturalfisherapp.data.models.interpretes.BusquedaInversiones;
 import com.example.naturalfisherapp.data.models.interpretes.BusquedaVentas;
+import com.example.naturalfisherapp.data.models.interpretes.DetalleInversiones;
 import com.example.naturalfisherapp.data.models.interpretes.DetalleVentas;
 import com.example.naturalfisherapp.data.models.interpretes.GeneralProductos;
 import com.example.naturalfisherapp.data.system.Configuracion;
@@ -35,6 +38,19 @@ public class InformacionSession {
     private DetalleVentas detalleVentas;
     private int numProductos = 0;
     private int numPromocion = 0;
+
+    /**
+     * Fase 4
+     * @Author RagooS
+     * @fecha 26/09/2022
+     * @descripcion Objeto permite almacenar en memoria las inversiones consultadas
+     */
+    private List<BusquedaInversiones> busquedaInversiones;
+    private DetalleInversiones detalleInversiones;
+    private List<Proveedor> proveedoresConsultados;
+    private Proveedor proveedorNewInversion;
+
+    private List<GeneralProductos> productosActivosInversion;
 
     public static InformacionSession getInstance() {
         if (instance == null) {
@@ -141,5 +157,45 @@ public class InformacionSession {
 
     public void setNumPromocion(int numPromocion) {
         this.numPromocion = numPromocion;
+    }
+
+    public List<BusquedaInversiones> getBusquedaInversiones() {
+        return busquedaInversiones;
+    }
+
+    public void setBusquedaInversiones(List<BusquedaInversiones> busquedaInversiones) {
+        this.busquedaInversiones = busquedaInversiones;
+    }
+
+    public DetalleInversiones getDetalleInversiones() {
+        return detalleInversiones;
+    }
+
+    public void setDetalleInversiones(DetalleInversiones detalleInversiones) {
+        this.detalleInversiones = detalleInversiones;
+    }
+
+    public List<Proveedor> getProveedoresConsultados() {
+        return proveedoresConsultados;
+    }
+
+    public void setProveedoresConsultados(List<Proveedor> proveedoresConsultados) {
+        this.proveedoresConsultados = proveedoresConsultados;
+    }
+
+    public Proveedor getProveedorNewInversion() {
+        return proveedorNewInversion;
+    }
+
+    public void setProveedorNewInversion(Proveedor proveedorNewInversion) {
+        this.proveedorNewInversion = proveedorNewInversion;
+    }
+
+    public List<GeneralProductos> getProductosActivosInversion() {
+        return productosActivosInversion;
+    }
+
+    public void setProductosActivosInversion(List<GeneralProductos> productosActivosInversion) {
+        this.productosActivosInversion = productosActivosInversion;
     }
 }

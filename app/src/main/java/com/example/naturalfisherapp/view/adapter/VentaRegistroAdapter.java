@@ -1,6 +1,7 @@
 package com.example.naturalfisherapp.view.adapter;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -11,11 +12,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.naturalfisherapp.R;
+import com.example.naturalfisherapp.data.models.Cliente;
 import com.example.naturalfisherapp.data.models.ItemPromocion;
 import com.example.naturalfisherapp.data.models.ItemPromocionVenta;
 import com.example.naturalfisherapp.data.models.ItemVenta;
@@ -28,9 +31,11 @@ import com.example.naturalfisherapp.utilidades.EnumVariables;
 import com.example.naturalfisherapp.utilidades.Utilidades;
 import com.example.naturalfisherapp.view.activities.MenuPrincipalActivity;
 import com.example.naturalfisherapp.view.activities.VentaPrinsipalActivity;
+import com.example.naturalfisherapp.view.dialog.AgregarClienteDialogFragment;
 import com.example.naturalfisherapp.view.dialog.AgregarProductoDialogFragment;
 import com.example.naturalfisherapp.view.dialog.ConfirmarDialogFragment;
 import com.example.naturalfisherapp.view.dialog.InformacionDialogFragment;
+import com.example.naturalfisherapp.view.dialog.SelectOptionDialogFragment;
 import com.example.naturalfisherapp.view.interfaces.adapter.IVentaRegistroHolderView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -56,20 +61,22 @@ public class VentaRegistroAdapter extends RecyclerView.Adapter<VentaRegistroAdap
     private FragmentManager fragmentManager;
     private Activity activity;
     private IVentaPresenter ventaPresenter;
+    private String modo;
 
-    public VentaRegistroAdapter(List<Venta> listVenta, Context context, FragmentManager fragmentManager, Activity activity, IVentaPresenter ventaPresenter) {
+    public VentaRegistroAdapter(List<Venta> listVenta, Context context, FragmentManager fragmentManager, Activity activity, IVentaPresenter ventaPresenter, String modo) {
         this.listVenta = listVenta;
         this.context = context;
         this.fragmentManager = fragmentManager;
         this.activity = activity;
         this.ventaPresenter = ventaPresenter;
+        this.modo = modo;
     }
 
     @NonNull
     @Override
     public VentaRegistroHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_venta_registro, parent, false);
-        VentaRegistroAdapter.VentaRegistroHolder ventaRegistroHolder = new VentaRegistroHolder(view, ventaPresenter, fragmentManager);
+        VentaRegistroAdapter.VentaRegistroHolder ventaRegistroHolder = new VentaRegistroHolder(view, ventaPresenter, fragmentManager, modo);
         context = parent.getContext();
         return ventaRegistroHolder;
     }
@@ -91,6 +98,21 @@ public class VentaRegistroAdapter extends RecyclerView.Adapter<VentaRegistroAdap
         private IVentaPresenter ventaPresenter;
         private Activity activity;
         private FragmentManager fragmentManager;
+
+        /**
+         * Fase 4 Tarea 2
+         * @author RagooS
+         * @fecha 30/07/2022
+         * @descripcion Se agregan las variables para el control logico
+         */
+
+        private List<String> listDireccionesCliente;
+        private List<String> listTelefonosCliente;
+        private int posicionDireccionSeleccionada = 0;
+        private int posicionTelefonoSeleccionado = 0;
+        private String modo;
+
+        private ProgressDialog progress;
 
         @BindView(R.id.fechaVentaDetalle)
         TextView fechaVentaDetalle;
@@ -128,29 +150,102 @@ public class VentaRegistroAdapter extends RecyclerView.Adapter<VentaRegistroAdap
         @BindView(R.id.btnAgregarProducto)
         FloatingActionButton btnAgregarProducto;
 
-        public VentaRegistroHolder(View itemView, IVentaPresenter ventaPresenter, FragmentManager fragmentManager) {
+        /**
+         * Fase 4 Tarea 2
+         * @author RagooS
+         * @fecha 30/07/2022
+         * @descripcion Se agregan los campos de la vista para el control de la misma
+         */
+
+        @BindView(R.id.llBtnCambiarClienteVenta)
+        LinearLayout llBtnCambiarClienteVenta;
+
+        @BindView(R.id.llBtnCambiarTelefonoVenta)
+        LinearLayout llBtnCambiarTelefonoVenta;
+
+        @BindView(R.id.llBtnCambiarDireccionVenta)
+        LinearLayout llBtnCambiarDireccionVenta;
+
+        public VentaRegistroHolder(View itemView, IVentaPresenter ventaPresenter, FragmentManager fragmentManager, String modo) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             this.ventaPresenter = ventaPresenter;
             this.fragmentManager = fragmentManager;
+            this.modo = modo;
+
+            listDireccionesCliente = new ArrayList<>();
+            listTelefonosCliente = new ArrayList<>();
         }
 
         void bind(final Venta venta, Activity activity){
             this.venta = venta;
             this.activity = activity;
 
+            progress = new ProgressDialog(activity.getApplicationContext());
+
             if(venta != null && venta.getCliente() != null){
                 fechaVentaDetalle.setText(Utilidades.formatearFecha(venta.getFecha()));
                 nombreCliente.setText(venta.getCliente().getNombre());
-                telefonoCliente.setText("" + venta.getCliente().getTelefono());
-                direccionCliente.setText(venta.getCliente().getDireccion());
+
+                if(venta.getDireccion() != null && !venta.getDireccion().equals("")){
+                    direccionCliente.setText(venta.getDireccion());
+
+                    if(modo.equals(EnumVariables.MODO_CREACION.getValor())){
+                        listDireccionesCliente.add(venta.getDireccion());
+                        posicionDireccionSeleccionada = 0;
+                    }
+
+                } else {
+                    direccionCliente.setText(venta.getCliente().getDireccion());
+                    venta.setDireccion(venta.getCliente().getDireccion());
+
+                    if(modo.equals(EnumVariables.MODO_CREACION.getValor())){
+                        listDireccionesCliente.add(venta.getDireccion());
+                        posicionDireccionSeleccionada = 0;
+                    }
+                }
+
+                if(modo.equals(EnumVariables.MODO_CREACION.getValor())){
+                    llBtnCambiarClienteVenta.setVisibility(View.VISIBLE);
+                    llBtnCambiarTelefonoVenta.setVisibility(View.VISIBLE);
+                    llBtnCambiarDireccionVenta.setVisibility(View.VISIBLE);
+
+                    if(venta.getCliente().getDireccion_respaldo() != null && !venta.getCliente().getDireccion_respaldo().equals("")){
+                        listDireccionesCliente.add(venta.getCliente().getDireccion_respaldo());
+                    }
+
+                    if(venta.getCliente().getTelefono_respaldo() != null && !venta.getCliente().getTelefono_respaldo().equals("")){
+                        listTelefonosCliente.add(venta.getCliente().getTelefono_respaldo());
+                    }
+                } else if(modo.equals(EnumVariables.MODO_CONSULTA.getValor())) {
+                    llBtnCambiarClienteVenta.setVisibility(View.GONE);
+                    llBtnCambiarTelefonoVenta.setVisibility(View.GONE);
+                    llBtnCambiarDireccionVenta.setVisibility(View.GONE);
+                }
+
+                if(venta.getTelefono() != null && !venta.getTelefono().equals("")){
+                    telefonoCliente.setText("" + venta.getTelefono());
+
+                    if(modo.equals(EnumVariables.MODO_CREACION.getValor())){
+                        listTelefonosCliente.add(venta.getTelefono());
+                        posicionTelefonoSeleccionado = 0;
+                    }
+
+                } else {
+                    telefonoCliente.setText("" + venta.getCliente().getTelefono());
+                    venta.setTelefono(venta.getCliente().getTelefono());
+
+                    if(modo.equals(EnumVariables.MODO_CREACION.getValor())){
+                        listTelefonosCliente.add(venta.getCliente().getTelefono());
+                    }
+                }
 
                 if(this.venta.getItems() != null && !this.venta.getItems().isEmpty()){
                     recyclerViewItems.setVisibility(View.VISIBLE);
                     llAgregarProducto.setVisibility(View.GONE);
                     llBotonesProcesos.setVisibility(View.GONE);
                     btnAgregarProducto.setVisibility(View.GONE);
-                    cargarAdapterItems(this.venta.getItems(), EnumVariables.MODO_CONSULTA.getValor());
+                    cargarAdapterItems(this.venta.getItems(), modo);
                 } else {
                     recyclerViewItems.setVisibility(View.GONE);
                     llAgregarProducto.setVisibility(View.VISIBLE);
@@ -193,6 +288,51 @@ public class VentaRegistroAdapter extends RecyclerView.Adapter<VentaRegistroAdap
         void onClickBtnAgregarProducto(){
             goToAgregarProducto();
         }
+
+        /**
+         * Fase 4 Tarea 2
+         * @author RagooS
+         * @fecha 30/07/2022
+         * @descripcion Se agregan los metodos onClick para el manejo de los botodes.
+         */
+        @OnClick(R.id.llBtnCambiarClienteVenta)
+        void onClickLlBtnCambiarClienteVenta(){
+            System.out.println("Cambiar Cliente");
+
+            AgregarClienteDialogFragment agregarClienteDialogFragment = AgregarClienteDialogFragment.newInstance(activity,"Cambiar Cliente", venta.getCliente(), this);
+            agregarClienteDialogFragment.show(fragmentManager, "CambiarCliente");
+            Fragment fragment = fragmentManager.findFragmentByTag("CambiarCliente");
+            if (fragment != null) {
+                fragmentManager.beginTransaction().remove(fragment).commit();
+            }
+
+        }
+
+        @OnClick(R.id.llBtnCambiarTelefonoVenta)
+        void onClickLlBtnCambiarTelefonoVenta(){
+            System.out.println("Cambiar Telefono");
+
+            SelectOptionDialogFragment selectOptionDialogFragment = SelectOptionDialogFragment.newInstance(fragmentManager, "Cambiar Telefono", EnumVariables.NUMBER.getValor(), listTelefonosCliente, posicionTelefonoSeleccionado, this);
+            selectOptionDialogFragment.show(fragmentManager, "CambiarTelefono");
+            Fragment fragment = fragmentManager.findFragmentByTag("CambiarTelefono");
+            if (fragment != null) {
+                fragmentManager.beginTransaction().remove(fragment).commit();
+            }
+
+        }
+
+        @OnClick(R.id.llBtnCambiarDireccionVenta)
+        void onClickLlBtnCambiarDireccionVenta(){
+            System.out.println("Cambiar Direccion");
+
+            SelectOptionDialogFragment selectOptionDialogFragment = SelectOptionDialogFragment.newInstance(fragmentManager, "Cambiar Direccion",EnumVariables.LETRAS.getValor(), listDireccionesCliente, posicionDireccionSeleccionada, this);
+            selectOptionDialogFragment.show(fragmentManager, "CambiarDireccion");
+            Fragment fragment = fragmentManager.findFragmentByTag("CambiarDireccion");
+            if (fragment != null) {
+                fragmentManager.beginTransaction().remove(fragment).commit();
+            }
+        }
+
 
         /**
          * -------------- METODOS INTERFACE IVentaRegistroHolderView --------------------------------
@@ -366,6 +506,118 @@ public class VentaRegistroAdapter extends RecyclerView.Adapter<VentaRegistroAdap
 
         }
 
+        /**
+         * Fase 4 Tarea 2
+         * @author RagooS
+         * @fecha 30/07/2022
+         * @descripcion Metodo encargado de validar y setear los datos del Cliente Cambiados.
+         * @param cliente
+         */
+        @Override
+        public void setCliente(Cliente cliente) {
+            if(cliente != null){
+                venta.setCliente(cliente);
+                nombreCliente.setText(cliente.getNombre());
+                telefonoCliente.setText(cliente.getTelefono());
+                direccionCliente.setText(cliente.getDireccion());
+                venta.setDireccion(cliente.getDireccion());
+                venta.setTelefono(cliente.getTelefono());
+
+                setListDatosCliente(cliente);
+            }
+        }
+
+        /**
+         * Fase 4 Tarea 2
+         * @author RagooS
+         * @fecha 30/07/2022
+         * @descripcion Metodo encargado de validar y setear la direccion.
+         * @param direccion
+         */
+        @Override
+        public void setDireccion(String direccion, int posicionSeleccionada) {
+            if(direccion != null && !direccion.equals("")){
+                direccionCliente.setText(direccion);
+                venta.setDireccion(direccion);
+
+                if(posicionSeleccionada >= 0 && posicionSeleccionada < listDireccionesCliente.size()){
+                    this.posicionDireccionSeleccionada = posicionSeleccionada;
+                } else {
+                    listDireccionesCliente.add(direccion);
+                    this.posicionDireccionSeleccionada = listDireccionesCliente.size() - 1;
+                }
+
+                /*
+                if(listDireccionesCliente != null && !listDireccionesCliente.isEmpty()){
+                    for(String direcc:listDireccionesCliente){
+                        if(direcc != null && !direcc.equals(direccion)){
+                            listDireccionesCliente.add(direccion);
+                            posicionDireccionSeleccionada = listDireccionesCliente.size() - 1;
+                        } else {
+                            break;
+                        }
+                    }
+                }*/
+            }
+        }
+
+        /**
+         * Fase 4 Tarea 2
+         * @author RagooS
+         * @fecha 30/07/2022
+         * @descripcion Metodo encargado de validar y setear el telefono.
+         * @param telefono
+         */
+        @Override
+        public void setTelefono(String telefono, int posicionSeleccionada) {
+            if(telefono != null && !telefono.equals("")){
+                telefonoCliente.setText(telefono);
+                venta.setTelefono(telefono);
+
+                if(posicionSeleccionada >= 0 && posicionSeleccionada < listTelefonosCliente.size()){
+                    this.posicionTelefonoSeleccionado = posicionSeleccionada;
+                } else {
+                    listTelefonosCliente.add(telefono);
+                    this.posicionTelefonoSeleccionado = listTelefonosCliente.size() - 1;
+                }
+
+
+                /*if(listTelefonosCliente != null && !listTelefonosCliente.isEmpty()){
+                    for(String tele:listTelefonosCliente){
+                        if(!tele.equals(telefono)){
+                            listTelefonosCliente.add(telefono);
+                            posicionTelefonoSeleccionado = listTelefonosCliente.size() - 1;
+                        } else {
+                            break;
+                        }
+                    }
+                }*/
+            }
+        }
+
+        /**
+         * Fase 4 Tarea 2
+         * @author RagooS
+         * @fecha 30/07/2022
+         * @descripcion Metodo encargado de validar y setear el telefono.
+         * @param mensaje
+         */
+        @Override
+        public void showProgress(String mensaje) {
+            progress= ProgressDialog.show(activity.getApplicationContext(), mensaje,null);
+        }
+
+        /**
+         * Fase 4 Tarea 2
+         * @author RagooS
+         * @fecha 30/07/2022
+         * @descripcion Metodo encargado de validar y setear el telefono.
+         */
+        @Override
+        public void hideProgress() {
+            progress.dismiss();
+        }
+
         /*@Override
         public void mostrarDialogoInformativo(String tipo, String informacion) {
             InformacionDialogFragment informacionDialogFragment = InformacionDialogFragment.newInstance(tipo, informacion);
@@ -407,6 +659,8 @@ public class VentaRegistroAdapter extends RecyclerView.Adapter<VentaRegistroAdap
 
             if(venta != null){
                 venta.setFecha(null);
+                venta.setTelefono(venta.getTelefono() != null && !venta.getTelefono().equals("") ? venta.getTelefono() : venta.getCliente().getTelefono());
+                venta.setDireccion(venta.getDireccion() != null && !venta.getDireccion().equals("") ? venta.getDireccion() : venta.getCliente().getDireccion());
                 if(venta.getItems() != null && !venta.getItems().isEmpty()){
                     for (ItemVenta item: venta.getItems()){
                         if(item.getCant_peso() > 0 && item.getTotal() > 0 ){
@@ -470,9 +724,30 @@ public class VentaRegistroAdapter extends RecyclerView.Adapter<VentaRegistroAdap
             activity.finish();
         }
 
+        /**
+         * Fase 4 Tarea 2
+         * @author RagooS
+         * @fecha 30/07/2022
+         * @descripcion Metodo permite insertar los datos del cliente en todos los campos de este.
+         */
+        private void setListDatosCliente(Cliente cliente) {
+
+            listTelefonosCliente = new ArrayList<>();
+            listDireccionesCliente = new ArrayList<>();
+
+            listDireccionesCliente.add(cliente.getDireccion());
+            posicionDireccionSeleccionada = 0;
+
+            listTelefonosCliente.add(cliente.getTelefono());
+            posicionTelefonoSeleccionado = 0;
+
+            if(cliente.getDireccion_respaldo() != null && !cliente.getDireccion_respaldo().equals("")){
+                listDireccionesCliente.add(cliente.getDireccion_respaldo());
+            }
+
+            if(cliente.getTelefono_respaldo() != null && !cliente.getTelefono_respaldo().equals("")){
+                listTelefonosCliente.add(cliente.getTelefono_respaldo());
+            }
+        }
     }
-
-
-
-
 }

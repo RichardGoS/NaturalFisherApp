@@ -115,6 +115,19 @@ public class ItemVentaBusquedaAdapter extends RecyclerView.Adapter<ItemVentaBusq
 
         }
 
+        /**
+         * --------------================ METODOS =================--------------------------------
+         */
+
+        /**
+         * -------------- METODOS PROPIOS --------------------------------
+         */
+
+        /**
+         * @Autor RagooS
+         * @Descripccion Metodo permite cargar el adapter
+         * @Fecha 10/03/2022
+         */
         private void cargarItemsAdapter(List<BusquedaClientesVenta> clientesVenta) {
             linearLayoutManager = new LinearLayoutManager(activity,RecyclerView.VERTICAL,false);
             android.app.FragmentManager fragmentManager = activity.getFragmentManager();
@@ -122,6 +135,10 @@ public class ItemVentaBusquedaAdapter extends RecyclerView.Adapter<ItemVentaBusq
             efRvItemsClientes.setAdapter(clienteItemVentaBusqueda);
             efRvItemsClientes.setLayoutManager(linearLayoutManager);
         }
+
+        /**
+         * -------------- METODOS ONCLICK BUTTERKNIFE --------------------------------
+         */
 
         @OnClick(R.id.llItemVentaFecha)
         public void goToVentasFecha(){

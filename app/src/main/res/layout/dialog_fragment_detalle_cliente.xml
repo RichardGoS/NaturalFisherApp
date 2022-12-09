@@ -71,6 +71,16 @@
                 android:text="Cra27 # 35-63 Saleciano"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
+
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/direccionRespaldoCliente"
+                android:textSize="12dp"
+                android:textColor="@color/azul_oscuro"
+                android:textStyle="italic"
+                android:text="Cra27 # 35-63 Saleciano"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
         </LinearLayout>
 
         <LinearLayout
@@ -95,7 +105,7 @@
                 android:textSize="12dp"
                 android:textColor="@color/azul_oscuro"
                 android:textStyle="italic"
-                android:text="3154269535"
+                android:text="3154269535 - 3234569087"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </LinearLayout>

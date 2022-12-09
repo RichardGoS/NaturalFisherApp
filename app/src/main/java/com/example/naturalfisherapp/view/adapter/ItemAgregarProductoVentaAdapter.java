@@ -17,6 +17,7 @@ import com.example.naturalfisherapp.data.models.Producto;
 import com.example.naturalfisherapp.data.models.Promocion;
 import com.example.naturalfisherapp.data.models.interpretes.GeneralProductos;
 import com.example.naturalfisherapp.utilidades.Utilidades;
+import com.example.naturalfisherapp.view.interfaces.adapter.IInversionRegistroHolderView;
 import com.example.naturalfisherapp.view.interfaces.adapter.IVentaRegistroHolderView;
 import com.example.naturalfisherapp.view.interfaces.dialog.IAgregarProductoDialogFragment;
 import com.example.naturalfisherapp.view.interfaces.fragment.IPromocionDetalleFragmentView;
@@ -46,6 +47,12 @@ public class ItemAgregarProductoVentaAdapter extends RecyclerView.Adapter<ItemAg
     private IAgregarProductoDialogFragment agregarProductoDialogFragment;
     private IPromocionDetalleFragmentView promocionDetalleFragmentView;
 
+    /**
+     * Fase 4 Tarea 3
+     * @author Ragoos
+     */
+    private IInversionRegistroHolderView iInversionRegistroHolderView;
+
     public ItemAgregarProductoVentaAdapter(Context context, FragmentManager fragmentManager, Activity activity, List<GeneralProductos> productos, IVentaRegistroHolderView ventaRegistroHolderView, IAgregarProductoDialogFragment agregarProductoDialogFragment) {
         this.context = context;
         this.fragmentManager = fragmentManager;
@@ -61,6 +68,15 @@ public class ItemAgregarProductoVentaAdapter extends RecyclerView.Adapter<ItemAg
         this.activity = activity;
         this.productos = productos;
         this.promocionDetalleFragmentView = promocionDetalleFragmentView;
+        this.agregarProductoDialogFragment = agregarProductoDialogFragment;
+    }
+
+    public ItemAgregarProductoVentaAdapter(Context context, FragmentManager fragmentManager, Activity activity, List<GeneralProductos> productos, IInversionRegistroHolderView iInversionRegistroHolderView, IAgregarProductoDialogFragment agregarProductoDialogFragment) {
+        this.context = context;
+        this.fragmentManager = fragmentManager;
+        this.activity = activity;
+        this.productos = productos;
+        this.iInversionRegistroHolderView = iInversionRegistroHolderView;
         this.agregarProductoDialogFragment = agregarProductoDialogFragment;
     }
 
@@ -145,22 +161,13 @@ public class ItemAgregarProductoVentaAdapter extends RecyclerView.Adapter<ItemAg
             if( ventaRegistroHolderView != null ){
                 ventaRegistroHolderView.agregarProducto(producto);
             } else if( promocionDetalleFragmentView != null ){
-                System.out.println("Producto Agregar...." + product.getNombre());
                 if(product != null){
                     promocionDetalleFragmentView.agregarProducto(product);
                 }
+            } else if( iInversionRegistroHolderView != null ){
+                iInversionRegistroHolderView.agregarProducto(product);
             }
-            /*if(this.object.getClass() == Producto.class){
-                Producto producto = (Producto) this.object;
 
-                System.out.println("Producto Agregar...." + producto.getNombre());
-
-                if( ventaRegistroHolderView != null ){
-                    ventaRegistroHolderView.agregarProducto(producto);
-                } else if( promocionDetalleFragmentView != null ){
-                    promocionDetalleFragmentView.agregarProducto(producto);
-                }
-            }*/
             agregarProductoDialogFragment.dismissDialog();
 
         }

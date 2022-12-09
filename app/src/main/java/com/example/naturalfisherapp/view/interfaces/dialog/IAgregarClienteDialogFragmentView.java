@@ -1,4 +1,4 @@
-package com.example.naturalfisherapp.view.interfaces;
+package com.example.naturalfisherapp.view.interfaces.dialog;
 
 import com.example.naturalfisherapp.data.models.Cliente;
 import com.example.naturalfisherapp.data.models.Producto;

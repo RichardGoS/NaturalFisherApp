@@ -22,7 +22,7 @@ import com.example.naturalfisherapp.data.models.Producto;
 import com.example.naturalfisherapp.data.models.Promocion;
 import com.example.naturalfisherapp.presenter.activities.ProductoPresenter;
 import com.example.naturalfisherapp.presenter.interfaces.IProductoPresenter;
-import com.example.naturalfisherapp.view.interfaces.IProductoBusquedaFragmentView;
+import com.example.naturalfisherapp.view.interfaces.fragment.IProductoBusquedaFragmentView;
 import com.example.naturalfisherapp.view.interfaces.dialog.IDetalleProductoDialogFragment;
 
 import org.jetbrains.annotations.NotNull;

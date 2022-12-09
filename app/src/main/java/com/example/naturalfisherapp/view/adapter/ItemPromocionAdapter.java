@@ -260,6 +260,11 @@ public class ItemPromocionAdapter extends RecyclerView.Adapter<ItemPromocionAdap
 
         }
 
+        /**
+         * @Autor RagooS
+         * @Descripccion Metodo permite settear los campos
+         * @Fecha 18/07/21
+         */
         private void setEdtPrecioProducto(Double precioUni) {
             if(itemPromocion.getProducto().getUnidad().equals("Kg")){
                 precioKg.setText("$" + Utilidades.puntoMil(precioUni) + " Kg");
@@ -280,7 +285,7 @@ public class ItemPromocionAdapter extends RecyclerView.Adapter<ItemPromocionAdap
 
         /**
          * @Autor RagooS
-         * @Descripccion Metodo permite mostrar barra de carga
+         * @Descripccion Metodo permite cambiar el precio del producto
          * @Fecha 03/05/22
          */
         @Override

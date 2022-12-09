@@ -20,7 +20,7 @@ import com.example.naturalfisherapp.data.models.interpretes.GeneralProductos;
 import com.example.naturalfisherapp.utilidades.EnumVariables;
 import com.example.naturalfisherapp.utilidades.Utilidades;
 import com.example.naturalfisherapp.view.dialog.DetalleProductoDialogFragment;
-import com.example.naturalfisherapp.view.interfaces.IProductoBusquedaFragmentView;
+import com.example.naturalfisherapp.view.interfaces.fragment.IProductoBusquedaFragmentView;
 
 import org.jetbrains.annotations.NotNull;
 

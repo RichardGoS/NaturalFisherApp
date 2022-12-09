@@ -2,8 +2,10 @@
     <string name="app_name">NaturalFisherMarcket</string>
 
     <!-- Aplicacion -->
-    <string name="version">NaturalFisherApp V 2.0 Rel 3.1 RS ED0007</string>
+    <string name="version">NaturalFisherApp V 2.0 Rel 1.8 RS ED0008 09/12/2022 </string><!-- ML 29/07/2022 F4T3 -->
     <string name="buscador">Buscar</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>

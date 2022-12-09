@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.naturalfisherapp.R;
+import com.example.naturalfisherapp.view.interfaces.adapter.IItemInversionHolderView;
 import com.example.naturalfisherapp.view.interfaces.adapter.IItemPromocionHolderView;
 import com.example.naturalfisherapp.view.interfaces.adapter.IItemVentaHolderView;
 import com.example.naturalfisherapp.view.interfaces.dialog.ICambiarPrecioItemProductoVentaDialogFragment;
@@ -42,6 +43,7 @@ public class CambiarPrecioItemProductoVentaDialogFragment extends DialogFragment
     private Activity activity;
     private IItemVentaHolderView iItemVentaHolderView;
     private IItemPromocionHolderView iItemPromocionHolderView;
+    private IItemInversionHolderView itemInversionHolderView;
 
     @BindView(R.id.txtTitulo)
     TextView txtTitulo;
@@ -62,6 +64,14 @@ public class CambiarPrecioItemProductoVentaDialogFragment extends DialogFragment
         cambiarPrecio.activity = activity;
         cambiarPrecio.titulo = titulo;
         cambiarPrecio.iItemPromocionHolderView = iItemPromocionHolderView;
+        return cambiarPrecio;
+    }
+
+    public static CambiarPrecioItemProductoVentaDialogFragment newInstance(String titulo, Activity activity, IItemInversionHolderView itemInversionHolderView){
+        CambiarPrecioItemProductoVentaDialogFragment cambiarPrecio = new CambiarPrecioItemProductoVentaDialogFragment();
+        cambiarPrecio.activity = activity;
+        cambiarPrecio.titulo = titulo;
+        cambiarPrecio.itemInversionHolderView = itemInversionHolderView;
         return cambiarPrecio;
     }
 
@@ -118,11 +128,13 @@ public class CambiarPrecioItemProductoVentaDialogFragment extends DialogFragment
         if(!edtPrecioProducto.getText().toString().equals("")){
             if(iItemVentaHolderView != null){
                 iItemVentaHolderView.cambiarPrecio(edtPrecioProducto.getText().toString());
-                dismissDialog();
             } else if(iItemPromocionHolderView != null){
                 iItemPromocionHolderView.cambiarPrecio(edtPrecioProducto.getText().toString());
-                dismissDialog();
+            } else if (itemInversionHolderView != null){
+                itemInversionHolderView.cambiarPrecio(edtPrecioProducto.getText().toString());
             }
+
+            dismissDialog();
         } else {
             System.out.println("El Campo Precio Esta Vacio");
         }

@@ -1,4 +1,4 @@
-package com.example.naturalfisherapp.view.interfaces;
+package com.example.naturalfisherapp.view.interfaces.activities;
 
 /**
  * de RagooS

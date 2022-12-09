@@ -3,10 +3,7 @@ package com.example.naturalfisherapp.view.fragment;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
-import android.app.TimePickerDialog;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -20,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
 import com.example.naturalfisherapp.R;
 import com.example.naturalfisherapp.data.models.interpretes.BusquedaVentas;
@@ -31,8 +27,9 @@ import com.example.naturalfisherapp.retrofit.InterfaceApiService;
 import com.example.naturalfisherapp.utilidades.EnumVariables;
 import com.example.naturalfisherapp.utilidades.InformacionSession;
 import com.example.naturalfisherapp.utilidades.Utilidades;
+import com.example.naturalfisherapp.view.activities.EstadisticaPrincipalActivity;
 import com.example.naturalfisherapp.view.adapter.ItemVentaBusquedaAdapter;
-import com.example.naturalfisherapp.view.interfaces.VentaBusquedaFragmentView;
+import com.example.naturalfisherapp.view.interfaces.fragment.VentaBusquedaFragmentView;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -64,6 +61,11 @@ public class VentaBusquedaFragment extends Fragment implements VentaBusquedaFrag
     private LinearLayoutManager linearLayoutManager;
     private InterfaceApiService service;
     private IVentaPresenter ventaPresenter;
+
+    private String mesActual = "";
+    private String mesConsulta = "";
+
+
     private DatePickerDialog.OnDateSetListener calendarioFlotante = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int month, int day) {
@@ -72,6 +74,7 @@ public class VentaBusquedaFragment extends Fragment implements VentaBusquedaFrag
             dia = day;
 
             String mesAnio = anio + "/" + (mes + 1);
+            mesConsulta = mesAnio;
 
             System.out.println("MesAño: " + mesAnio);
 
@@ -80,7 +83,6 @@ public class VentaBusquedaFragment extends Fragment implements VentaBusquedaFrag
             }
         }
     };
-
 
     @BindView(R.id.efRvVentaBusqueda)
     RecyclerView recyclerViewVentaBusqueda;
@@ -100,12 +102,13 @@ public class VentaBusquedaFragment extends Fragment implements VentaBusquedaFrag
     @BindView(R.id.llBtnFecha)
     LinearLayout llBtnFecha;
 
+    @BindView(R.id.llBtnEstadisticaProducto)
+    LinearLayout llBtnEstadisticaProducto;
+
     private ProgressDialog progress;
 
 
-    public VentaBusquedaFragment() {
-        // Required empty public constructor
-    }
+    public VentaBusquedaFragment() {}
 
     public static VentaBusquedaFragment newInstance(Activity activity, FragmentManager fragmentManager) {
         VentaBusquedaFragment fragment = new VentaBusquedaFragment();
@@ -136,7 +139,8 @@ public class VentaBusquedaFragment extends Fragment implements VentaBusquedaFrag
         ventaPresenter = new ventaPresenter(activity.getApplicationContext(), this);
 
         Date fechaActual = new Date();
-        String mesActual = obtenerMesAñoMesFecha(fechaActual);
+        mesActual = Utilidades.obtenerMesAñoMesFecha(fechaActual);
+        mesConsulta = mesActual;
 
         if(InformacionSession.getInstance().getVentasConsultadas() != null && !InformacionSession.getInstance().getVentasConsultadas().isEmpty()){
             if(InformacionSession.getInstance().getDetalleVentas() != null){
@@ -151,7 +155,6 @@ public class VentaBusquedaFragment extends Fragment implements VentaBusquedaFrag
         }
 
         calendarioCargarVariables();
-
 
         return view;
     }
@@ -172,11 +175,23 @@ public class VentaBusquedaFragment extends Fragment implements VentaBusquedaFrag
         hideProgress();
     }
 
+    /**
+     * -------------- METODOS ONCLICK BUTTERKNIFE --------------------------------
+     */
+
     @OnClick(R.id.llBtnFecha)
     void onClickFecha(){
         DatePickerDialog dialogPiker = new DatePickerDialog(activity, calendarioFlotante, anio, mes, dia);
         dialogPiker.getWindow().setBackgroundDrawableResource(R.color.azul_bajo);
         dialogPiker.show();
+    }
+
+    @OnClick(R.id.llBtnEstadisticaProducto)
+    void onClickLlBtnEstadisticaProducto(){
+        if(mesActual != null && !mesActual.equals("")){
+            System.out.println(mesActual);
+            goToEstaditicaActivity();
+        }
     }
 
     /**
@@ -211,21 +226,14 @@ public class VentaBusquedaFragment extends Fragment implements VentaBusquedaFrag
     }
 
     /**
+     * -------------- METODOS PROPIOS --------------------------------
+     */
+
+    /**
      * @Autor RagooS
-     * @Descripccion Metodo permite extraer el año y el mes de la fecha
+     * @Descripccion Metodo permite cargar las variables para el calendario
      * @Fecha 10/03/2022
      */
-    private String obtenerMesAñoMesFecha(Date fechaActual) {
-        String mesReturn = "";
-
-        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM");
-
-        mesReturn = format.format(fechaActual);
-
-        return mesReturn;
-
-    }
-
     private void calendarioCargarVariables() {
         Calendar calendar = Calendar.getInstance();
         anio = calendar.get(Calendar.YEAR);
@@ -235,6 +243,19 @@ public class VentaBusquedaFragment extends Fragment implements VentaBusquedaFrag
         hora = calendar.get(Calendar.HOUR_OF_DAY);
         minuto = calendar.get(Calendar.MINUTE);
         horaDia = Utilidades.getHora();
+    }
+
+    /**
+     * Fase 4 Tarea 1
+     * @author RagooS
+     * @Descripccion Metodo permite ir al activity EstadisticaProductoBusqueda
+     * @ddate 07/08/2022
+     */
+    private void goToEstaditicaActivity() {
+        Intent intent = new Intent(activity, EstadisticaPrincipalActivity.class);
+        intent.putExtra("fecha", mesConsulta);
+        startActivity(intent);
+        activity.finish();
     }
 
 }

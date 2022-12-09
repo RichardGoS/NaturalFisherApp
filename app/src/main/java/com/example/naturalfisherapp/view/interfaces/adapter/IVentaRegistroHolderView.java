@@ -1,5 +1,6 @@
 package com.example.naturalfisherapp.view.interfaces.adapter;
 
+import com.example.naturalfisherapp.data.models.Cliente;
 import com.example.naturalfisherapp.data.models.ItemVenta;
 import com.example.naturalfisherapp.data.models.Producto;
 import com.example.naturalfisherapp.data.models.Venta;
@@ -17,18 +18,18 @@ import java.util.List;
 public interface IVentaRegistroHolderView {
 
     void cargarAdapterItems(List<ItemVenta> items, String modo);
-
     void agregarProducto(GeneralProductos producto);
-
     void mostrarLlProcesos();
-
     void habilitarDeahabilitarBtnConfirmarVenta(boolean habilita);
-
     void calcularPrecioTotal();
-
     void realizarVenta();
-
     void eliminarItemVenta(ItemVenta itemVenta);
+
+    void setCliente(Cliente cliente);
+    void setDireccion(String direccion, int posicionSeleccionada);
+    void setTelefono(String telefono, int posicionSeleccionada);
+    void showProgress(String mensaje);
+    void hideProgress();
 
     //void mostrarDialogoInformativo(String tipo, String informacion);
 }

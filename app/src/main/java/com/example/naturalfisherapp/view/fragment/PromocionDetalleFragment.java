@@ -265,7 +265,7 @@ public class PromocionDetalleFragment extends Fragment implements IPromocionDeta
 
     /**
      * @Autor RagooS
-     * @Descripccion Metodo permite eliminar el item perteneciente al producto de la venta
+     * @Descripccion Metodo permite eliminar el item perteneciente al producto de la promocion
      * @Fecha 03/05/2022
      */
     @Override

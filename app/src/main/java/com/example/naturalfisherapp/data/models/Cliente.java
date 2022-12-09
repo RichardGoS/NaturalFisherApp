@@ -15,6 +15,15 @@ public class Cliente {
     private String telefono;
     private String estado;
 
+    /**
+     * Fase 4 Tarea 2
+     * @author RagooS
+     * @fecha 30/07/2022
+     * @descripcion Se agregan variables nuevas
+     */
+    private String telefono_respaldo;
+    private String direccion_respaldo;
+
     public Long getId() {
         return id;
     }
@@ -53,5 +62,27 @@ public class Cliente {
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    /**
+     * Fase 4 Tarea 2
+     * @author RagooS
+     * @fecha 30/07/2022
+     * @descripcion metodos get y  set de las variables creadas
+     */
+    public String getTelefono_respaldo() {
+        return telefono_respaldo;
+    }
+
+    public void setTelefono_respaldo(String telefono_respaldo) {
+        this.telefono_respaldo = telefono_respaldo;
+    }
+
+    public String getDireccion_respaldo() {
+        return direccion_respaldo;
+    }
+
+    public void setDireccion_respaldo(String direccion_respaldo) {
+        this.direccion_respaldo = direccion_respaldo;
     }
 }

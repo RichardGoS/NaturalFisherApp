@@ -113,6 +113,11 @@ public class MenuPrincipalActivity extends AppCompatActivity implements IMenuPri
         goToVender();
     }
 
+    @OnClick(R.id.btnInversiones)
+    void goToInversion(){
+        goToInversionPrincipalActivity();
+    }
+
     /**
      * -------------- METODOS PROPIOS --------------------------------
      */
@@ -211,6 +216,18 @@ public class MenuPrincipalActivity extends AppCompatActivity implements IMenuPri
         btnAddProducto.animate().translationX(0);
         btnAddVenta.setVisibility(View.GONE);
         btnAddProducto.setVisibility(View.GONE);
+    }
+
+    /**
+     * Fase 4 Tarea 3
+     * @Descripccion Metodo permite ir a la actividad InversionPrincipalActivity para generar una vinversion
+     * @Autor RagooS
+     * @Date 18/09/2022
+     */
+    private void goToInversionPrincipalActivity() {
+        Intent intent = new Intent(this, InversionPrincipalActivity.class);
+        startActivity(intent);
+        finish();
     }
 
 

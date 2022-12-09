@@ -9,7 +9,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -20,7 +19,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.naturalfisherapp.R;
@@ -29,9 +27,8 @@ import com.example.naturalfisherapp.data.models.Promocion;
 import com.example.naturalfisherapp.presenter.activities.ProductoPresenter;
 import com.example.naturalfisherapp.presenter.interfaces.IProductoPresenter;
 import com.example.naturalfisherapp.utilidades.EnumVariables;
-import com.example.naturalfisherapp.utilidades.Utilidades;
 import com.example.naturalfisherapp.view.fragment.PromocionDetalleFragment;
-import com.example.naturalfisherapp.view.interfaces.IProductoBusquedaFragmentView;
+import com.example.naturalfisherapp.view.interfaces.fragment.IProductoBusquedaFragmentView;
 import com.example.naturalfisherapp.view.interfaces.dialog.ICrearProductoDialogFragmentView;
 import com.example.naturalfisherapp.view.interfaces.dialog.IDetalleProductoDialogFragment;
 
@@ -39,7 +36,6 @@ import org.jetbrains.annotations.NotNull;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import butterknife.OnItemSelected;
 
