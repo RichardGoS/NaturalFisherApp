@@ -21,7 +21,7 @@ import com.example.naturalfisherapp.R;
 import com.example.naturalfisherapp.data.models.Cliente;
 import com.example.naturalfisherapp.presenter.activities.ClientePresenter;
 import com.example.naturalfisherapp.presenter.interfaces.IClientePresenter;
-import com.example.naturalfisherapp.view.interfaces.IAgregarClienteDialogFragmentView;
+import com.example.naturalfisherapp.view.interfaces.dialog.IAgregarClienteDialogFragmentView;
 import com.example.naturalfisherapp.view.interfaces.dialog.IDetalleClienteDialogFragment;
 import com.example.naturalfisherapp.view.interfaces.fragment.IClienteBusquedaFragmentView;
 
@@ -54,6 +54,9 @@ public class DetalleClienteDialogFragment extends DialogFragment implements IDet
 
     @BindView(R.id.direccionCliente)
     TextView direccionCliente;
+
+    @BindView(R.id.direccionRespaldoCliente)
+    TextView direccionRespaldoCliente;
 
     @BindView(R.id.telefonoCliente)
     TextView telefonoCliente;
@@ -126,7 +129,19 @@ public class DetalleClienteDialogFragment extends DialogFragment implements IDet
 
         direccionCliente.setText(cliente.getDireccion());
 
-        telefonoCliente.setText(cliente.getTelefono());
+        if(cliente.getDireccion_respaldo() != null && !cliente.getDireccion_respaldo().equals("")){
+            direccionRespaldoCliente.setVisibility(View.VISIBLE);
+            direccionRespaldoCliente.setText(cliente.getDireccion_respaldo());
+        } else {
+            direccionRespaldoCliente.setVisibility(View.GONE);
+        }
+
+
+        if(cliente.getTelefono_respaldo() != null && !cliente.getTelefono_respaldo().equals("")){
+            telefonoCliente.setText(cliente.getTelefono() + " - " + cliente.getTelefono_respaldo());
+        } else {
+            telefonoCliente.setText(cliente.getTelefono());
+        }
 
         dialog = builder.create();
 
@@ -160,7 +175,6 @@ public class DetalleClienteDialogFragment extends DialogFragment implements IDet
     void OnClickBtnEliminar(){
         System.out.println("Eliminar");
         mostrarDialogoConfirmacion();
-        //clientePresenter.eliminarCliente(cliente);
     }
 
     @OnClick(R.id.llBtnActualizarDetalleCliente)

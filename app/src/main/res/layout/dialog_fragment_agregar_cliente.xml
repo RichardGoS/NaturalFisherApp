@@ -31,66 +31,290 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
-            android:layout_marginLeft="5dp"
-            android:textSize="12dp"
-            android:textColor="@color/azul_oscuro"
-            android:textStyle="normal"
-            android:text="Nombre"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <AutoCompleteTextView
-            android:scrollbars="vertical"
-            android:focusable="true"
-            android:id="@+id/edtNombreCliente"
-            android:layout_marginRight="5dp"
-            android:layout_marginLeft="5dp"
-            android:textSize="10dp"
-            android:hint="Nombre"
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:layout_marginTop="2dp"
-            android:layout_marginLeft="5dp"
-            android:textSize="12dp"
-            android:textColor="@color/azul_oscuro"
-            android:textStyle="normal"
-            android:text="Direccion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            <TextView
+                android:layout_marginLeft="5dp"
+                android:textSize="12dp"
+                android:textColor="@color/azul_oscuro"
+                android:textStyle="normal"
+                android:text="Nombre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
-        <EditText
-            android:focusable="true"
-            android:id="@+id/edtDireccionCliente"
-            android:layout_marginRight="5dp"
-            android:layout_marginLeft="5dp"
-            android:textSize="10dp"
-            android:hint="Direccion"
+            <AutoCompleteTextView
+                android:scrollbars="vertical"
+                android:focusable="true"
+                android:id="@+id/edtNombreCliente"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="5dp"
+                android:textSize="10dp"
+                android:hint="Nombre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:layout_marginTop="2dp"
-            android:layout_marginLeft="5dp"
-            android:textSize="12dp"
-            android:textColor="@color/azul_oscuro"
-            android:textStyle="normal"
-            android:text="Telefono"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            <LinearLayout
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-        <EditText
-            android:focusable="true"
-            android:inputType="number"
-            android:id="@+id/edtTelefonoCliente"
-            android:layout_marginRight="5dp"
-            android:layout_marginLeft="5dp"
-            android:textSize="10dp"
-            android:hint="Telefono"
+                <LinearLayout
+                    android:layout_weight="0.7"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_marginTop="2dp"
+                        android:layout_marginLeft="5dp"
+                        android:textSize="12dp"
+                        android:textColor="@color/azul_oscuro"
+                        android:textStyle="normal"
+                        android:text="Direccion"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:visibility="visible"
+                    android:id="@+id/llBtnPlusDireccion"
+                    android:layout_marginRight="4dp"
+                    android:layout_weight="0.1"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:background="@drawable/ic_plus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <EditText
+                android:focusable="true"
+                android:id="@+id/edtDireccionCliente"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="5dp"
+                android:textSize="10dp"
+                android:hint="Direccion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/llDireccionRespaldo"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_weight="0.7"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_marginTop="2dp"
+                        android:layout_marginLeft="5dp"
+                        android:textSize="12dp"
+                        android:textColor="@color/azul_oscuro"
+                        android:textStyle="normal"
+                        android:text="Direccion Respaldo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:visibility="visible"
+                    android:id="@+id/llBtnMenosDireccionRespaldo"
+                    android:layout_marginRight="4dp"
+                    android:layout_weight="0.1"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:background="@drawable/ic_menos"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <EditText
+                android:focusable="true"
+                android:id="@+id/edtDireccionRespaldoCliente"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="5dp"
+                android:textSize="10dp"
+                android:hint="Direccion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_weight="0.7"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_marginTop="2dp"
+                        android:layout_marginLeft="5dp"
+                        android:textSize="12dp"
+                        android:textColor="@color/azul_oscuro"
+                        android:textStyle="normal"
+                        android:text="Telefono"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:visibility="visible"
+                    android:id="@+id/llBtnPlusTelefono"
+                    android:layout_marginRight="4dp"
+                    android:layout_weight="0.1"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:background="@drawable/ic_plus"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <EditText
+                android:focusable="true"
+                android:inputType="number"
+                android:id="@+id/edtTelefonoCliente"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="5dp"
+                android:textSize="10dp"
+                android:hint="Telefono"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/llTelefonoRespaldo"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_weight="0.7"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_marginTop="2dp"
+                        android:layout_marginLeft="5dp"
+                        android:textSize="12dp"
+                        android:textColor="@color/azul_oscuro"
+                        android:textStyle="normal"
+                        android:text="Telefono Respaldo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:visibility="visible"
+                    android:id="@+id/llBtnMenosTelefonoRespaldo"
+                    android:layout_marginRight="4dp"
+                    android:layout_weight="0.1"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:background="@drawable/ic_menos"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <EditText
+                android:focusable="true"
+                android:inputType="number"
+                android:id="@+id/edtTelefonoRespaldoCliente"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="5dp"
+                android:textSize="10dp"
+                android:hint="Telefono"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+
+
 
         <LinearLayout
             android:gravity="center_vertical"

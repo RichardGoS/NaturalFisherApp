@@ -17,7 +17,7 @@ import com.example.naturalfisherapp.sqlite.tables.ConfiguracionTable;
 import com.example.naturalfisherapp.utilidades.InformacionSession;
 import com.example.naturalfisherapp.utilidades.Utilidades;
 import com.example.naturalfisherapp.view.dialog.InformacionDialogFragment;
-import com.example.naturalfisherapp.view.interfaces.IConfiguracionView;
+import com.example.naturalfisherapp.view.interfaces.activities.IConfiguracionView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

@@ -15,8 +15,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.naturalfisherapp.R;
-import com.example.naturalfisherapp.view.interfaces.IConfiguracionView;
-import com.example.naturalfisherapp.view.interfaces.IDetalleRegistroVentaFragmentView;
+import com.example.naturalfisherapp.view.interfaces.activities.IConfiguracionView;
+import com.example.naturalfisherapp.view.interfaces.fragment.IDetalleInversionFragmentView;
+import com.example.naturalfisherapp.view.interfaces.fragment.IDetalleRegistroVentaFragmentView;
+import com.example.naturalfisherapp.view.interfaces.fragment.IInversionBusquedaFragmentView;
+import com.example.naturalfisherapp.view.interfaces.fragment.IProveedorBusquedaFragmentView;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -37,6 +40,9 @@ public class InformacionDialogFragment extends DialogFragment {
     private String informacion;
     private IDetalleRegistroVentaFragmentView detalleRegistroVentaFragmentView;
     private IConfiguracionView configuracionView;
+    private IInversionBusquedaFragmentView inversionBusquedaFragmentView;
+    private IProveedorBusquedaFragmentView proveedorBusquedaFragmentView;
+    private IDetalleInversionFragmentView detalleInversionFragmentView;
 
     @BindView(R.id.imvIcono)
     ImageView imvIcono;
@@ -57,6 +63,30 @@ public class InformacionDialogFragment extends DialogFragment {
         informacionDialogFragment.tipo = tipo;
         informacionDialogFragment.informacion = informacion;
         informacionDialogFragment.configuracionView = configuracionView;
+        return informacionDialogFragment;
+    }
+
+    public static InformacionDialogFragment newInstance(String tipo, String informacion, IInversionBusquedaFragmentView inversionBusquedaFragmentView){
+        InformacionDialogFragment informacionDialogFragment = new InformacionDialogFragment();
+        informacionDialogFragment.tipo = tipo;
+        informacionDialogFragment.informacion = informacion;
+        informacionDialogFragment.inversionBusquedaFragmentView = inversionBusquedaFragmentView;
+        return informacionDialogFragment;
+    }
+
+    public static InformacionDialogFragment newInstance(String tipo, String informacion, IProveedorBusquedaFragmentView proveedorBusquedaFragmentView){
+        InformacionDialogFragment informacionDialogFragment = new InformacionDialogFragment();
+        informacionDialogFragment.tipo = tipo;
+        informacionDialogFragment.informacion = informacion;
+        informacionDialogFragment.proveedorBusquedaFragmentView = proveedorBusquedaFragmentView;
+        return informacionDialogFragment;
+    }
+
+    public static InformacionDialogFragment newInstance(String tipo, String informacion, IDetalleInversionFragmentView detalleInversionFragmentView){
+        InformacionDialogFragment informacionDialogFragment = new InformacionDialogFragment();
+        informacionDialogFragment.tipo = tipo;
+        informacionDialogFragment.informacion = informacion;
+        informacionDialogFragment.detalleInversionFragmentView = detalleInversionFragmentView;
         return informacionDialogFragment;
     }
 
@@ -102,6 +132,8 @@ public class InformacionDialogFragment extends DialogFragment {
                             detalleRegistroVentaFragmentView.goToVentaPrinsipalActivity();
                         } else if(configuracionView != null){
                             configuracionView.goToLoginActivity();
+                        } else if(detalleInversionFragmentView != null){
+                            detalleInversionFragmentView.goToInversionActivity();
                         }
                     }
 

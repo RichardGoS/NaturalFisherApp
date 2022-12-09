@@ -2,9 +2,14 @@ package com.example.naturalfisherapp.retrofit;
 
 import com.example.naturalfisherapp.data.models.Bodega;
 import com.example.naturalfisherapp.data.models.Cliente;
+import com.example.naturalfisherapp.data.models.EstadisticasMesProducto;
+import com.example.naturalfisherapp.data.models.Inversion;
 import com.example.naturalfisherapp.data.models.Producto;
 import com.example.naturalfisherapp.data.models.Promocion;
+import com.example.naturalfisherapp.data.models.Proveedor;
 import com.example.naturalfisherapp.data.models.Venta;
+import com.example.naturalfisherapp.data.models.interpretes.DetalleEstadistica;
+import com.example.naturalfisherapp.data.models.interpretes.DetalleInversiones;
 import com.example.naturalfisherapp.data.models.interpretes.DetalleVentas;
 import com.example.naturalfisherapp.data.models.interpretes.ProductosTransporte;
 
@@ -27,6 +32,101 @@ import retrofit2.http.Query;
  */
 
 public interface InterfaceApiService {
+
+    /**
+     * ===================================================== PROVEEDOR =============================================================================================
+     */
+
+    /**
+     * @Descripcion Metodo permite obtener la lista de bodegas de cada producto
+     * @return List<Producto> Lista de productos
+     */
+    @Headers({
+            "Accept: application/json",
+            "Content-Type: application/json"
+    })
+    @GET("proveedor/proveedores")
+    Call<List<Proveedor>> getProveedores();
+
+    /**
+     * @Descripcion Metodo permite guardar un Proveedor
+     * @return Proveedor objeto tipo Proveedor
+     */
+    @POST("proveedor/save/")
+    @Headers({
+            "Accept: application/json",
+            "Content-Type: application/json"
+    })
+    Call<Proveedor> saveProveedor(@Body Proveedor proveedorNew);
+
+    /**
+     * @Descripcion Metodo permite eliminar una Inversion
+     * @return boolean true correcto de lo contrario false
+     */
+    @POST("proveedor/delete/")
+    @Headers({
+            "Accept: application/json",
+            "Content-Type: application/json"
+    })
+    Call<Boolean> eliminarProveedor(@Body Proveedor proveedor);
+
+    /**
+     * ===================================================== INVERSION =============================================================================================
+     */
+
+    /**
+     * @Descripcion Metodo permite obtener la lista de inversiones todas
+     * @return <List<Venta>> Lista de ventas
+     */
+    @Headers({
+            "Accept: application/json",
+            "Content-Type: application/json"
+    })
+    @GET("/appi/inversion/inversionesEnFecha")
+    Call<List<Inversion>> getInversionesEnFecha(@Query("fecha") String fecha);
+
+    /**
+     * @Descripcion Metodo permite obtener la lista de inversiones todas
+     * @return <List<Venta>> Lista de ventas
+     */
+    @Headers({
+            "Accept: application/json",
+            "Content-Type: application/json"
+    })
+    @GET("/appi/inversion/todasInversiones")
+    Call<DetalleInversiones> getIodasInversionesDetalle();
+    /**
+     * @Descripcion Metodo permite obtener la lista de ventas en el rango de fechas por defecto
+     * @return <List<Venta>> Lista de ventas
+     */
+    @Headers({
+            "Accept: application/json",
+            "Content-Type: application/json"
+    })
+    @GET("/appi/inversion/inversionDetalleEnMes")
+    Call<DetalleInversiones> getInversionesDetalleMes(@Query("fecha") String fecha);
+
+    /**
+     * @Descripcion Metodo permite guardar una Inversion
+     * @return Inversion objeto tipo Inversion
+     */
+    @POST("inversion/save/")
+    @Headers({
+            "Accept: application/json",
+            "Content-Type: application/json"
+    })
+    Call<Inversion> saveInversion(@Body Inversion inversionNew);
+
+    /**
+     * @Descripcion Metodo permite eliminar una Inversion
+     * @return boolean true correcto de lo contrario false
+     */
+    @POST("inversion/delete/")
+    @Headers({
+            "Accept: application/json",
+            "Content-Type: application/json"
+    })
+    Call<Boolean> eliminarInversion(@Body Inversion inversion);
 
     /**
      * ===================================================== PROMOCION =============================================================================================
@@ -120,6 +220,17 @@ public interface InterfaceApiService {
     })
     @GET("producto/productosPromoVenta")
     Call<List<Producto>> getProductosPromoVentas();
+
+    /**
+     * @Descripcion Metodo permite obtener la lista de productos activos para la inversion
+     * @return List<Producto> Lista de productos
+     */
+    @Headers({
+            "Accept: application/json",
+            "Content-Type: application/json"
+    })
+    @GET("producto/productosActivosInversion")
+    Call<ProductosTransporte> getProductosActivosInversion();
 
     /**
      * @Descripcion Metodo permite guardar un Producto
@@ -251,6 +362,22 @@ public interface InterfaceApiService {
             "Content-Type: application/json"
     })
     Call<Cliente> actualizarCliente(@Body Cliente clienteNew);
+
+    /**
+     * Fase 4
+     * ===================================================== ESTADISTICAS =============================================================================================
+     */
+
+    /**
+     * @Descripcion Metodo permite obtener la lista de las estadisticas de los productos por mes
+     * @return <List<EstadisticasMesProducto>> Lista de estadisticas
+     */
+    @Headers({
+            "Accept: application/json",
+            "Content-Type: application/json"
+    })
+    @GET("estadisticas/estadisticaMesProductos?")
+    Call<DetalleEstadistica> getEstadisticasProductosEnMes(@Query("fecha") String fecha );
 
 
 }

@@ -11,7 +11,7 @@ import com.example.naturalfisherapp.presenter.interfaces.IProductoPresenter;
 import com.example.naturalfisherapp.retrofit.ClientApiService;
 import com.example.naturalfisherapp.retrofit.InterfaceApiService;
 import com.example.naturalfisherapp.utilidades.InformacionSession;
-import com.example.naturalfisherapp.view.interfaces.IProductoBusquedaFragmentView;
+import com.example.naturalfisherapp.view.interfaces.fragment.IProductoBusquedaFragmentView;
 import com.example.naturalfisherapp.view.interfaces.dialog.IAgregarProductoDialogFragment;
 import com.example.naturalfisherapp.view.interfaces.dialog.ICrearProductoDialogFragmentView;
 import com.example.naturalfisherapp.view.interfaces.dialog.IDetalleProductoDialogFragment;
@@ -113,32 +113,6 @@ public class ProductoPresenter implements IProductoPresenter {
                     validarProductos(null);
                 }
             });
-            /*
-
-
-
-
-
-
-            call.enqueue(new Callback<List<Producto>>() {
-                @Override
-                public void onResponse(Call<List<Producto>> call, Response<List<Producto>> response) {
-                    if(response != null && response.body() != null){
-                        validarProductos(response.body());
-                    } else {
-                        if(iProductoBusquedaFragmentView != null){
-                            iProductoBusquedaFragmentView.hideProgress();
-                        }
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<List<Producto>> call, Throwable t) {
-                    if(iProductoBusquedaFragmentView != null){
-                        iProductoBusquedaFragmentView.hideProgress();
-                    }
-                }
-            });*/
 
         } catch (Exception e){
             e.printStackTrace();
@@ -211,6 +185,36 @@ public class ProductoPresenter implements IProductoPresenter {
 
     }
 
+    /**
+     * @Autor RagooS
+     * @Descripccion Metodo permite consultar los productos activos para la inversion
+     * @Fecha 12/10/2022
+     */
+    @Override
+    public void consultarProductosInversion() {
+        try {
+
+            service = ClientApiService.getClient().create(InterfaceApiService.class);
+
+            Call<ProductosTransporte> call = service.getProductosActivosInversion();
+
+            call.enqueue(new Callback<ProductosTransporte>() {
+                @Override
+                public void onResponse(Call<ProductosTransporte> call, Response<ProductosTransporte> response) {
+                    validarProductosInversion(response.body());
+                }
+
+                @Override
+                public void onFailure(Call<ProductosTransporte> call, Throwable t) {
+                    validarProductosInversion(null);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e("consultarProductos", "Error al consultar los productos inversion");
+            validarProductosInversion(null);
+        }
+    }
 
 
     /**
@@ -664,5 +668,40 @@ public class ProductoPresenter implements IProductoPresenter {
                 iPromocionDetalleFragmentView.hideProgress();
             }
         }
+    }
+
+    /**
+     * @Autor RagooS
+     * @Descripccion Metodo permite validar la respuesta de la consulta de productos para la inversion
+     * @Fecha 06/05/2022
+     * @Param Promocion promocion
+     */
+    private void validarProductosInversion(ProductosTransporte productos) {
+
+        if(productos != null){
+            if(productos.getProductos() != null && !productos.getProductos().isEmpty()){
+                crearListaProductosGeneralActivosInversion(productos.getProductos());
+                if(agregarProductoDialogFragment != null){
+                    agregarProductoDialogFragment.cargarAdapter(InformacionSession.getInstance().getProductosActivosInversion());
+                }
+
+            }
+        }
+    }
+
+    /**
+     * @Autor RagooS
+     * @Fecha 18/10/2022
+     * @Descripccion Metodo permite extraer productos de la respuesta
+     */
+    private void crearListaProductosGeneralActivosInversion(List<Producto> productos) {
+        List<GeneralProductos> generalProductos = new ArrayList<>();
+
+        for(Producto producto: productos){
+            GeneralProductos gProducto = new GeneralProductos();
+            gProducto.setProducto(producto);
+            generalProductos.add(gProducto);
+        }
+        InformacionSession.getInstance().setProductosActivosInversion(generalProductos);
     }
 }

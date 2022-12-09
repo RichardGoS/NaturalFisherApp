@@ -1,4 +1,4 @@
-package com.example.naturalfisherapp.view.interfaces;
+package com.example.naturalfisherapp.view.interfaces.fragment;
 
 import com.example.naturalfisherapp.data.models.Venta;
 
@@ -13,7 +13,7 @@ import java.util.List;
 
 public interface IDetalleRegistroVentaFragmentView {
 
-    void cargarAdapter(List<Venta> ventas);
+    void cargarAdapter(List<Venta> ventas, String modo);
     void showProgress(String mensaje);
     void hideProgress();
 

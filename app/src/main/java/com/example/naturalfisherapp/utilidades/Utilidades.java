@@ -363,5 +363,21 @@ public class Utilidades {
         return new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
     }
 
+    /**
+     * @Autor RagooS
+     * @Descripccion Metodo permite extraer el año y el mes de la fecha
+     * @Fecha 10/03/2022
+     */
+    public static String obtenerMesAñoMesFecha(Date fechaActual) {
+        String mesReturn = "";
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM");
+
+        mesReturn = format.format(fechaActual);
+
+        return mesReturn;
+
+    }
+
 
 }

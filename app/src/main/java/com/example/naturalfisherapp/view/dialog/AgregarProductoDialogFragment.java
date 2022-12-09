@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.naturalfisherapp.R;
+import com.example.naturalfisherapp.data.models.ItemInversion;
 import com.example.naturalfisherapp.data.models.ItemPromocion;
 import com.example.naturalfisherapp.data.models.ItemVenta;
 import com.example.naturalfisherapp.data.models.Producto;
@@ -29,6 +30,7 @@ import com.example.naturalfisherapp.presenter.activities.ProductoPresenter;
 import com.example.naturalfisherapp.presenter.interfaces.IProductoPresenter;
 import com.example.naturalfisherapp.utilidades.InformacionSession;
 import com.example.naturalfisherapp.view.adapter.ItemAgregarProductoVentaAdapter;
+import com.example.naturalfisherapp.view.interfaces.adapter.IInversionRegistroHolderView;
 import com.example.naturalfisherapp.view.interfaces.adapter.IVentaRegistroHolderView;
 import com.example.naturalfisherapp.view.interfaces.dialog.IAgregarProductoDialogFragment;
 import com.example.naturalfisherapp.view.interfaces.fragment.IPromocionDetalleFragmentView;
@@ -63,6 +65,12 @@ public class AgregarProductoDialogFragment extends DialogFragment implements IAg
     private IPromocionDetalleFragmentView promocionDetalleFragmentView;
     private Activity activity;
 
+    /**
+     * Fase 4 Tarea 3
+     */
+    private IInversionRegistroHolderView iInversionRegistroHolderView;
+    private List<ItemInversion> itemsInversion;
+
     @BindView(R.id.edtBuscador)
     EditText edtBuscador;
 
@@ -84,6 +92,15 @@ public class AgregarProductoDialogFragment extends DialogFragment implements IAg
         agregarProductoDialogFragment.promocionDetalleFragmentView = promocionDetalleFragmentView;
         agregarProductoDialogFragment.itemsPromocion = itemsPromocion;
 
+        return agregarProductoDialogFragment;
+    }
+
+    public static AgregarProductoDialogFragment newInstance(FragmentManager fragmentManager, IInversionRegistroHolderView iInversionRegistroHolderView, List<ItemInversion> itemsInversion, Activity activity){
+        AgregarProductoDialogFragment agregarProductoDialogFragment = new AgregarProductoDialogFragment();
+        agregarProductoDialogFragment.fragmentManager = fragmentManager;
+        agregarProductoDialogFragment.iInversionRegistroHolderView = iInversionRegistroHolderView;
+        agregarProductoDialogFragment.itemsInversion = itemsInversion;
+        agregarProductoDialogFragment.activity = activity;
         return agregarProductoDialogFragment;
     }
 
@@ -122,6 +139,8 @@ public class AgregarProductoDialogFragment extends DialogFragment implements IAg
             productos = extraerProductos(items);
         } else if(itemsPromocion != null && !itemsPromocion.isEmpty()){
             productos = extraerProductosPromocion(itemsPromocion);
+        } else if(itemsInversion != null && !itemsInversion.isEmpty()){
+            productos = extraerProductosInversion(itemsInversion);
         }
 
         if(ventaRegistroHolderView != null){
@@ -139,19 +158,15 @@ public class AgregarProductoDialogFragment extends DialogFragment implements IAg
                 productoPresenter.consultarProductosPromocion();
             }
 
-        }
-        /*if(InformacionSession.getInstance().getProductosActivosVenta() != null && !InformacionSession.getInstance().getProductosActivosVenta().isEmpty()){
-            List<GeneralProductos> productosDisponibles = validarProductosDisponibles(InformacionSession.getInstance().getProductosActivosVenta(), productos);
-            cargarAdapter(productosDisponibles);
-        } else {
-            if(ventaRegistroHolderView != null){
-                productoPresenter.consultarProductosActivosVenta();
-            } else if(promocionDetalleFragmentView != null){
-
+        } else if (iInversionRegistroHolderView != null){
+            if(InformacionSession.getInstance().getProductosActivosInversion() != null && !InformacionSession.getInstance().getProductosActivosInversion().isEmpty()){
+                List<GeneralProductos> productosDisponibles = validarProductosDisponibles(InformacionSession.getInstance().getProductosActivosInversion(), productos);
+                cargarAdapter(productosDisponibles);
+            } else {
+                productoPresenter.consultarProductosInversion();
             }
 
-        }*/
-
+        }
 
         return dialog;
     }
@@ -215,6 +230,11 @@ public class AgregarProductoDialogFragment extends DialogFragment implements IAg
             } else if( promocionDetalleFragmentView != null ){
                 linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
                 ItemAgregarProductoVentaAdapter itemAgregarProductoVentaAdapter = new ItemAgregarProductoVentaAdapter(getContext(), fragmentManager, getActivity(), productos, promocionDetalleFragmentView, this);
+                efRvProductos.setAdapter(itemAgregarProductoVentaAdapter);
+                efRvProductos.setLayoutManager(linearLayoutManager);
+            } else if( iInversionRegistroHolderView != null ){
+                linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+                ItemAgregarProductoVentaAdapter itemAgregarProductoVentaAdapter = new ItemAgregarProductoVentaAdapter(getContext(), fragmentManager, getActivity(), productos, iInversionRegistroHolderView, this);
                 efRvProductos.setAdapter(itemAgregarProductoVentaAdapter);
                 efRvProductos.setLayoutManager(linearLayoutManager);
             }
@@ -290,5 +310,23 @@ public class AgregarProductoDialogFragment extends DialogFragment implements IAg
 
         return productos;
 
+    }
+
+    /**
+     * @Autor RagooS
+     * @Descripccion Metodo permite extraer los productos de los item inversion
+     * @Fecha 12/10/2022
+     */
+    private List<Producto> extraerProductosInversion(List<ItemInversion> itemsInversion) {
+
+        List<Producto> productos = new ArrayList<>();
+
+        for( ItemInversion item:itemsInversion ){
+            if(item.getProducto() != null){
+                productos.add(item.getProducto());
+            }
+        }
+
+        return productos;
     }
 }

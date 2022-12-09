@@ -10,8 +10,8 @@ android {
         applicationId "com.example.naturalfisherapp"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 27
-        versionName "2.7"
+        versionCode 218
+        versionName "2.1.8"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

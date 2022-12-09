@@ -19,7 +19,6 @@ import com.example.naturalfisherapp.data.models.Cliente;
 import com.example.naturalfisherapp.data.models.Venta;
 import com.example.naturalfisherapp.presenter.activities.ventaPresenter;
 import com.example.naturalfisherapp.presenter.interfaces.IVentaPresenter;
-import com.example.naturalfisherapp.retrofit.ClientApiService;
 import com.example.naturalfisherapp.retrofit.InterfaceApiService;
 import com.example.naturalfisherapp.utilidades.EnumVariables;
 import com.example.naturalfisherapp.utilidades.InformacionSession;
@@ -27,7 +26,7 @@ import com.example.naturalfisherapp.utilidades.Utilidades;
 import com.example.naturalfisherapp.view.activities.VentaPrinsipalActivity;
 import com.example.naturalfisherapp.view.adapter.VentaRegistroAdapter;
 import com.example.naturalfisherapp.view.dialog.InformacionDialogFragment;
-import com.example.naturalfisherapp.view.interfaces.IDetalleRegistroVentaFragmentView;
+import com.example.naturalfisherapp.view.interfaces.fragment.IDetalleRegistroVentaFragmentView;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,9 +34,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * de RagooS
@@ -49,7 +45,6 @@ import retrofit2.Response;
 public class DetalleRegistroVentaFragment extends Fragment implements IDetalleRegistroVentaFragmentView {
 
     private LinearLayoutManager linearLayoutManager;
-    private InterfaceApiService service;
     private Activity activity;
     private Date fecha;
     private IVentaPresenter ventaPresenter;
@@ -107,8 +102,12 @@ public class DetalleRegistroVentaFragment extends Fragment implements IDetalleRe
             ventaNew.setCliente(clienteNew);
             ventaNew.setFecha(Utilidades.obtenerFechaFormatoEstandar(new Date()));
             ventaNew.setTotal(0d);
+
+            ventaNew.setTelefono(clienteNew.getTelefono()!= null ? clienteNew.getTelefono() : "");
+            ventaNew.setDireccion(clienteNew.getDireccion()!= null ? clienteNew.getDireccion() : "");
+
             ventas.add(ventaNew);
-            cargarAdapter(ventas);
+            cargarAdapter(ventas, EnumVariables.MODO_CREACION.getValor());
         }else if(fecha != null){
             ventaPresenter.consultarVentaEnFecha(Utilidades.formatearFecha(fecha));
         }
@@ -134,35 +133,6 @@ public class DetalleRegistroVentaFragment extends Fragment implements IDetalleRe
      * -------------- METODOS PROPIOS --------------------------------
      */
 
-    /**
-     * @Autor RagooS
-     * @Date 06/07/21
-     * @Descripcion Metodo permite consultar la Ventas
-     */
-    public void consultarVentas(){
-
-        try {
-            service = ClientApiService.getClient().create(InterfaceApiService.class);
-
-            Call<List<Venta>> call = service.getVentas();
-
-            call.enqueue(new Callback<List<Venta>>() {
-                @Override
-                public void onResponse(Call<List<Venta>> call, Response<List<Venta>> response) {
-                    if(response != null){
-                        cargarAdapter(response.body());
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<List<Venta>> call, Throwable t) {
-
-                }
-            });
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-    }
 
     /**
      * -------------- METODOS INTERFACE IDetalleRegistroVentaFragmentView --------------------------------
@@ -176,10 +146,10 @@ public class DetalleRegistroVentaFragment extends Fragment implements IDetalleRe
      */
 
     @Override
-    public void cargarAdapter(List<Venta> listVenta) {
+    public void cargarAdapter(List<Venta> listVenta, String modo) {
         linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        VentaRegistroAdapter adapter = new VentaRegistroAdapter(listVenta, getActivity().getApplicationContext(), fragmentManager, getActivity(), ventaPresenter);
+        VentaRegistroAdapter adapter = new VentaRegistroAdapter(listVenta, getActivity().getApplicationContext(), fragmentManager, getActivity(), ventaPresenter, modo);
         recyclerViewVentas.setAdapter(adapter);
         recyclerViewVentas.setLayoutManager(linearLayoutManager);
     }
@@ -218,10 +188,6 @@ public class DetalleRegistroVentaFragment extends Fragment implements IDetalleRe
         if (fragment != null) {
             activity.getFragmentManager().beginTransaction().remove(fragment).commit();
         }
-
-        /*Intent intent = new Intent(activity, VentaPrinsipalActivity.class);
-        startActivity(intent);
-        activity.finish();*/
 
     }
 

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -17,38 +16,29 @@ import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.naturalfisherapp.R;
 import com.example.naturalfisherapp.data.models.Cliente;
-import com.example.naturalfisherapp.data.models.Producto;
 import com.example.naturalfisherapp.presenter.activities.ClientePresenter;
 import com.example.naturalfisherapp.presenter.interfaces.IClientePresenter;
 import com.example.naturalfisherapp.utilidades.InformacionSession;
 import com.example.naturalfisherapp.view.activities.VentaPrinsipalActivity;
-import com.example.naturalfisherapp.view.adapter.ItemAutocompleteTextViewAdapter;
-import com.example.naturalfisherapp.view.fragment.DetalleRegistroVentaFragment;
-import com.example.naturalfisherapp.view.interfaces.IAgregarClienteDialogFragmentView;
+import com.example.naturalfisherapp.view.interfaces.dialog.IAgregarClienteDialogFragmentView;
+import com.example.naturalfisherapp.view.interfaces.adapter.IVentaRegistroHolderView;
 import com.example.naturalfisherapp.view.interfaces.dialog.IDetalleClienteDialogFragment;
 import com.example.naturalfisherapp.view.interfaces.fragment.IClienteBusquedaFragmentView;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.OnItemClick;
 
 /**
  * de RagooS
@@ -72,6 +62,10 @@ public class AgregarClienteDialogFragment extends DialogFragment implements IAgr
     private String titulo;
     private Cliente clienteActualizar;
 
+    private IVentaRegistroHolderView iVentaRegistroHolderView;
+    private Cliente clienteCambiar;
+    private boolean cambiarCliente;
+
     @BindView(R.id.txtTitulo)
     TextView txtTitulo;
 
@@ -89,6 +83,37 @@ public class AgregarClienteDialogFragment extends DialogFragment implements IAgr
 
     @BindView(R.id.btnAgregarCliente)
     LinearLayout btnAgregarCliente;
+
+    /**
+     * Fase 4 Tarea 2
+     * @author RagooS
+     * @fecha 30/07/2022
+     * @descripcion Se agregan los campos de la vista para el control de la misma
+     */
+
+    @BindView(R.id.llBtnPlusDireccion)
+    LinearLayout llBtnPlusDireccion;
+
+    @BindView(R.id.llBtnPlusTelefono)
+    LinearLayout llBtnPlusTelefono;
+
+    @BindView(R.id.llBtnMenosTelefonoRespaldo)
+    LinearLayout llBtnMenosTelefonoRespaldo;
+
+    @BindView(R.id.llBtnMenosDireccionRespaldo)
+    LinearLayout llBtnMenosDireccionRespaldo;
+
+    @BindView(R.id.llTelefonoRespaldo)
+    LinearLayout llTelefonoRespaldo;
+
+    @BindView(R.id.llDireccionRespaldo)
+    LinearLayout llDireccionRespaldo;
+
+    @BindView(R.id.edtDireccionRespaldoCliente)
+    EditText edtDireccionRespaldoCliente;
+
+    @BindView(R.id.edtTelefonoRespaldoCliente)
+    EditText edtTelefonoRespaldoCliente;
 
 
     public static AgregarClienteDialogFragment newInstance(Activity activity, FragmentManager fragmentManager, String titulo){
@@ -114,6 +139,17 @@ public class AgregarClienteDialogFragment extends DialogFragment implements IAgr
         agregarClienteDialogFragment.activity = activity;
         agregarClienteDialogFragment.clienteActualizar = clienteActualizar;
         agregarClienteDialogFragment.iDetalleClienteDialogFragment = iDetalleClienteDialogFragment;
+        return agregarClienteDialogFragment;
+    }
+
+    public static AgregarClienteDialogFragment newInstance(Activity activity, String titulo, Cliente clienteCambiar, IVentaRegistroHolderView iVentaRegistroHolderView){
+        AgregarClienteDialogFragment agregarClienteDialogFragment = new AgregarClienteDialogFragment();
+        agregarClienteDialogFragment.activity = activity;
+        agregarClienteDialogFragment.clienteCambiar = clienteCambiar;
+        agregarClienteDialogFragment.iVentaRegistroHolderView = iVentaRegistroHolderView;
+        agregarClienteDialogFragment.titulo = titulo;
+        agregarClienteDialogFragment.cambiarCliente = true;
+        agregarClienteDialogFragment.clienteSeleccionado = clienteCambiar;
         return agregarClienteDialogFragment;
     }
 
@@ -148,6 +184,8 @@ public class AgregarClienteDialogFragment extends DialogFragment implements IAgr
 
         } else if(iDetalleClienteDialogFragment != null){
             clientePresenter = new ClientePresenter(getContext(), iDetalleClienteDialogFragment, this);
+        } else if(iVentaRegistroHolderView != null){
+            clientePresenter = new ClientePresenter(getContext(), iVentaRegistroHolderView, this);
         } else {
             clientePresenter = new ClientePresenter(getContext(), this);
         }
@@ -156,7 +194,33 @@ public class AgregarClienteDialogFragment extends DialogFragment implements IAgr
             edtNombreCliente.setText(clienteActualizar.getNombre());
             edtDireccionCliente.setText(clienteActualizar.getDireccion());
             edtTelefonoCliente.setText(clienteActualizar.getTelefono());
+
+            if(clienteActualizar.getTelefono_respaldo() != null && !clienteActualizar.getTelefono_respaldo().equals("")){
+                edtTelefonoRespaldoCliente.setText(clienteActualizar.getTelefono_respaldo());
+                llTelefonoRespaldo.setVisibility(View.VISIBLE);
+            } else {
+                edtTelefonoRespaldoCliente.setText("");
+                llTelefonoRespaldo.setVisibility(View.GONE);
+            }
+
+            if(clienteActualizar.getDireccion_respaldo() != null && !clienteActualizar.getDireccion_respaldo().equals("")){
+                edtDireccionRespaldoCliente.setText(clienteActualizar.getDireccion_respaldo());
+                llDireccionRespaldo.setVisibility(View.VISIBLE);
+            } else {
+                edtDireccionRespaldoCliente.setText("");
+                llDireccionRespaldo.setVisibility(View.GONE);
+            }
         } else {
+
+            if(clienteCambiar != null){
+                edtNombreCliente.setText(clienteCambiar.getNombre());
+                edtDireccionCliente.setText(clienteCambiar.getDireccion());
+                edtTelefonoCliente.setText(clienteCambiar.getTelefono());
+
+                edtTelefonoRespaldoCliente.setText(clienteCambiar.getTelefono_respaldo() != null && !clienteCambiar.getTelefono_respaldo().equals("") ? clienteCambiar.getTelefono_respaldo() : "");
+                edtDireccionRespaldoCliente.setText(clienteCambiar.getDireccion_respaldo() != null && !clienteCambiar.getDireccion_respaldo().equals("") ? clienteCambiar.getDireccion_respaldo() : "");
+            }
+
             clientePresenter.consultarClientes();
         }
 
@@ -181,6 +245,9 @@ public class AgregarClienteDialogFragment extends DialogFragment implements IAgr
                         edtNombreCliente.setText(clienteSeleccionado.getNombre());
                         edtDireccionCliente.setText(clienteSeleccionado.getDireccion());
                         edtTelefonoCliente.setText(clienteSeleccionado.getTelefono());
+
+                        edtDireccionRespaldoCliente.setText(clienteSeleccionado.getDireccion_respaldo());
+                        edtTelefonoRespaldoCliente.setText(clienteSeleccionado.getTelefono_respaldo());
                     }
 
                 } else {
@@ -202,29 +269,76 @@ public class AgregarClienteDialogFragment extends DialogFragment implements IAgr
 
     @OnClick(R.id.btnCancelar)
     void onClickCancelar(){
-        System.out.println("Cancelar");
+        //System.out.println("Cancelar");
         dismissDialog();
     }
 
     @OnClick(R.id.btnAgregarCliente)
     void onClickAgregarCliente(){
-        System.out.println("Aceptar");
+        //System.out.println("Aceptar");
 
         if(validarCampos()){
             //clientePresenter.guardarCliente();
             Cliente cliente = extraerDatos();
             if(cliente != null){
                 if(clienteSeleccionado != null){
-                    goToVentaDetalle(clienteSeleccionado);
+                    if(cambiarCliente){
+                        dismissDialog();
+                        iVentaRegistroHolderView.setCliente(clienteSeleccionado);
+                    } else {
+                        goToVentaDetalle(clienteSeleccionado);
+                    }
                 } else{
                     clientePresenter.guardarCliente(cliente);
                 }
-
             }
 
         } else {
-            System.out.println("Campos Vacios..");
+            //System.out.println("Campos Vacios..");
         }
+    }
+
+    /**
+     * Fase 4 Tarea 2
+     * @author RagooS
+     * @fecha 30/07/2022
+     * @descripcion Se agregan los metodos onClick para el manejo de los botodes para la informacion de respaldo.
+     */
+
+    @OnClick(R.id.llBtnPlusDireccion)
+    void onClickLlBtnPlusDireccion(){
+        System.out.println("Plus Direccion");
+
+        llDireccionRespaldo.setVisibility(View.VISIBLE);
+        llBtnPlusDireccion.setVisibility(View.GONE);
+
+    }
+
+    @OnClick(R.id.llBtnPlusTelefono)
+    void onClickLlBtnPlusTelefono(){
+        System.out.println("Plus Telefono");
+
+        llTelefonoRespaldo.setVisibility(View.VISIBLE);
+        llBtnPlusTelefono.setVisibility(View.GONE);
+
+    }
+
+    @OnClick(R.id.llBtnMenosDireccionRespaldo)
+    void onClickLlBtnMenosDireccionRespaldo(){
+        System.out.println("Menos Direccion");
+
+        llDireccionRespaldo.setVisibility(View.GONE);
+        llBtnPlusDireccion.setVisibility(View.VISIBLE);
+
+    }
+
+    @OnClick(R.id.llBtnMenosTelefonoRespaldo)
+    void onClickLlBtnMenosTelefonoRespaldo(){
+        System.out.println("Menos Telefono");
+
+        llTelefonoRespaldo.setVisibility(View.GONE);
+        llBtnPlusTelefono.setVisibility(View.VISIBLE);
+
     }
 
     /*@OnItemClick(R.id.edtNombreCliente)
@@ -277,15 +391,15 @@ public class AgregarClienteDialogFragment extends DialogFragment implements IAgr
 
         if(edtNombreCliente.getText().toString().contains("-")){
             strNombreCliente = eliminarIdNombre(edtNombreCliente.getText().toString());
-
             cliente.setNombre(strNombreCliente);
-            cliente.setDireccion(edtDireccionCliente.getText().toString());
-            cliente.setTelefono(edtTelefonoCliente.getText().toString());
         } else{
             cliente.setNombre(edtNombreCliente.getText().toString());
-            cliente.setDireccion(edtDireccionCliente.getText().toString());
-            cliente.setTelefono(edtTelefonoCliente.getText().toString());
         }
+
+        cliente.setDireccion(edtDireccionCliente.getText().toString());
+        cliente.setTelefono(edtTelefonoCliente.getText().toString());
+        cliente.setDireccion_respaldo(edtDireccionRespaldoCliente.getText().toString());
+        cliente.setTelefono_respaldo(edtTelefonoRespaldoCliente.getText().toString());
 
 
         return cliente;

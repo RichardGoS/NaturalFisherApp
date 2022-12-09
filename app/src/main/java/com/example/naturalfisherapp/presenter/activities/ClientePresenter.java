@@ -7,11 +7,11 @@ import com.example.naturalfisherapp.presenter.interfaces.IClientePresenter;
 import com.example.naturalfisherapp.retrofit.ClientApiService;
 import com.example.naturalfisherapp.retrofit.InterfaceApiService;
 import com.example.naturalfisherapp.utilidades.InformacionSession;
-import com.example.naturalfisherapp.view.interfaces.IAgregarClienteDialogFragmentView;
+import com.example.naturalfisherapp.view.interfaces.dialog.IAgregarClienteDialogFragmentView;
+import com.example.naturalfisherapp.view.interfaces.adapter.IVentaRegistroHolderView;
 import com.example.naturalfisherapp.view.interfaces.dialog.IDetalleClienteDialogFragment;
 import com.example.naturalfisherapp.view.interfaces.fragment.IClienteBusquedaFragmentView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -32,6 +32,8 @@ public class ClientePresenter implements IClientePresenter {
     private IAgregarClienteDialogFragmentView agregarClienteDialogFragmentView;
     private IClienteBusquedaFragmentView iClienteBusquedaFragmentView;
     private IDetalleClienteDialogFragment iDetalleClienteDialogFragment;
+
+    private IVentaRegistroHolderView iVentaRegistroHolderView;
 
     public ClientePresenter(Context context, IAgregarClienteDialogFragmentView agregarClienteDialogFragmentView) {
         this.context = context;
@@ -58,6 +60,12 @@ public class ClientePresenter implements IClientePresenter {
     public ClientePresenter(Context context, IDetalleClienteDialogFragment iDetalleClienteDialogFragment, IAgregarClienteDialogFragmentView agregarClienteDialogFragmentView) {
         this.context = context;
         this.iDetalleClienteDialogFragment = iDetalleClienteDialogFragment;
+        this.agregarClienteDialogFragmentView = agregarClienteDialogFragmentView;
+    }
+
+    public ClientePresenter(Context context, IVentaRegistroHolderView iVentaRegistroHolderView, IAgregarClienteDialogFragmentView agregarClienteDialogFragmentView) {
+        this.context = context;
+        this.iVentaRegistroHolderView = iVentaRegistroHolderView;
         this.agregarClienteDialogFragmentView = agregarClienteDialogFragmentView;
     }
 

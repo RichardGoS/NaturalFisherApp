@@ -9,10 +9,11 @@ import com.example.naturalfisherapp.data.models.interpretes.BusquedaVentas;
 import com.example.naturalfisherapp.data.models.interpretes.DetalleVentas;
 import com.example.naturalfisherapp.retrofit.ClientApiService;
 import com.example.naturalfisherapp.retrofit.InterfaceApiService;
+import com.example.naturalfisherapp.utilidades.EnumVariables;
 import com.example.naturalfisherapp.utilidades.InformacionSession;
 import com.example.naturalfisherapp.utilidades.Utilidades;
-import com.example.naturalfisherapp.view.interfaces.IDetalleRegistroVentaFragmentView;
-import com.example.naturalfisherapp.view.interfaces.VentaBusquedaFragmentView;
+import com.example.naturalfisherapp.view.interfaces.fragment.IDetalleRegistroVentaFragmentView;
+import com.example.naturalfisherapp.view.interfaces.fragment.VentaBusquedaFragmentView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -216,8 +217,6 @@ public class ventaPresenter implements com.example.naturalfisherapp.presenter.in
 
             if(ventas != null && !ventas.isEmpty()){
                 List<Venta> ventasComparar = new ArrayList<>(ventas);
-                //List<Venta> ventasReciduo = new ArrayList<>(ventas);
-                //ventasComparar.remove(0);
 
                 //System.out.println("==================================== INICIO ======================================");
                 for(int j = 0; j < ventas.size();){
@@ -275,40 +274,6 @@ public class ventaPresenter implements com.example.naturalfisherapp.presenter.in
 
                 //System.out.println("==================================== FIN ======================================");
 
-            /*if(ventasIguales != null && !ventasIguales.isEmpty()){
-                BusquedaVentas busqueda = new BusquedaVentas();
-                busqueda.setFecha(ventasIguales.get(0).getFecha());
-                List<BusquedaClientesVenta> clientesVenta = new ArrayList<>();
-                for (Venta ventaIgual: ventasIguales){
-                    BusquedaClientesVenta busquedaClientesVenta = new BusquedaClientesVenta();
-
-                    busquedaClientesVenta.setCliente(ventaIgual.getCliente());
-                    busquedaClientesVenta.setPrecioVenta(ventaIgual.getTotal());
-
-                    clientesVenta.add(busquedaClientesVenta);
-
-                }
-                busqueda.setClientesVenta(clientesVenta);
-                busquedaVentas.add(busqueda);
-            }*/
-
-            /*if(ventasComparar != null && !ventasComparar.isEmpty()){
-                for (Venta ventaAdd: ventasComparar){
-                    BusquedaVentas busqueda = new BusquedaVentas();
-                    List<BusquedaClientesVenta> clientesVenta = new ArrayList<>();
-                    busqueda.setFecha(ventaAdd.getFecha());
-                    BusquedaClientesVenta busquedaClientesVenta = new BusquedaClientesVenta();
-
-                    busquedaClientesVenta.setCliente(ventaAdd.getCliente());
-                    busquedaClientesVenta.setPrecioVenta(ventaAdd.getTotal());
-
-                    clientesVenta.add(busquedaClientesVenta);
-
-                    busqueda.setClientesVenta(clientesVenta);
-                    busquedaVentas.add(busqueda);
-                }
-            }*/
-
                 //cargarAdapter(busquedaVentas);
                 if(busquedaVentas != null && !busquedaVentas.isEmpty()){
                     busquedaVentas = calcularTotales(busquedaVentas);
@@ -345,7 +310,7 @@ public class ventaPresenter implements com.example.naturalfisherapp.presenter.in
         if(ventas != null && !ventas.isEmpty()){
             if(iDetalleRegistroVentaFragmentView != null){
                 iDetalleRegistroVentaFragmentView.hideProgress();
-                iDetalleRegistroVentaFragmentView.cargarAdapter(ventas);
+                iDetalleRegistroVentaFragmentView.cargarAdapter(ventas, EnumVariables.MODO_CONSULTA.getValor());
             }
         } else {
             if(iDetalleRegistroVentaFragmentView != null){
@@ -389,15 +354,12 @@ public class ventaPresenter implements com.example.naturalfisherapp.presenter.in
         List<BusquedaClientesVenta> clientesVenta = new ArrayList<>();
 
         for (Venta ventaAdd: ventas){
-
             BusquedaClientesVenta busquedaClientesVenta = new BusquedaClientesVenta();
 
             busquedaClientesVenta.setCliente(ventaAdd.getCliente());
             busquedaClientesVenta.setPrecioVenta(ventaAdd.getTotal());
 
             clientesVenta.add(busquedaClientesVenta);
-
-
         }
 
         busqueda.setClientesVenta(clientesVenta);

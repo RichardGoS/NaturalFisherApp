@@ -2,8 +2,6 @@ package com.example.naturalfisherapp.view.fragment;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -19,7 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.naturalfisherapp.R;
-import com.example.naturalfisherapp.data.models.Producto;
 import com.example.naturalfisherapp.data.models.Promocion;
 import com.example.naturalfisherapp.data.models.interpretes.GeneralProductos;
 import com.example.naturalfisherapp.presenter.activities.ProductoPresenter;
@@ -28,7 +25,7 @@ import com.example.naturalfisherapp.utilidades.EnumVariables;
 import com.example.naturalfisherapp.utilidades.InformacionSession;
 import com.example.naturalfisherapp.view.adapter.ItemProductoAdapter;
 import com.example.naturalfisherapp.view.dialog.CrearProductoDialogFragment;
-import com.example.naturalfisherapp.view.interfaces.IProductoBusquedaFragmentView;
+import com.example.naturalfisherapp.view.interfaces.fragment.IProductoBusquedaFragmentView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;

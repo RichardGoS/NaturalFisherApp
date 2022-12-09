@@ -15,6 +15,7 @@ public interface IProductoPresenter {
     void consultarProductos();
     void consultarProductosActivosVenta();
     void consultarProductosPromocion();
+    void consultarProductosInversion();
 
     void guardarProducto(Producto producto);
     void eliminarProducto(Object producto);

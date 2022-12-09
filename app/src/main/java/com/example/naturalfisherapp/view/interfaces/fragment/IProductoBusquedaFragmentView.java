@@ -1,4 +1,4 @@
-package com.example.naturalfisherapp.view.interfaces;
+package com.example.naturalfisherapp.view.interfaces.fragment;
 
 import com.example.naturalfisherapp.data.models.Producto;
 import com.example.naturalfisherapp.data.models.Promocion;
